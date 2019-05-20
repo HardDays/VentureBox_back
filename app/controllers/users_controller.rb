@@ -65,9 +65,10 @@ class UsersController < ApplicationController
   swagger_api :update do
     summary "Update user info"
     param :path, :id, :integer, :required, "User id"
-    param :form, :old_password, :string, :required, "User old password"
-    param :form, :password, :string, :required, "User password"
-    param :form, :password_confirmation, :string, :required, "User password confirmation"
+    param :form, :old_password, :string, :optional, "User old password"
+    param :form, :password, :string, :optional, "User password"
+    param :form, :password_confirmation, :string, :optional, "User password confirmation"
+    param :form, :turn_email_notifications, :boolean, :optional, "Turn on email notifications"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
@@ -75,6 +76,10 @@ class UsersController < ApplicationController
     response :unprocessable_entity
   end
   def update
+    if params[:turn_email_notifications]
+      @user.is_email_notifications_available = true
+    end
+
     if @user.update(user_params)
       render json: @user, status: :ok
     else
