@@ -36,6 +36,7 @@ class UsersController < ApplicationController
     param :form, :name, :string, :required, "User name"
     param :form, :surname, :string, :required, "User surname"
     param :form, :email, :string, :required, "User email"
+    param :form, :phone, :string, :optional, "User phone"
     param :form, :password, :string, :required, "User password"
     param :form, :password_confirmation, :string, :required, "User password confirmation"
     param_list :form, :role, :string, :required, "User role", [:startup, :investor]
@@ -124,6 +125,6 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      params.permit(:role, :name, :surname, :email, :password, :password_confirmation, :old_password, :goals)
+      params.permit(:role, :name, :surname, :email, :phone, :password, :password_confirmation, :old_password, :goals)
     end
 end
