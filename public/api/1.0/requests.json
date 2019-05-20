@@ -33,18 +33,24 @@
             },
             {
               "paramType": "form",
-              "name": "interested_in",
-              "type": "string",
-              "description": "What requestor interested in",
-              "required": false,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "investing",
-                  "advisor",
-                  "purchasing"
-                ]
-              }
+              "name": "interested_in_investing",
+              "type": "boolean",
+              "description": "requestor interested in",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "interested_in_advisor",
+              "type": "boolean",
+              "description": "requestor interested in",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "interested_in_purchasing",
+              "type": "boolean",
+              "description": "requestor interested in",
+              "required": false
             }
           ],
           "responseMessages": [
