@@ -8,4 +8,5 @@ RSpec.describe User, type: :model do
 
   it { should have_many(:tokens).dependent(:destroy) }
   it { should have_many(:forgot_password_attempts).dependent(:destroy) }
+  it { should have_one(:company).dependent(:destroy) }
 end

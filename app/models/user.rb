@@ -3,7 +3,7 @@ class User < ApplicationRecord
   validates_presence_of :surname
   validates :email, presence: true, uniqueness: true
 
-  validates :password, length: {:within => 6..100}, :allow_blank => false
+  validates :password, presence:true, length: {:within => 6..100}, :allow_blank => false
   before_save :encrypt, if: :password_changed?
   validates_confirmation_of :password, message: 'NOT_MATCHED'
   attr_accessor :password_confirmation
@@ -15,6 +15,7 @@ class User < ApplicationRecord
 
   has_many :tokens, dependent: :destroy
   has_many :forgot_password_attempts, dependent: :destroy
+  has_one :company, dependent: :destroy
 
   SALT = ENV.fetch("PASSWORD_SALT")
 

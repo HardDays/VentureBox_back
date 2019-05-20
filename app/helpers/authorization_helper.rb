@@ -5,6 +5,16 @@ module AuthorizationHelper
     @token = Token.find_by token: @tokenstr
     return @token if not @token
 
-    return @token.user
+    @token.user
+  end
+
+  def self.authorize_startup(request)
+    @user = self.authorize(request)
+
+    unless @user.role == 'startup'
+      return nil
+    end
+
+    @user
   end
 end

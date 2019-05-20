@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class AuthenticationController < ApplicationController
-  swagger_controller :auth, "Authentication"
+  swagger_controller :authentication, "Authentication"
 
   # POST /auth/forgot_password
   swagger_api :forgot_password do
@@ -17,20 +17,20 @@ class AuthenticationController < ApplicationController
       render json: {error: :LOGIN_DOES_NOT_EXIST}, status: :unauthorized and return
     end
 
-    @attempt = ForgotPassAttempt.where(
+    @attempt = ForgotPasswordAttempt.where(
       user_id: @user.id,
       created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
     ).first
 
     if @attempt
-      if @attempt.attempt_count >= 3
+      if @attempt.attempts_count >= 3
         render json: {error: :TOO_MANY_ATTEMPTS}, status: :bad_request and return
       end
 
-      @attempt.attempt_count += 1
+      @attempt.attempts_count += 1
       @attempt.save
     else
-      @attempt = ForgotPassAttempt.new(user_id: @user.id, attempt_count: 1)
+      @attempt = ForgotPasswordAttempt.new(user_id: @user.id, attempt_count: 1)
       @attempt.save
     end
 

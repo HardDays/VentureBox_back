@@ -1,0 +1,240 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "https://venture-box-back.herokuapp.com",
+  "resourcePath": "companies",
+  "apis": [
+    {
+      "path": "/companies/{id}.json",
+      "operations": [
+        {
+          "summary": "Retrieve company info",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Company id",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Companies#show",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies.json",
+      "operations": [
+        {
+          "summary": "Create company",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "type": "integer",
+              "description": "Startup user id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "name",
+              "type": "string",
+              "description": "Company name",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "website",
+              "type": "string",
+              "description": "Company website",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "description",
+              "type": "string",
+              "description": "Company description",
+              "required": false
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 201,
+              "responseModel": null,
+              "message": "Created"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
+          "nickname": "Companies#create",
+          "method": "post"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/{id}.json",
+      "operations": [
+        {
+          "summary": "Update company info",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "type": "integer",
+              "description": "Startup user id",
+              "required": true
+            },
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Company id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "name",
+              "type": "string",
+              "description": "Company name",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "website",
+              "type": "string",
+              "description": "Company website",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "description",
+              "type": "string",
+              "description": "Company description",
+              "required": false
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
+          "nickname": "Companies#update",
+          "method": "patch"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/{id}.json",
+      "operations": [
+        {
+          "summary": "Delete company",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "type": "integer",
+              "description": "Startup user id",
+              "required": true
+            },
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Company id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Companies#destroy",
+          "method": "delete"
+        }
+      ]
+    }
+  ],
+  "authorizations": null
+}
