@@ -1,3 +1,11 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  resources :users
+
+  resources :authentication, path: "auth", only: [] do
+    collection do
+      post :login
+      post :forgot_password
+      post :logout
+    end
+  end
 end

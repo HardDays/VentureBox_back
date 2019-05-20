@@ -1,0 +1,20 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "http://localhost:3000",
+  "apis": [
+    {
+      "path": "/api/1.0/users.{format}",
+      "description": "User"
+    },
+    {
+      "path": "/api/1.0/authentication.{format}",
+      "description": "Authentication"
+    }
+  ],
+  "authorizations": null,
+  "info": {
+    "title": "Venture Box",
+    "description": ""
+  }
+}
