@@ -166,21 +166,28 @@
               "name": "old_password",
               "type": "string",
               "description": "User old password",
-              "required": true
+              "required": false
             },
             {
               "paramType": "form",
               "name": "password",
               "type": "string",
               "description": "User password",
-              "required": true
+              "required": false
             },
             {
               "paramType": "form",
               "name": "password_confirmation",
               "type": "string",
               "description": "User password confirmation",
-              "required": true
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "turn_email_notifications",
+              "type": "boolean",
+              "description": "Turn on email notifications",
+              "required": false
             },
             {
               "paramType": "header",

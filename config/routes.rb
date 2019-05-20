@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :requests, only: [:create]
   resources :companies, only: [:show]
   resources :users do
     resources :companies, only: [:create, :update, :destroy]
