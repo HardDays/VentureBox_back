@@ -66,6 +66,13 @@
             },
             {
               "paramType": "form",
+              "name": "phone",
+              "type": "string",
+              "description": "User phone",
+              "required": false
+            },
+            {
+              "paramType": "form",
               "name": "password",
               "type": "string",
               "description": "User password",
