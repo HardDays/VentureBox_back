@@ -7,7 +7,9 @@ class RequestsController < ApplicationController
     param :form, :name, :string, :required, "Requestor name"
     param :form, :email, :string, :required, "Requestor website"
     param :form, :requested_name, :string, :optional, "Requested company info"
-    param_list :form, :interested_in, :string, :optional, "What requestor interested in", [:investing, :advisor, :purchasing]
+    param :form, :interested_in_investing, :boolean, :optional, "requestor interested in"
+    param :form, :interested_in_advisor, :boolean, :optional, "requestor interested in"
+    param :form, :interested_in_purchasing, :boolean, :optional, "requestor interested in"
     response :created
     response :unprocessable_entity
   end
@@ -23,6 +25,6 @@ class RequestsController < ApplicationController
 
   private
     def request_params
-      params.permit(:name, :email, :requested_name, :interested_in)
+      params.permit(:name, :email, :requested_name, :interested_in_investing, :interested_in_advisor, :interested_in_purchasing)
     end
 end
