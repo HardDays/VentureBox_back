@@ -15,7 +15,7 @@ class RequestsController < ApplicationController
     @request = Request.new(request_params)
 
     if @request.save
-      render json: @request, status: :created, location: @request
+      render json: @request, status: :created
     else
       render json: @request.errors, status: :unprocessable_entity
     end
