@@ -5,7 +5,7 @@ class RequestsController < ApplicationController
   swagger_api :create do
     summary "Request info"
     param :form, :name, :string, :required, "Requestor name"
-    param :form, :email, :string, :required, "Requestor website"
+    param :form, :email, :string, :required, "Requestor email"
     param :form, :requested_name, :string, :optional, "Requested company info"
     param :form, :interested_in_investing, :boolean, :optional, "requestor interested in"
     param :form, :interested_in_advisor, :boolean, :optional, "requestor interested in"
