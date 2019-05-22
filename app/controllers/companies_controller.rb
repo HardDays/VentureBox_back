@@ -107,6 +107,10 @@ class CompaniesController < ApplicationController
       unless @company.user_id == @user.id
         render json: {errors: :WRONG_COMPANY_ID}, status: :forbidden
       end
+
+      if @user.company.exists?
+        render json: {errors: :ALREADY_HAVE_COMPANY}, status: :forbidden
+      end
     end
 
     def company_params

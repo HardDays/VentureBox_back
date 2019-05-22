@@ -37,14 +37,14 @@ class AuthenticationController < ApplicationController
     # password = SecureRandom.hex(4)
     password = '0000'
     @user.password = password
-    # begin
+    begin
       ForgotPasswordMailer.forgot_password_email(params[:email], password).deliver
 
       @user.save(validate: false)
       render status: :ok
-    # rescue => ex
-    #   render status: :bad_request
-    # end
+    rescue => ex
+      render status: :bad_request
+    end
   end
 
 
