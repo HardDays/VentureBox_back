@@ -111,7 +111,7 @@ class CompaniesController < ApplicationController
     end
 
     def check_company_exists
-      if @user.company.exists?
+      if @user.company
         render json: {errors: :ALREADY_HAVE_COMPANY}, status: :forbidden and return
       end
     end
