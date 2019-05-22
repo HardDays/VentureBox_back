@@ -4,8 +4,8 @@
   "basePath": "https://venture-box-back.herokuapp.com",
   "apis": [
     {
-      "path": "/api/1.0/requests.{format}",
-      "description": "Request info"
+      "path": "/api/1.0/company_items.{format}",
+      "description": "Company items"
     },
     {
       "path": "/api/1.0/companies.{format}",

@@ -5,4 +5,5 @@ RSpec.describe Company, type: :model do
   it { should validate_presence_of(:website) }
 
   it { should belong_to(:user) }
+  it { should have_many(:company_items).dependent(:destroy) }
 end
