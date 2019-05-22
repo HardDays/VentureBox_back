@@ -2,6 +2,7 @@ class CompaniesController < ApplicationController
   before_action :authorize_startup, only: [:create, :update, :destroy]
   before_action :set_company, only: [:show, :update, :destroy]
   before_action :check_company_ownership, only: [:update, :destroy]
+  before_action :check_company_exists, only: [:create]
   swagger_controller :company, "Startup company"
 
   # GET /companies/1
@@ -105,11 +106,13 @@ class CompaniesController < ApplicationController
 
     def check_company_ownership
       unless @company.user_id == @user.id
-        render json: {errors: :WRONG_COMPANY_ID}, status: :forbidden
+        render json: {errors: :WRONG_COMPANY_ID}, status: :forbidden and return
       end
+    end
 
+    def check_company_exists
       if @user.company.exists?
-        render json: {errors: :ALREADY_HAVE_COMPANY}, status: :forbidden
+        render json: {errors: :ALREADY_HAVE_COMPANY}, status: :forbidden and return
       end
     end
 
