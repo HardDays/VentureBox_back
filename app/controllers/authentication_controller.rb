@@ -30,7 +30,7 @@ class AuthenticationController < ApplicationController
       @attempt.attempts_count += 1
       @attempt.save
     else
-      @attempt = ForgotPasswordAttempt.new(user_id: @user.id, attempt_count: 1)
+      @attempt = ForgotPasswordAttempt.new(user_id: @user.id, attempts_count: 1)
       @attempt.save
     end
 
