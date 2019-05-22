@@ -38,4 +38,10 @@ RailsAdmin.config do |config|
     # history_index
     # history_show
   end
+
+  config.authorize_with do
+    authenticate_or_request_with_http_basic('Site Message') do |username, password|
+      username == ENV.fetch('ADMIN_LOGIN') && password == ENV.fetch('ADMIN_PASSWORD')
+    end
+  end
 end

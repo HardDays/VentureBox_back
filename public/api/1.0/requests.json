@@ -21,7 +21,7 @@
               "paramType": "form",
               "name": "email",
               "type": "string",
-              "description": "Requestor website",
+              "description": "Requestor email",
               "required": true
             },
             {

@@ -3,7 +3,7 @@ module AuthenticationHelper
 
   def self.process_token(request, user)
     if request.ip and request.user_agent
-      token_str = Digest::SHA256.hexdigest(user.id + request.ip + request.user_agent + SALT)
+      token_str = Digest::SHA256.hexdigest(user.id.to_s + request.ip + request.user_agent + SALT)
     else
       token_str = SecureRandom.hex
     end
