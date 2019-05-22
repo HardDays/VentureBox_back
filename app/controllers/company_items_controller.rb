@@ -70,7 +70,7 @@ class CompanyItemsController < ApplicationController
   end
 
   # GET /users/1/companies/1/company_items/1
-  swagger_api :my_items do
+  swagger_api :my_item do
     summary "Retrieve my company item"
     param :path, :user_id, :integer, :required, "User id"
     param :path, :company_id, :integer, :required, "Company id"
@@ -84,11 +84,11 @@ class CompanyItemsController < ApplicationController
     response :forbidden
   end
   def my_item
-    ender json: @company_item, status: :ok
+    render json: @company_item, status: :ok
   end
 
   # POST /users/1/companies/1/company_items
-  swagger_api :my_items do
+  swagger_api :create do
     summary "Create my company item"
     param :path, :user_id, :integer, :required, "User id"
     param :path, :company_id, :integer, :required, "Company id"
@@ -116,7 +116,7 @@ class CompanyItemsController < ApplicationController
   end
 
   # PATCH/PUT /users/1/companies/1/company_items/1
-  swagger_api :my_items do
+  swagger_api :update do
     summary "Update my company item"
     param :path, :user_id, :integer, :required, "User id"
     param :path, :company_id, :integer, :required, "Company id"
@@ -143,7 +143,7 @@ class CompanyItemsController < ApplicationController
   end
 
   # DELETE /users/1/companies/1/company_items/1
-  swagger_api :my_items do
+  swagger_api :destroy do
     summary "Update my company item"
     param :path, :user_id, :integer, :required, "User id"
     param :path, :company_id, :integer, :required, "Company id"
