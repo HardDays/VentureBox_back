@@ -8,39 +8,6 @@
       "path": "/users.json",
       "operations": [
         {
-          "summary": "Retrieve users list",
-          "parameters": [
-            {
-              "paramType": "query",
-              "name": "limit",
-              "type": "integer",
-              "description": "Limit",
-              "required": false
-            },
-            {
-              "paramType": "query",
-              "name": "offset",
-              "type": "integer",
-              "description": "Offset",
-              "required": false
-            }
-          ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            }
-          ],
-          "nickname": "Users#index",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users.json",
-      "operations": [
-        {
           "summary": "Create user",
           "parameters": [
             {
@@ -136,6 +103,13 @@
               "type": "integer",
               "description": "User id",
               "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
             }
           ],
           "responseMessages": [
@@ -143,6 +117,11 @@
               "code": 200,
               "responseModel": null,
               "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
             },
             {
               "code": 404,
