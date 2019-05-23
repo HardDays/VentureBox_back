@@ -4,6 +4,10 @@
   "basePath": "https://venture-box-back.herokuapp.com",
   "apis": [
     {
+      "path": "/api/1.0/startup_news.{format}",
+      "description": "Startup news"
+    },
+    {
       "path": "/api/1.0/company_items.{format}",
       "description": "Company items"
     },

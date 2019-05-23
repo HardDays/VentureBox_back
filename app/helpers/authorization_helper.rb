@@ -17,4 +17,14 @@ module AuthorizationHelper
 
     @user
   end
+
+  def self.authorize_investor(request)
+    @user = self.authorize(request)
+
+    unless @user.role == 'investor'
+      return nil
+    end
+
+    @user
+  end
 end

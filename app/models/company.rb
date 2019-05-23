@@ -4,4 +4,5 @@ class Company < ApplicationRecord
 
   belongs_to :user
   has_many :company_items, dependent: :destroy
+  has_many :startup_news, dependent: :destroy
 end
