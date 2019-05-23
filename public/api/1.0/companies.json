@@ -5,6 +5,46 @@
   "resourcePath": "companies",
   "apis": [
     {
+      "path": "/companies.json",
+      "operations": [
+        {
+          "summary": "Retrieve companies",
+          "parameters": [
+            {
+              "paramType": "query",
+              "name": "limit",
+              "type": "integer",
+              "description": "Limit",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "offset",
+              "type": "integer",
+              "description": "Offset",
+              "required": false
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            }
+          ],
+          "nickname": "Companies#index",
+          "method": "get"
+        }
+      ]
+    },
+    {
       "path": "/companies/{id}.json",
       "operations": [
         {

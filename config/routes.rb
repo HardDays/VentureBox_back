@@ -6,9 +6,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :companies, only: [:show]
-  resources :users do
+  resources :companies, only: [:index, :show]
+  resources :users, except: [:index] do
     resources :companies, only: [:create, :update, :destroy] do
+      member do
+        get :my, path: ""
+      end
       resources :company_items, only: [:create, :update, :destroy]  do
         collection do
           get :my_items, path: ""

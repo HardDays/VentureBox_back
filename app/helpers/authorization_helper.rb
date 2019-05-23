@@ -11,6 +11,10 @@ module AuthorizationHelper
   def self.authorize_startup(request)
     @user = self.authorize(request)
 
+    unless @user
+      return nil
+    end
+
     unless @user.role == 'startup'
       return nil
     end
@@ -20,6 +24,10 @@ module AuthorizationHelper
 
   def self.authorize_investor(request)
     @user = self.authorize(request)
+
+    unless @user
+      return nil
+    end
 
     unless @user.role == 'investor'
       return nil

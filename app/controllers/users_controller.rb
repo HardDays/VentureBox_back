@@ -1,29 +1,14 @@
 class UsersController < ApplicationController
-  before_action :authorize_user, only: [:update, :destroy]
-  before_action :set_user, only: [:show]
+  before_action :authorize_user, only: [:show, :update, :destroy]
   swagger_controller :user, 'User'
-
-  # GET /users
-  swagger_api :index do
-    summary "Retrieve users list"
-    param :query, :limit, :integer, :optional, "Limit"
-    param :query, :offset, :integer, :optional, "Offset"
-    response :ok
-  end
-  def index
-    @users = User.all
-
-    render json: {
-      count: @users.count,
-      items: @users.limit(params[:limit]).offset(params[:offset])
-    }, status: :ok
-  end
 
   # GET /users/1
   swagger_api :show do
     summary "Retrieve user info"
     param :path, :id, :integer, :required, "User id"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
+    response :unauthorized
     response :not_found
   end
   def show
@@ -113,14 +98,6 @@ class UsersController < ApplicationController
 
       if @user.id != params[:id].to_i
         render json: {errors: :WRONG_USER_ID}, status: :forbidden and return
-      end
-    end
-
-    def set_user
-      begin
-        @user = User.find(params[:id])
-      rescue
-        render status: :not_found and return
       end
     end
 

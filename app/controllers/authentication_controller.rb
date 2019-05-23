@@ -59,7 +59,11 @@ class AuthenticationController < ApplicationController
     response :unauthorized
   end
   def login
-    @password = User.encrypt_password(params[:password])
+    if params[:password]
+      @password = User.encrypt_password(params[:password])
+    else
+      render status: :forbidden and return
+    end
 
     if params[:email]
       @user = User.find_by("LOWER(email) = ?", params[:email].downcase)

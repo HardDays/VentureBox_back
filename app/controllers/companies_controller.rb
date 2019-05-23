@@ -1,18 +1,51 @@
 class CompaniesController < ApplicationController
-  before_action :authorize_startup, only: [:create, :update, :destroy]
-  before_action :set_company, only: [:show, :update, :destroy]
-  before_action :check_company_ownership, only: [:update, :destroy]
+  before_action :authorize_investor, only: [:index, :show]
+  before_action :authorize_startup, only: [:my, :create, :update, :destroy]
+  before_action :set_company, only: [:show, :my, :update, :destroy]
+  before_action :check_company_ownership, only: [:my, :update, :destroy]
   before_action :check_company_exists, only: [:create]
   swagger_controller :company, "Startup company"
+
+  # GET /companies
+  swagger_api :index do
+    summary "Retrieve companies"
+    param :query, :limit, :integer, :optional, "Limit"
+    param :query, :offset, :integer, :optional, "Offset"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
+    response :ok
+    response :unauthorized
+  end
+  def index
+    @companies = Company.all
+
+    render json: {
+      count: @companies.count,
+      items: @companies.limit(params[:limit]).offset(params[:offset])
+    }, status: :ok
+  end
 
   # GET /companies/1
   swagger_api :show do
     summary "Retrieve company info"
     param :path, :id, :integer, :required, "Company id"
     response :ok
+    response :unauthorized
     response :not_found
   end
   def show
+    render json: @company, status: :ok
+  end
+
+  # GET /users/1/companies/1
+  swagger_api :my do
+    summary "Retrieve my company info"
+    param :path, :id, :integer, :required, "Company id"
+    response :ok
+    response :forbidden
+    response :unauthorized
+    response :not_found
+  end
+  def my
     render json: @company, status: :ok
   end
 
@@ -84,6 +117,14 @@ class CompaniesController < ApplicationController
   end
 
   private
+    def authorize_investor
+      @user = AuthorizationHelper.authorize_investor(request)
+
+      if @user == nil
+        render status: :unauthorized and return
+      end
+    end
+
     def authorize_startup
       @user = AuthorizationHelper.authorize_startup(request)
 

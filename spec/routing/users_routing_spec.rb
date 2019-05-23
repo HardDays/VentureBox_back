@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe UsersController, type: :routing do
   describe "routing" do
     it "routes to #index" do
-      expect(:get => "/users").to route_to("users#index")
+      expect(:get => "/users").not_to be_routable
     end
 
     it "routes to #show" do
