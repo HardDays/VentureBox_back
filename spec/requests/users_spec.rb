@@ -35,6 +35,11 @@ RSpec.describe "Users", type: :request do
   let(:investor_password_not_match) { { name: "name", surname: "surname", email: "email@email.com", phone: "79510661020",
                              password: password, password_confirmation: "123", role: "investor", goals: "goals" } }
 
+  let(:startup_email_invalid) { { name: "name", surname: "surname", email: "emailemail.com", phone: "79510661020",
+                             password: password, password_confirmation: password, role: "startup", goals: "goals" } }
+  let(:investor_email_invalid) { { name: "name", surname: "surname", email: "emailemail.com", phone: "79510661020",
+                             password: password, password_confirmation: password, role: "investor", goals: "goals" } }
+
   let(:without_role) { { name: "name", surname: "surname", email: "email@email.com", phone: "79510661020",
                              password: password, password_confirmation: password, goals: "goals" } }
 
@@ -90,34 +95,235 @@ RSpec.describe "Users", type: :request do
     end
   end
 
-  # Test suite for POST /users/1/companies/
-  describe 'POST /users/1/companies' do
-    context 'when the request is valid' do
-      before do
-        post "/auth/login", params: { email: new_user.email, password: password}
-        token = json['token']
+  # Test suite for POST /users/
+  describe 'POST /users/' do
+    context 'startup' do
+      context 'when the request is valid' do
+        before do
+          post "/users", params: valid_attributes_startup
+        end
 
-        post "/users/#{new_user.id}/companies", params: valid_attributes, headers: { 'Authorization': token }
+        it 'creates a user' do
+          expect(json['name']).to eq('name')
+          expect(json['surname']).to eq('surname')
+          expect(json['email']).to eq('email@email.com')
+          expect(json['role']).to eq('startup')
+          expect(json['phone']).to eq('79510661020')
+          expect(json['goals']).to eq('goals')
+          expect(json['password']).not_to be_present
+        end
+
+        it 'returns status code 201' do
+          expect(response).to have_http_status(201)
+        end
       end
 
-      it 'creates a company' do
-        expect(json['name']).to eq('name')
-        expect(json['description']).to eq('description')
-        expect(json['website']).to eq('domain.com')
-        expect(user.company).not_to be_nil
+      context 'when the request without name' do
+        before do
+          post "/users", params: startup_without_name
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"name\":[\"can't be blank\"]}")
+        end
       end
 
-      it 'returns status code 201' do
-        expect(response).to have_http_status(201)
+      context 'when the request without surname' do
+        before do
+          post "/users", params: startup_without_surname
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"surname\":[\"can't be blank\"]}")
+        end
+      end
+
+      context 'when the request without email' do
+        before do
+          post "/users", params: startup_without_email
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"email\":[\"can't be blank\"]}")
+        end
+      end
+
+      context 'when the request without password' do
+        before do
+          post "/users", params: startup_without_password
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"password\":[\"can't be blank\"]}")
+        end
+      end
+
+      context 'when the request password not match' do
+        before do
+          post "/users", params: startup_password_not_match
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"password_confirmation\":[\"NOT_MATCHED\"]}")
+        end
+      end
+
+      context 'when the request email not valid' do
+        before do
+          post "/users", params: startup_email_invalid
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"email\":[\"is invalid\"]}")
+        end
       end
     end
 
-    context 'when the request without name' do
-      before do
-        post "/auth/login", params: { email: new_user.email, password: password}
-        token = json['token']
+    context 'investor' do
+      context 'when the request is valid' do
+        before do
+          post "/users", params: valid_attributes_investor
+        end
 
-        post "/users/#{new_user.id}/companies", params: without_name, headers: { 'Authorization': token }
+        it 'creates a user' do
+          expect(json['name']).to eq('name')
+          expect(json['surname']).to eq('surname')
+          expect(json['email']).to eq('email@email.com')
+          expect(json['role']).to eq('investor')
+          expect(json['phone']).to eq('79510661020')
+          expect(json['goals']).to eq('goals')
+          expect(json['password']).not_to be_present
+        end
+
+        it 'returns status code 201' do
+          expect(response).to have_http_status(201)
+        end
+      end
+
+      context 'when the request without name' do
+        before do
+          post "/users", params: investor_without_name
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"name\":[\"can't be blank\"]}")
+        end
+      end
+
+      context 'when the request without surname' do
+        before do
+          post "/users", params: investor_without_surname
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"surname\":[\"can't be blank\"]}")
+        end
+      end
+
+      context 'when the request without email' do
+        before do
+          post "/users", params: investor_without_email
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"email\":[\"can't be blank\"]}")
+        end
+      end
+
+      context 'when the request without password' do
+        before do
+          post "/users", params: investor_without_password
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"password\":[\"can't be blank\"]}")
+        end
+      end
+
+      context 'when the request password not match' do
+        before do
+          post "/users", params: investor_password_not_match
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"password_confirmation\":[\"NOT_MATCHED\"]}")
+        end
+      end
+
+      context 'when the request email not valid' do
+        before do
+          post "/users", params: investor_email_invalid
+        end
+
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match("{\"email\":[\"is invalid\"]}")
+        end
+      end
+    end
+
+    context 'creation without role' do
+      before do
+        post "/users", params: without_role
       end
 
       it 'returns status code 422' do
@@ -126,175 +332,24 @@ RSpec.describe "Users", type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match("{\"name\":[\"can't be blank\"]}")
-      end
-    end
-
-    context 'when the request without website' do
-      before do
-        post "/auth/login", params: { email: new_user.email, password: password}
-        token = json['token']
-
-        post "/users/#{new_user.id}/companies", params: without_website, headers: { 'Authorization': token }
-      end
-
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
-
-      it 'returns a validation failure message' do
-        expect(response.body)
-          .to match("{\"website\":[\"can't be blank\"]}")
-      end
-    end
-
-    context 'when already have company' do
-      before do
-        post "/auth/login", params: { email: user.email, password: password}
-        token = json['token']
-
-        post "/users/#{user.id}/companies", params: valid_attributes, headers: { 'Authorization': token }
-      end
-
-      it 'returns status code 403' do
-        expect(response).to have_http_status(403)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-    end
-
-    context 'when i am not startup' do
-      before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        post "/users/#{new_user.id}/companies", params: valid_attributes, headers: { 'Authorization': token }
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-    end
-
-    context 'when the user unauthorized' do
-      before do
-        post "/users/1/companies", params: valid_attributes
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
+          .to match("{\"role\":[\"can't be blank\"]}")
       end
     end
   end
 
-  # Test suite for PATCH /users/1/companies/1
-  describe 'PATCH /users/1/companies/1' do
+  # Test suite for PATCH /users/1
+  describe 'PATCH /users/1' do
+    # TODO:
+  end
+
+  # Test suite for DELETE /users/1
+  describe 'DELETE /users/1' do
     context 'when the request is valid' do
       before do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        patch "/users/#{user.id}/companies/#{company.id}", params: valid_attributes1, headers: { 'Authorization': token }
-      end
-
-      it 'updates a company' do
-        expect(json['name']).to eq('name1')
-        expect(json['description']).to eq('description1')
-        expect(json['website']).to eq('domain1.com')
-        expect(user.company).not_to be_nil
-      end
-
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
-      end
-    end
-
-    context 'when company does not exists' do
-      let(:company_id) { 0 }
-
-      before do
-        post "/auth/login", params: { email: user.email, password: password}
-        token = json['token']
-
-        patch "/users/#{user.id}/companies/#{company_id}", params: valid_attributes, headers: { 'Authorization': token }
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
-    end
-
-    context 'when not my company' do
-      before do
-        post "/auth/login", params: { email: user.email, password: password}
-        token = json['token']
-
-        patch "/users/#{user.id}/companies/#{company2.id}", params: valid_attributes, headers: { 'Authorization': token }
-      end
-
-      it 'returns status code 403' do
-        expect(response).to have_http_status(403)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-    end
-
-    context 'when i am not startup' do
-      before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        patch "/users/#{user.id}/companies/#{company.id}", params: valid_attributes, headers: { 'Authorization': token }
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-    end
-
-    context 'when the user unauthorized' do
-      before do
-        patch "/users/#{user.id}/companies/#{company.id}", params: valid_attributes
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-    end
-  end
-
-  # Test suite for DELETE /users/1/companies/1
-  describe 'DELETE /users/1/companies/1' do
-    context 'when the request is valid' do
-      before do
-        post "/auth/login", params: { email: user.email, password: password}
-        token = json['token']
-
-        delete "/users/#{user.id}/companies/#{company.id}", params: valid_attributes, headers: { 'Authorization': token }
+        delete "/users/#{user.id}", headers: { 'Authorization': token }
       end
 
       it 'response is empty' do
@@ -306,31 +361,31 @@ RSpec.describe "Users", type: :request do
       end
     end
 
-    context 'when company does not exists' do
-      let(:company_id) { 0 }
+    context 'when user does not exists' do
+      let(:user_id) { 0 }
 
       before do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        delete "/users/#{user.id}/companies/#{company_id}", params: valid_attributes, headers: { 'Authorization': token }
+        delete "/users/#{user_id}", headers: { 'Authorization': token }
       end
 
       it 'response is empty' do
         expect(response.body).to match("")
       end
 
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
+      it 'returns status code 403' do
+        expect(response).to have_http_status(403)
       end
     end
 
-    context 'when not my company' do
+    context 'when not my user' do
       before do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        delete "/users/#{user.id}/companies/#{company2.id}", params: valid_attributes, headers: { 'Authorization': token }
+        delete "/users/#{user2.id}", headers: { 'Authorization': token }
       end
 
       it 'returns status code 403' do
@@ -342,26 +397,9 @@ RSpec.describe "Users", type: :request do
       end
     end
 
-    context 'when i am not startup' do
-      before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        delete "/users/#{user.id}/companies/#{company.id}", params: valid_attributes, headers: { 'Authorization': token }
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-    end
-
     context 'when the user unauthorized' do
       before do
-        delete "/users/#{user.id}/companies/#{company.id}", params: valid_attributes
+        delete "/users/#{user.id}"
       end
 
       it 'returns status code 401' do

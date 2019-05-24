@@ -1,9 +1,11 @@
 class User < ApplicationRecord
   validates_presence_of :name
   validates_presence_of :surname
-  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :email, presence: true, uniqueness: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, unless: Proc.new { |a| a.email.blank? }
 
-  validates :password, presence:true, length: {:within => 6..100}, :allow_blank => false
+  validates :password, presence:true
+  validates :password, length: {:within => 6..100}, unless: Proc.new { |a| a.password.blank? }
   before_save :encrypt, if: :password_changed?
   validates_confirmation_of :password, message: 'NOT_MATCHED'
   attr_accessor :password_confirmation
@@ -11,6 +13,7 @@ class User < ApplicationRecord
   validate :check_old, if: :password_changed?, on: :update
   attr_accessor :old_password
 
+  validates_presence_of :role
   enum role: [:startup, :investor]
 
   has_many :tokens, dependent: :destroy

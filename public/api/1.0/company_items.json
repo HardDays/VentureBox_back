@@ -240,6 +240,44 @@
       ]
     },
     {
+      "path": "/users/{user_id}/companies/{company_id}/company_items/{id}/image.json",
+      "operations": [
+        {
+          "summary": "Retrieve company item image",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Company item id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "CompanyItems#my_item_image",
+          "method": "get"
+        }
+      ]
+    },
+    {
       "path": "/users/{user_id}/companies/{company_id}/company_items.json",
       "operations": [
         {
