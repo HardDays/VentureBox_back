@@ -122,10 +122,6 @@ class StartupNewsController < ApplicationController
       if @user == nil
         render status: :unauthorized and return
       end
-
-      if @user.id != params[:user_id].to_i
-        render json: {errors: :WRONG_USER_ID}, status: :forbidden and return
-      end
     end
 
     def authorize_startup

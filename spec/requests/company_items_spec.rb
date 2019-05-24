@@ -671,10 +671,7 @@ RSpec.describe "CompanyItems", type: :request do
         post "/auth/login", params: {email: user2.email, password: password}
         token = json['token']
 
-        company_item.image = image
-        company_item.save
-
-        get "/users/#{user2.id}/companies/#{company.id}/company_items/#{company_item.id}/image", headers: {'Authorization': token}
+        post "/users/#{user2.id}/companies/#{company.id}/company_items", headers: {'Authorization': token}
       end
 
       it "returns nothing" do
@@ -817,7 +814,7 @@ RSpec.describe "CompanyItems", type: :request do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        delete "/users/#{user.id}/companies/#{company.id}/company_items/#{company_item.id}", params: valid_attributes, headers: { 'Authorization': token }
+        delete "/users/#{user.id}/companies/#{company.id}/company_items/#{company_item.id}", headers: { 'Authorization': token }
       end
 
       it 'response is empty' do
@@ -836,7 +833,7 @@ RSpec.describe "CompanyItems", type: :request do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        delete "/users/#{user.id}/companies/#{company.id}/company_items/#{company_item_id}", params: valid_attributes, headers: { 'Authorization': token }
+        delete "/users/#{user.id}/companies/#{company.id}/company_items/#{company_item_id}", headers: { 'Authorization': token }
       end
 
       it 'response is empty' do
