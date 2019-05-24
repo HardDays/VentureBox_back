@@ -1,8 +1,8 @@
 class CompanyItemsController < ApplicationController
-  before_action :authorize_user, except: [:index, :show, :item_image]
+  before_action :authorize_startup, except: [:index, :show, :item_image]
   before_action :set_company, except: [:index, :show, :item_image]
-  before_action :set_company_item, only: [:show, :item_image, :my_item, :update, :destroy]
-  before_action :check_company_item, only: [:my_item, :update, :destroy]
+  before_action :set_company_item, only: [:show, :item_image, :my_item, :my_item_image, :update, :destroy]
+  before_action :check_company_item, only: [:my_item, :my_item_image,  :update, :destroy]
   swagger_controller :company_items, "Company items"
 
   # GET /company_items
@@ -45,7 +45,7 @@ class CompanyItemsController < ApplicationController
       render json: {errors: :ITEM_NOT_FOUND}, status: :not_found and return
     end
 
-    send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
+    send_data Base64.decode64(@image), :type => 'image/png', :disposition => 'inline'
   end
 
   # GET /users/1/companies/1/company_items
@@ -85,6 +85,23 @@ class CompanyItemsController < ApplicationController
   end
   def my_item
     render json: @company_item, status: :ok
+  end
+
+  # GET /users/1/companies/1/company_items/1/image
+  swagger_api :my_item_image do
+    summary "Retrieve company item image"
+    param :path, :id, :integer, :required, "Company item id"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
+    response :ok
+    response :not_found
+  end
+  def my_item_image
+    @image = @company_item.image
+    unless @image
+      render json: {errors: :ITEM_NOT_FOUND}, status: :not_found and return
+    end
+
+    send_data Base64.decode64(@image), :type => 'image/png', :disposition => 'inline'
   end
 
   # POST /users/1/companies/1/company_items
@@ -161,8 +178,8 @@ class CompanyItemsController < ApplicationController
   end
 
   private
-    def authorize_user
-      @user = AuthorizationHelper.authorize(request)
+    def authorize_startup
+      @user = AuthorizationHelper.authorize_startup(request)
 
       if @user == nil
         render status: :unauthorized and return

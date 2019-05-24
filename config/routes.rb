@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         end
         member do
           get :my_item, path: ""
+          get :my_item_image, path: "image"
         end
       end
       resources :startup_news, only: [:create, :destroy] do

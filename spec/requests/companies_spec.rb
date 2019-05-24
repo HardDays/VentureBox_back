@@ -386,7 +386,7 @@ RSpec.describe "Companies", type: :request do
     end
 
     context 'when not authorized' do
-      before { get "/users/1/companies/#{company.id}" }
+      before { get "/users/#{user.id}/companies/#{company.id}" }
 
       it 'returns status code 401' do
         expect(response).to have_http_status(401)
@@ -490,7 +490,7 @@ RSpec.describe "Companies", type: :request do
     end
 
     context 'when not authorized' do
-      before { get "/users/1/companies/#{company.id}/image" }
+      before { get "/users/#{user.id}/companies/#{company.id}/image" }
 
       it 'returns status code 401' do
         expect(response).to have_http_status(401)
@@ -746,7 +746,7 @@ RSpec.describe "Companies", type: :request do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        delete "/users/#{user.id}/companies/#{company.id}", params: valid_attributes, headers: { 'Authorization': token }
+        delete "/users/#{user.id}/companies/#{company.id}", headers: { 'Authorization': token }
       end
 
       it 'response is empty' do
@@ -765,7 +765,7 @@ RSpec.describe "Companies", type: :request do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        delete "/users/#{user.id}/companies/#{company_id}", params: valid_attributes, headers: { 'Authorization': token }
+        delete "/users/#{user.id}/companies/#{company_id}", headers: { 'Authorization': token }
       end
 
       it 'response is empty' do
@@ -782,7 +782,7 @@ RSpec.describe "Companies", type: :request do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        delete "/users/#{user.id}/companies/#{company2.id}", params: valid_attributes, headers: { 'Authorization': token }
+        delete "/users/#{user.id}/companies/#{company2.id}", headers: { 'Authorization': token }
       end
 
       it 'returns status code 403' do
@@ -799,7 +799,7 @@ RSpec.describe "Companies", type: :request do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
 
-        delete "/users/#{user.id}/companies/#{company.id}", params: valid_attributes, headers: { 'Authorization': token }
+        delete "/users/#{user.id}/companies/#{company.id}", headers: { 'Authorization': token }
       end
 
       it 'returns status code 401' do
@@ -813,7 +813,7 @@ RSpec.describe "Companies", type: :request do
 
     context 'when the user unauthorized' do
       before do
-        delete "/users/#{user.id}/companies/#{company.id}", params: valid_attributes
+        delete "/users/#{user.id}/companies/#{company.id}"
       end
 
       it 'returns status code 401' do
