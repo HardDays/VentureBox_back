@@ -6,5 +6,6 @@ RSpec.describe CompanyItem, type: :model do
   it { should validate_presence_of(:company_id) }
 
   it { should belong_to(:company) }
+  it { should have_one(:company_item_image).dependent(:destroy) }
   it { should have_many(:company_item_tags).dependent(:destroy) }
 end

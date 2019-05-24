@@ -40,37 +40,59 @@ class CompaniesController < ApplicationController
   swagger_api :image do
     summary "Get company image"
     param :path, :id, :integer, :required, "Company id"
+    param :query, :width, :integer, :optional, "Width to crop"
+    param :query, :height, :integer, :optional, "Height to crop"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
     response :not_found
   end
   def image
-    @image = @company.image
+    @image = @company.company_image
     unless @image
       render status: :not_found and return
     end
 
-    send_data Base64.decode64(@image), :type => 'image/png', :disposition => 'inline'
+    if params[:width] and params[:height]
+      resized = ResizedImage.find_by(image_id: @image.id, width: params[:width], height: params[:height])
+      unless resized
+        resized = ImageHelper.resize_company_image(@image.id, @image.base64, params[:width], params[:height])
+      end
+
+      @image = resized
+    end
+
+    send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
   end
 
-  # GET /users/1/companies/1
+  # GET /users/1/companies/1/image
   swagger_api :my_image do
     summary "Get my company image"
     param :path, :user_id, :integer, :required, "Startup user id"
     param :path, :id, :integer, :required, "Company id"
+    param :query, :width, :integer, :optional, "Width to crop"
+    param :query, :height, :integer, :optional, "Height to crop"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
     response :not_found
   end
   def my_image
-    @image = @company.image
+    @image = @company.company_image
     unless @image
       render status: :not_found and return
     end
 
-    send_data Base64.decode64(@image), :type => 'image/png', :disposition => 'inline'
+    if params[:width] and params[:height]
+      resized = ResizedImage.find_by(image_id: @image.id, width: params[:width], height: params[:height])
+      unless resized
+        resized = ImageHelper.resize_company_image(@image.id, @image.base64, params[:width], params[:height])
+      end
+
+      @image = resized
+    end
+
+    send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
   end
 
   # GET /users/1/companies/1
@@ -108,6 +130,7 @@ class CompaniesController < ApplicationController
       @company.user_id = @user.id
 
       if @company.save
+        set_company_image
         render json: @company, status: :created
       else
         render json: @company.errors, status: :unprocessable_entity
@@ -135,7 +158,9 @@ class CompaniesController < ApplicationController
     response :unprocessable_entity
   end
   def update
+    remove_image
     if @company.update(company_params)
+      set_company_image
       render json: @company, status: :ok
     else
       render json: @company.errors, status: :unprocessable_entity
@@ -186,6 +211,19 @@ class CompaniesController < ApplicationController
       end
     end
 
+    def remove_image
+      if @company.company_image and params[:image]
+        @company.company_image.destroy
+      end
+    end
+
+    def set_company_image
+      if params[:image]
+        image = CompanyImage.new(base64: params[:image], company_id: @company.id)
+        image.save
+      end
+    end
+
     def check_company_exists
       if @user.company
         render json: {errors: :ALREADY_HAVE_COMPANY}, status: :forbidden and return
@@ -193,6 +231,6 @@ class CompaniesController < ApplicationController
     end
 
     def company_params
-      params.permit(:name, :website, :description, :contact_email, :image)
+      params.permit(:name, :website, :description, :contact_email)
     end
 end

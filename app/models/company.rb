@@ -5,6 +5,7 @@ class Company < ApplicationRecord
   validates :contact_email, :allow_blank => true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   belongs_to :user
+  has_one :company_image, dependent: :destroy
   has_many :company_items, dependent: :destroy
   has_many :startup_news, dependent: :destroy
 

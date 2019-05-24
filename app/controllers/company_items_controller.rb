@@ -35,17 +35,28 @@ class CompanyItemsController < ApplicationController
   # GET /company_items/1/image
   swagger_api :item_image do
     summary "Retrieve company item image"
+    param :query, :width, :integer, :optional, "Width to crop"
+    param :query, :height, :integer, :optional, "Height to crop"
     param :path, :id, :integer, :required, "Company item id"
     response :ok
     response :not_found
   end
   def item_image
-    @image = @company_item.image
+    @image = @company_item.company_item_image
     unless @image
       render json: {errors: :ITEM_NOT_FOUND}, status: :not_found and return
     end
 
-    send_data Base64.decode64(@image), :type => 'image/png', :disposition => 'inline'
+    if params[:width] and params[:height]
+      resized = ResizedImage.find_by(image_id: @image.id, width: params[:width], height: params[:height])
+      unless resized
+        resized = ImageHelper.resize_company_item_image(@image.id, @image.base64, params[:width], params[:height])
+      end
+
+      @image = resized
+    end
+
+    send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
   end
 
   # GET /users/1/companies/1/company_items
@@ -90,18 +101,31 @@ class CompanyItemsController < ApplicationController
   # GET /users/1/companies/1/company_items/1/image
   swagger_api :my_item_image do
     summary "Retrieve company item image"
+    param :path, :user_id, :integer, :required, "User id"
+    param :path, :company_id, :integer, :required, "Company id"
     param :path, :id, :integer, :required, "Company item id"
+    param :query, :width, :integer, :optional, "Width to crop"
+    param :query, :height, :integer, :optional, "Height to crop"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :not_found
   end
   def my_item_image
-    @image = @company_item.image
+    @image = @company_item.company_item_image
     unless @image
       render json: {errors: :ITEM_NOT_FOUND}, status: :not_found and return
     end
 
-    send_data Base64.decode64(@image), :type => 'image/png', :disposition => 'inline'
+    if params[:width] and params[:height]
+      resized = ResizedImage.find_by(image_id: @image.id, width: params[:width], height: params[:height])
+      unless resized
+        resized = ImageHelper.resize_company_item_image(@image.id, @image.base64, params[:width], params[:height])
+      end
+
+      @image = resized
+    end
+
+    send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
   end
 
   # POST /users/1/companies/1/company_items
@@ -126,6 +150,7 @@ class CompanyItemsController < ApplicationController
 
     if @company_item.save
       set_item_tags
+      set_item_image
       render json: @company_item, status: :created
     else
       render json: @company_item.errors, status: :unprocessable_entity
@@ -151,7 +176,9 @@ class CompanyItemsController < ApplicationController
     response :forbidden
   end
   def update
+    remove_image
     if @company_item.update(company_item_params)
+      set_item_image
       set_item_tags
       render json: @company_item, status: :ok
     else
@@ -232,7 +259,20 @@ class CompanyItemsController < ApplicationController
       end
     end
 
+    def set_item_image
+      if params[:image]
+        image = CompanyItemImage.new(base64: params[:image], company_item_id: @company_item.id)
+        image.save
+      end
+    end
+
+    def remove_image
+      if @company_item.company_item_image and params[:image]
+        @company_item.company_item_image.destroy
+      end
+    end
+
     def company_item_params
-      params.permit(:company_id, :image, :name, :price, :link_to_store, :description)
+      params.permit(:company_id, :name, :price, :link_to_store, :description)
     end
 end

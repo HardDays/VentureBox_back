@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_24_144823) do
+ActiveRecord::Schema.define(version: 2019_05_24_154706) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,8 +22,21 @@ ActiveRecord::Schema.define(version: 2019_05_24_144823) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "image"
     t.string "contact_email"
+  end
+
+  create_table "company_images", force: :cascade do |t|
+    t.integer "company_id"
+    t.string "base64"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "company_item_images", force: :cascade do |t|
+    t.integer "company_item_id"
+    t.string "base64"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "company_item_tags", force: :cascade do |t|
@@ -35,7 +48,6 @@ ActiveRecord::Schema.define(version: 2019_05_24_144823) do
 
   create_table "company_items", force: :cascade do |t|
     t.integer "company_id"
-    t.string "image"
     t.string "name"
     t.string "price"
     t.string "link_to_store"
@@ -47,6 +59,24 @@ ActiveRecord::Schema.define(version: 2019_05_24_144823) do
   create_table "forgot_password_attempts", force: :cascade do |t|
     t.integer "user_id"
     t.integer "attempts_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "resized_company_images", force: :cascade do |t|
+    t.integer "company_image_id"
+    t.string "base64"
+    t.integer "width"
+    t.integer "height"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "resized_company_item_images", force: :cascade do |t|
+    t.integer "company_item_image_id"
+    t.string "base64"
+    t.integer "width"
+    t.integer "height"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
