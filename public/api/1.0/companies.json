@@ -5,6 +5,49 @@
   "resourcePath": "companies",
   "apis": [
     {
+      "path": "/companies/{id}/image.json",
+      "operations": [
+        {
+          "summary": "Get company image",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Company id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Companies#image",
+          "method": "get"
+        }
+      ]
+    },
+    {
       "path": "/companies.json",
       "operations": [
         {
@@ -61,6 +104,13 @@
               "type": "integer",
               "description": "Company id",
               "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
             }
           ],
           "responseMessages": [
@@ -93,9 +143,23 @@
           "parameters": [
             {
               "paramType": "path",
+              "name": "user_id",
+              "type": "integer",
+              "description": "Startup user id",
+              "required": true
+            },
+            {
+              "paramType": "path",
               "name": "id",
               "type": "integer",
               "description": "Company id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
               "required": true
             }
           ],
@@ -122,6 +186,56 @@
             }
           ],
           "nickname": "Companies#my",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/{id}/image.json",
+      "operations": [
+        {
+          "summary": "Get my company image",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "type": "integer",
+              "description": "Startup user id",
+              "required": true
+            },
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Company id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Companies#my_image",
           "method": "get"
         }
       ]
@@ -158,6 +272,20 @@
               "name": "description",
               "type": "string",
               "description": "Company description",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "contact_email",
+              "type": "string",
+              "description": "Company contact email",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "image",
+              "type": "string",
+              "description": "Company logo",
               "required": false
             },
             {
@@ -229,6 +357,20 @@
               "name": "description",
               "type": "string",
               "description": "Company description",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "contact_email",
+              "type": "string",
+              "description": "Company contact email",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "image",
+              "type": "string",
+              "description": "Company logo",
               "required": false
             },
             {

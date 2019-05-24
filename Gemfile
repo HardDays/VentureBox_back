@@ -36,3 +36,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'swagger-docs'
 gem 'rails_admin', '~> 1.3'
 gem 'therubyracer'
+gem 'valid_url'

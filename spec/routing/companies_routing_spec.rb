@@ -10,8 +10,17 @@ RSpec.describe CompaniesController, type: :routing do
       expect(:get => "/companies/1").to route_to("companies#show", :id => "1")
     end
 
+    it "routes to #show" do
+      expect(:get => "/companies/1/image").to route_to("companies#image", :id => "1")
+    end
+
+
     it "routes to #my" do
-      expect(:get => "users/1/companies/1").to route_to("companies#my", :id => "1", :user_id => "1")
+      expect(:get => "/users/1/companies/1").to route_to("companies#my", :id => "1", :user_id => "1")
+    end
+
+    it "routes to #my" do
+      expect(:get => "/users/1/companies/1/image").to route_to("companies#my_image", :id => "1", :user_id => "1")
     end
 
     it "routes to #create" do

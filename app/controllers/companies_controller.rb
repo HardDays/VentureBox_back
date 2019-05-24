@@ -1,8 +1,8 @@
 class CompaniesController < ApplicationController
-  before_action :authorize_investor, only: [:index, :show]
-  before_action :authorize_startup, only: [:my, :create, :update, :destroy]
-  before_action :set_company, only: [:show, :my, :update, :destroy]
-  before_action :check_company_ownership, only: [:my, :update, :destroy]
+  before_action :authorize_investor, only: [:index, :show, :image]
+  before_action :authorize_startup, only: [:my, :my_image, :create, :update, :destroy]
+  before_action :set_company, only: [:show, :my, :image, :my_image, :update, :destroy]
+  before_action :check_company_ownership, only: [:my, :my_image, :update, :destroy]
   before_action :check_company_exists, only: [:create]
   swagger_controller :company, "Startup company"
 
@@ -28,6 +28,7 @@ class CompaniesController < ApplicationController
   swagger_api :show do
     summary "Retrieve company info"
     param :path, :id, :integer, :required, "Company id"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
     response :not_found
@@ -36,10 +37,49 @@ class CompaniesController < ApplicationController
     render json: @company, status: :ok
   end
 
+  # GET /companies/1
+  swagger_api :image do
+    summary "Get company image"
+    param :path, :id, :integer, :required, "Company id"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
+    response :ok
+    response :unauthorized
+    response :not_found
+  end
+  def image
+    @image = @company.image
+    unless @image
+      render status: :not_found and return
+    end
+
+    send_data Base64.decode64(@image), :type => 'image/png', :disposition => 'inline'
+  end
+
+  # GET /users/1/companies/1
+  swagger_api :my_image do
+    summary "Get my company image"
+    param :path, :user_id, :integer, :required, "Startup user id"
+    param :path, :id, :integer, :required, "Company id"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
+    response :ok
+    response :unauthorized
+    response :not_found
+  end
+  def my_image
+    @image = @company.image
+    unless @image
+      render status: :not_found and return
+    end
+
+    send_data Base64.decode64(@image), :type => 'image/png', :disposition => 'inline'
+  end
+
   # GET /users/1/companies/1
   swagger_api :my do
     summary "Retrieve my company info"
+    param :path, :user_id, :integer, :required, "Startup user id"
     param :path, :id, :integer, :required, "Company id"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :forbidden
     response :unauthorized
@@ -49,13 +89,15 @@ class CompaniesController < ApplicationController
     render json: @company, status: :ok
   end
 
-  # POST /companies
+  # POST /users/1/companies
   swagger_api :create do
     summary "Create company"
     param :path, :user_id, :integer, :required, "Startup user id"
     param :form, :name, :string, :required, "Company name"
     param :form, :website, :string, :required, "Company website"
     param :form, :description, :string, :optional, "Company description"
+    param :form, :contact_email, :string, :optional, "Company contact email"
+    param :form, :image, :string, :optional, "Company logo"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :created
     response :unauthorized
@@ -76,7 +118,7 @@ class CompaniesController < ApplicationController
     render json: {errors: :FAILED_SAVE_COMPANY}, status: :unprocessable_entity
   end
 
-  # PATCH/PUT /companies/1
+  # PATCH/PUT /users/1/companies/1
   swagger_api :update do
     summary "Update company info"
     param :path, :user_id, :integer, :required, "Startup user id"
@@ -84,6 +126,8 @@ class CompaniesController < ApplicationController
     param :form, :name, :string, :optional, "Company name"
     param :form, :website, :string, :optional, "Company website"
     param :form, :description, :string, :optional, "Company description"
+    param :form, :contact_email, :string, :optional, "Company contact email"
+    param :form, :image, :string, :optional, "Company logo"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
@@ -99,7 +143,7 @@ class CompaniesController < ApplicationController
     end
   end
 
-  # DELETE /companies/1
+  # DELETE /users/1/companies/1
   swagger_api :destroy do
     summary "Delete company"
     param :path, :user_id, :integer, :required, "Startup user id"
@@ -158,6 +202,6 @@ class CompaniesController < ApplicationController
     end
 
     def company_params
-      params.permit(:name, :website, :description)
+      params.permit(:name, :website, :description, :contact_email, :image)
     end
 end

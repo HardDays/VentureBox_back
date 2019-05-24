@@ -6,11 +6,16 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :companies, only: [:index, :show]
+  resources :companies, only: [:index, :show] do
+    member do
+      get :image
+    end
+  end
   resources :users, except: [:index] do
     resources :companies, only: [:create, :update, :destroy] do
       member do
         get :my, path: ""
+        get :my_image, path: "image"
       end
       resources :company_items, only: [:create, :update, :destroy]  do
         collection do

@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   validates_presence_of :name
   validates_presence_of :surname
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   validates :password, presence:true, length: {:within => 6..100}, :allow_blank => false
   before_save :encrypt, if: :password_changed?
