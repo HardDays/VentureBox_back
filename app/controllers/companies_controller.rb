@@ -1,5 +1,4 @@
 class CompaniesController < ApplicationController
-  before_action :authorize_investor, only: [:index, :show, :image]
   before_action :authorize_startup, only: [:my, :my_image, :create, :update, :destroy]
   before_action :set_company, only: [:show, :my, :image, :my_image, :update, :destroy]
   before_action :check_company_ownership, only: [:my, :my_image, :update, :destroy]
@@ -161,14 +160,6 @@ class CompaniesController < ApplicationController
   end
 
   private
-    def authorize_investor
-      @user = AuthorizationHelper.authorize_investor(request)
-
-      if @user == nil
-        render status: :unauthorized and return
-      end
-    end
-
     def authorize_startup
       @user = AuthorizationHelper.authorize_startup(request)
 

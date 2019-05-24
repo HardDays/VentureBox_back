@@ -26,10 +26,7 @@ RSpec.describe "Companies", type: :request do
   describe 'GET /companies' do
     context 'when simply get' do
       before do
-        post "/auth/login", params: {email: investor.email, password: password}
-        token = json['token']
-
-        get "/companies", headers: {'Authorization': token}
+        get "/companies"
       end
 
       it "return all companies" do
@@ -55,10 +52,7 @@ RSpec.describe "Companies", type: :request do
 
     context 'when use limit' do
       before do
-        post "/auth/login", params: {email: investor.email, password: password}
-        token = json['token']
-
-        get "/companies", params: {limit: 2}, headers: {'Authorization': token}
+        get "/companies", params: {limit: 2}
       end
 
       it "returns 2 entities" do
@@ -83,10 +77,7 @@ RSpec.describe "Companies", type: :request do
 
     context 'when use offset' do
       before do
-        post "/auth/login", params: {email: investor.email, password: password}
-        token = json['token']
-
-        get "/companies", params: {offset: 2}, headers: {'Authorization': token}
+        get "/companies", params: {offset: 2}
       end
 
       it "returns response with offset" do
@@ -108,47 +99,13 @@ RSpec.describe "Companies", type: :request do
         expect(response).to have_http_status(200)
       end
     end
-
-    context 'when i am not investor' do
-      before do
-        post "/auth/login", params: {email: user.email, password: password}
-        token = json['token']
-
-        get "/companies", params: {offset: 2}, headers: {'Authorization': token}
-      end
-
-      it "returns nothing" do
-        expect(response.body).to match("")
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-    end
-
-    context 'when not authorized' do
-      before do
-        get "/companies"
-      end
-
-      it "returns nothing" do
-        expect(response.body).to match("")
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-    end
   end
 
   # Test suite for GET /companies/1
   describe 'GET /companies/1' do
     context 'when the record exists' do
       before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        get "/companies/#{company.id}", headers: { 'Authorization': token }
+        get "/companies/#{company.id}"
       end
 
       it 'returns the company' do
@@ -174,43 +131,11 @@ RSpec.describe "Companies", type: :request do
       let(:company_id) { 0 }
 
       before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        get "/companies/#{company_id}", headers: { 'Authorization': token }
+        get "/companies/#{company_id}"
       end
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
-      end
-
-      it 'returns a not found message' do
-        expect(response.body).to match("")
-      end
-    end
-
-    context 'when i am not investor' do
-      before do
-        post "/auth/login", params: {email: user.email, password: password}
-        token = json['token']
-
-        get "/companies/#{company.id}", headers: {'Authorization': token}
-      end
-
-      it "returns nothing" do
-        expect(response.body).to match("")
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-    end
-
-    context 'when not authorized' do
-      before { get "/companies/#{company.id}" }
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
       end
 
       it 'returns a not found message' do
@@ -223,13 +148,10 @@ RSpec.describe "Companies", type: :request do
   describe 'GET /companies/1/image' do
     context 'when the record exists' do
       before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
         company.image = image
         company.save
 
-        get "/companies/#{company.id}/image", headers: { 'Authorization': token }
+        get "/companies/#{company.id}/image"
       end
 
       it 'returns status code 200' do
@@ -241,10 +163,7 @@ RSpec.describe "Companies", type: :request do
       let(:company_id) { 0 }
 
       before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        get "/companies/#{company_id}/image", headers: { 'Authorization': token }
+        get "/companies/#{company_id}/image"
       end
 
       it 'returns status code 404' do
@@ -258,43 +177,11 @@ RSpec.describe "Companies", type: :request do
 
     context 'when the image does not exist' do
       before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        get "/companies/#{company.id}/image", headers: { 'Authorization': token }
+        get "/companies/#{company.id}/image"
       end
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
-      end
-
-      it 'returns a not found message' do
-        expect(response.body).to match("")
-      end
-    end
-
-    context 'when i am not investor' do
-      before do
-        post "/auth/login", params: {email: user.email, password: password}
-        token = json['token']
-
-        get "/companies/#{company.id}/image", headers: {'Authorization': token}
-      end
-
-      it "returns nothing" do
-        expect(response.body).to match("")
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-    end
-
-    context 'when not authorized' do
-      before { get "/companies/#{company.id}/image" }
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
       end
 
       it 'returns a not found message' do
