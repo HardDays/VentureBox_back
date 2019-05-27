@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_24_154706) do
+ActiveRecord::Schema.define(version: 2019_05_27_084909) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,16 @@ ActiveRecord::Schema.define(version: 2019_05_24_154706) do
   create_table "forgot_password_attempts", force: :cascade do |t|
     t.integer "user_id"
     t.integer "attempts_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "invested_companies", force: :cascade do |t|
+    t.integer "investor_id"
+    t.integer "company_id"
+    t.string "contact_email"
+    t.integer "investment"
+    t.integer "evaluation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

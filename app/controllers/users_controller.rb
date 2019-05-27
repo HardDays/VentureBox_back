@@ -70,7 +70,7 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1/change_email
   swagger_api :change_email do
-    summary "Update user password"
+    summary "Update user email"
     param :path, :id, :integer, :required, "User id"
     param :form, :email, :string, :required, "User new email"
     param :form, :current_email, :string, :required, "User old email"
@@ -91,7 +91,7 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1/change_general
   swagger_api :change_general do
-    summary "Update user password"
+    summary "Update user general info"
     param :path, :id, :integer, :required, "User id"
     param :form, :name, :string, :required, "User name"
     param :form, :surname, :string, :required, "User surname"

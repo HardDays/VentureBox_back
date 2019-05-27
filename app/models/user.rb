@@ -22,9 +22,10 @@ class User < ApplicationRecord
   validates_presence_of :role
   enum role: [:startup, :investor]
 
+  has_one :company, dependent: :destroy
   has_many :tokens, dependent: :destroy
   has_many :forgot_password_attempts, dependent: :destroy
-  has_one :company, dependent: :destroy
+  has_many :invested_companies, foreign_key: :investor_id, dependent: :destroy
 
   SALT = ENV.fetch("PASSWORD_SALT")
 

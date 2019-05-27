@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :invested_companies, only: [:index]
   resources :startup_news, only: [:index, :show]
   resources :company_items, only: [:index, :show] do
     member do
@@ -9,8 +10,11 @@ Rails.application.routes.draw do
   resources :companies, only: [:index, :show] do
     member do
       get :image
+
+      resources :invested_companies, only: [:create]
     end
   end
+
   resources :users, except: [:index, :update] do
     member do
       patch :change_password
@@ -22,6 +26,12 @@ Rails.application.routes.draw do
       member do
         get :my, path: ""
         get :my_image, path: "image"
+
+        resources :invested_companies, path: "investors", only: [] do
+          collection do
+            get :my_investors, path: ""
+          end
+        end
       end
 
       resources :company_items, only: [:create, :update, :destroy]  do

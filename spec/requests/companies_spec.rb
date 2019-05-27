@@ -43,9 +43,9 @@ RSpec.describe "Companies", type: :request do
         expect(json['items'].size).to eq(3)
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
-        expect(json['items'][0]["website"]).to be_a_kind_of(String)
-        expect(json['items'][0]["description"]).to be_a_kind_of(String)
-        expect(json['items'][0]["contact_email"]).to be_a_kind_of(String)
+        expect(json['items'][0]["website"]).not_to be_present
+        expect(json['items'][0]["description"]).not_to be_present
+        expect(json['items'][0]["contact_email"]).not_to be_present
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -68,9 +68,9 @@ RSpec.describe "Companies", type: :request do
       it "return all company info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
-        expect(json['items'][0]["website"]).to be_a_kind_of(String)
-        expect(json['items'][0]["description"]).to be_a_kind_of(String)
-        expect(json['items'][0]["contact_email"]).to be_a_kind_of(String)
+        expect(json['items'][0]["website"]).not_to be_present
+        expect(json['items'][0]["description"]).not_to be_present
+        expect(json['items'][0]["contact_email"]).not_to be_present
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -93,9 +93,9 @@ RSpec.describe "Companies", type: :request do
       it "return all company info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
-        expect(json['items'][0]["website"]).to be_a_kind_of(String)
-        expect(json['items'][0]["description"]).to be_a_kind_of(String)
-        expect(json['items'][0]["contact_email"]).to be_a_kind_of(String)
+        expect(json['items'][0]["website"]).not_to be_present
+        expect(json['items'][0]["description"]).not_to be_present
+        expect(json['items'][0]["contact_email"]).not_to be_present
         expect(json['items'][0]["image"]).not_to be_present
       end
 

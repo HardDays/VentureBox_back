@@ -8,9 +8,16 @@ class Company < ApplicationRecord
   has_one :company_image, dependent: :destroy
   has_many :company_items, dependent: :destroy
   has_many :startup_news, dependent: :destroy
+  has_many :invested_companies, dependent: :destroy
 
   def as_json(options={})
     res = super(options)
+
+    if options[:list]
+      res.delete('website')
+      res.delete('description')
+      res.delete('contact_email')
+    end
 
     res.delete('image')
     res
