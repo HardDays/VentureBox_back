@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :interesting_companies, only: [:index, :destroy]
   resources :invested_companies, only: [:index]
   resources :startup_news, only: [:index, :show]
   resources :company_items, only: [:index, :show] do
@@ -12,6 +13,7 @@ Rails.application.routes.draw do
       get :image
 
       resources :invested_companies, only: [:create]
+      resources :interesting_companies, only: [:create]
     end
   end
 

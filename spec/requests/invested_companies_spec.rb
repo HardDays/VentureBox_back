@@ -11,6 +11,9 @@ RSpec.describe "InvestedCompanies", type: :request do
   let!(:user3)  { create(:user, password: password, password_confirmation: password, role: :startup) }
   let!(:company3) { create(:company, user_id: user3.id) }
 
+  let!(:user4)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:company4) { create(:company, user_id: user4.id) }
+
   let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
   let!(:invested_company1) { create(:invested_company, company_id: company.id, investor_id: investor.id)}
   let!(:invested_company2) { create(:invested_company, company_id: company2.id, investor_id: investor.id)}
@@ -280,12 +283,15 @@ RSpec.describe "InvestedCompanies", type: :request do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
 
-        post "/companies/#{company.id}/invested_companies", params: valid_attributes, headers: { 'Authorization': token }
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
+
+        post "/companies/#{company4.id}/invested_companies", params: valid_attributes, headers: { 'Authorization': token }
       end
 
       it 'creates a company' do
-        expect(json['company_name']).to eq(company.name)
-        expect(json['company_id']).to eq(company.id)
+        expect(json['company_name']).to eq(company4.name)
+        expect(json['company_id']).to eq(company4.id)
         expect(json['investment']).to eq(1000000)
         expect(json['evaluation']).to eq(10)
         expect(json["contact_email"]).to eq('contact@email.com')
@@ -294,6 +300,12 @@ RSpec.describe "InvestedCompanies", type: :request do
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
       end
+
+      it 'deletes interesting company item' do
+        exitst = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exitst).to eq(false)
+      end
     end
 
     context 'when the request investment' do
@@ -301,7 +313,7 @@ RSpec.describe "InvestedCompanies", type: :request do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
 
-        post "/companies/#{company.id}/invested_companies", params: without_investment, headers: { 'Authorization': token }
+        post "/companies/#{company4.id}/invested_companies", params: without_investment, headers: { 'Authorization': token }
       end
 
       it 'returns status code 422' do
@@ -319,7 +331,7 @@ RSpec.describe "InvestedCompanies", type: :request do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
 
-        post "/companies/#{company.id}/invested_companies", params: without_evaluation, headers: { 'Authorization': token }
+        post "/companies/#{company4.id}/invested_companies", params: without_evaluation, headers: { 'Authorization': token }
       end
 
       it 'returns status code 422' do
@@ -337,12 +349,12 @@ RSpec.describe "InvestedCompanies", type: :request do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
 
-        post "/companies/#{company.id}/invested_companies", params: without_contact_email, headers: { 'Authorization': token }
+        post "/companies/#{company4.id}/invested_companies", params: without_contact_email, headers: { 'Authorization': token }
       end
 
       it 'creates a company' do
-        expect(json['company_name']).to eq(company.name)
-        expect(json['company_id']).to eq(company.id)
+        expect(json['company_name']).to eq(company4.name)
+        expect(json['company_id']).to eq(company4.id)
         expect(json['investment']).to eq(1000000)
         expect(json['evaluation']).to eq(10)
         expect(json["contact_email"]).to eq(investor.email)
@@ -358,7 +370,7 @@ RSpec.describe "InvestedCompanies", type: :request do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
 
-        post "/companies/#{company.id}/invested_companies", params: wrong_contact_email_format, headers: { 'Authorization': token }
+        post "/companies/#{company4.id}/invested_companies", params: wrong_contact_email_format, headers: { 'Authorization': token }
       end
 
       it 'returns status code 422' do
@@ -376,7 +388,7 @@ RSpec.describe "InvestedCompanies", type: :request do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        post "/companies/#{company.id}/invested_companies", params: valid_attributes, headers: { 'Authorization': token }
+        post "/companies/#{company4.id}/invested_companies", params: valid_attributes, headers: { 'Authorization': token }
       end
 
       it 'returns status code 401' do
@@ -390,7 +402,7 @@ RSpec.describe "InvestedCompanies", type: :request do
 
     context 'when the user unauthorized' do
       before do
-        post "/companies/#{company.id}/invested_companies", params: valid_attributes
+        post "/companies/#{company4.id}/invested_companies", params: valid_attributes
       end
 
       it 'returns status code 401' do

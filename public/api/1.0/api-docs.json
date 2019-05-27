@@ -4,6 +4,10 @@
   "basePath": "https://venture-box-back.herokuapp.com",
   "apis": [
     {
+      "path": "/api/1.0/interesting_companies.{format}",
+      "description": "Interesting companies"
+    },
+    {
       "path": "/api/1.0/invested_companies.{format}",
       "description": "Invested companies"
     },

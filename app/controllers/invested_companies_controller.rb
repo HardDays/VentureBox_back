@@ -3,6 +3,7 @@ class InvestedCompaniesController < ApplicationController
   before_action :authorize_startup, only: [:my_investors]
   before_action :set_company, only: [:create, :my_investors]
   before_action :check_company_ownership, only: [:my_investors]
+  before_action :delete_from_interesting, only: [:create]
   swagger_controller :invested_companies, "Invested companies"
 
   # GET /invested_companies
@@ -24,7 +25,7 @@ class InvestedCompaniesController < ApplicationController
   end
 
   # GET /users/1/companies/1/invested_companies
-  swagger_api :index do
+  swagger_api :my_investors do
     summary "Retrieve my investors list"
     param :path, :user_id, :integer, :required, "User id"
     param :path, :id, :integer, :required, "Company_id"
@@ -104,6 +105,14 @@ class InvestedCompaniesController < ApplicationController
     def check_company_ownership
       unless @company.user_id == @user.id
         render status: :forbidden and return
+      end
+    end
+
+    def delete_from_interesting
+      interesting_item = InterestingCompany.where(company_id: @company.id, investor_id: @user.id).first
+
+      if interesting_item
+        interesting_item.destroy
       end
     end
 

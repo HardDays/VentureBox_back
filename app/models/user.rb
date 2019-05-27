@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_many :tokens, dependent: :destroy
   has_many :forgot_password_attempts, dependent: :destroy
   has_many :invested_companies, foreign_key: :investor_id, dependent: :destroy
+  has_many :interesting_companies, foreign_key: :investor_id, dependent: :destroy
 
   SALT = ENV.fetch("PASSWORD_SALT")
 

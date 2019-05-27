@@ -9,6 +9,7 @@ class Company < ApplicationRecord
   has_many :company_items, dependent: :destroy
   has_many :startup_news, dependent: :destroy
   has_many :invested_companies, dependent: :destroy
+  has_many :interesting_companies, dependent: :destroy
 
   def as_json(options={})
     res = super(options)
