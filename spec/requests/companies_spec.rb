@@ -2,19 +2,19 @@ require 'rails_helper'
 
 RSpec.describe "Companies", type: :request do
   let(:password) { "123123" }
-  let!(:user)  { create(:user, password: password, role: :startup) }
+  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
   let!(:company) { create(:company, user_id: user.id) }
   let!(:company_image) { create(:company_image, company_id: company.id) }
 
-  let!(:user2)  { create(:user, password: password, role: :startup) }
+  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
   let!(:company2) { create(:company, user_id: user2.id) }
   let!(:company2_image) { create(:company_image, company_id: company2.id) }
 
-  let!(:user3)  { create(:user, password: password, role: :startup) }
+  let!(:user3)  { create(:user, password: password, password_confirmation: password, role: :startup) }
   let!(:company3) { create(:company, user_id: user3.id) }
 
-  let!(:investor) { create(:user, password: password, role: :investor )}
-  let!(:new_user) { create(:user, password: password, role: :startup)}
+  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
+  let!(:new_user) { create(:user, password: password, password_confirmation: password, role: :startup)}
 
   let(:resize_params) { { heigh: 200, width: 200 } }
   let(:valid_attributes) { { name: "name", website: "domain.com", description: "description",

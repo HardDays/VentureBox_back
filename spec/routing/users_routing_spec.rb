@@ -16,11 +16,23 @@ RSpec.describe UsersController, type: :routing do
     end
 
     it "routes to #update via PUT" do
-      expect(:put => "/users/1").to route_to("users#update", :id => "1")
+      expect(:put => "/users/1").not_to be_routable
     end
 
     it "routes to #update via PATCH" do
-      expect(:patch => "/users/1").to route_to("users#update", :id => "1")
+      expect(:patch => "/users/1").not_to be_routable
+    end
+
+    it "routes to #update via PATCH" do
+      expect(:patch => "/users/1/change_password").to route_to("users#change_password", :id => "1")
+    end
+
+    it "routes to #update via PATCH" do
+      expect(:patch => "/users/1/change_email").to route_to("users#change_email", :id => "1")
+    end
+
+    it "routes to #update via PATCH" do
+      expect(:patch => "/users/1/change_general").to route_to("users#change_general", :id => "1")
     end
 
     it "routes to #destroy" do

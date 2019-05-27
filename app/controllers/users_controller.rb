@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authorize_user, only: [:show, :update, :destroy]
+  before_action :authorize_user, only: [:show, :change_general, :change_email, :change_password, :destroy]
   swagger_controller :user, 'User'
 
   # GET /users/1
@@ -47,13 +47,54 @@ class UsersController < ApplicationController
     render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
   end
 
-  # PATCH/PUT /users/1
-  swagger_api :update do
-    summary "Update user info"
+  # PATCH/PUT /users/1/change_password
+  swagger_api :change_password do
+    summary "Update user password"
     param :path, :id, :integer, :required, "User id"
-    param :form, :old_password, :string, :optional, "User old password"
-    param :form, :password, :string, :optional, "User password"
-    param :form, :password_confirmation, :string, :optional, "User password confirmation"
+    param :form, :old_password, :string, :required, "User old password"
+    param :form, :password, :string, :required, "User password"
+    param :form, :password_confirmation, :string, :required, "User password confirmation"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
+    response :ok
+    response :unauthorized
+    response :forbidden
+    response :unprocessable_entity
+  end
+  def change_password
+    if @user.update(change_password_params)
+      render json: @user, status: :ok
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /users/1/change_email
+  swagger_api :change_email do
+    summary "Update user password"
+    param :path, :id, :integer, :required, "User id"
+    param :form, :email, :string, :required, "User new email"
+    param :form, :current_email, :string, :required, "User old email"
+    param :form, :current_password, :string, :required, "User password"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
+    response :ok
+    response :unauthorized
+    response :forbidden
+    response :unprocessable_entity
+  end
+  def change_email
+    if @user.update(change_email_params)
+      render json: @user, status: :ok
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /users/1/change_general
+  swagger_api :change_general do
+    summary "Update user password"
+    param :path, :id, :integer, :required, "User id"
+    param :form, :name, :string, :required, "User name"
+    param :form, :surname, :string, :required, "User surname"
     param :form, :turn_email_notifications, :boolean, :optional, "Turn on email notifications"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
@@ -61,12 +102,8 @@ class UsersController < ApplicationController
     response :forbidden
     response :unprocessable_entity
   end
-  def update
-    if params[:turn_email_notifications]
-      @user.is_email_notifications_available = true
-    end
-
-    if @user.update(user_params)
+  def change_general
+    if @user.update(change_general_params)
       render json: @user, status: :ok
     else
       render json: @user.errors, status: :unprocessable_entity
@@ -103,5 +140,17 @@ class UsersController < ApplicationController
 
     def user_params
       params.permit(:role, :name, :surname, :email, :phone, :password, :password_confirmation, :old_password, :goals)
+    end
+
+    def change_password_params
+      params.permit(:password, :password_confirmation, :old_password)
+    end
+
+    def change_email_params
+      params.permit(:current_password, :email, :current_email)
+    end
+
+    def change_general_params
+      params.permit(:name, :surname, :is_email_notifications_available)
     end
 end

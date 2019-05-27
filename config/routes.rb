@@ -11,12 +11,19 @@ Rails.application.routes.draw do
       get :image
     end
   end
-  resources :users, except: [:index] do
+  resources :users, except: [:index, :update] do
+    member do
+      patch :change_password
+      patch :change_email
+      patch :change_general
+    end
+
     resources :companies, only: [:create, :update, :destroy] do
       member do
         get :my, path: ""
         get :my_image, path: "image"
       end
+
       resources :company_items, only: [:create, :update, :destroy]  do
         collection do
           get :my_items, path: ""
@@ -26,6 +33,7 @@ Rails.application.routes.draw do
           get :my_item_image, path: "image"
         end
       end
+
       resources :startup_news, only: [:create, :destroy] do
         collection do
           get :my_news, path: ""

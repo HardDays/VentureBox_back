@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Auth API', type: :request do
   # initialize test data
-  let!(:user) { create(:user, email: "aaa@aaa.com", password: "123123") }
+  let!(:user) { create(:user, email: "aaa@aaa.com", password: "123123", password_confirmation: "123123") }
   let(:email) { Faker::Internet.email }
   let(:password) { "123123" }
 
