@@ -5,6 +5,213 @@
   "resourcePath": "users",
   "apis": [
     {
+      "path": "/users/{id}/change_password.json",
+      "operations": [
+        {
+          "summary": "Update user password",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "User id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "old_password",
+              "type": "string",
+              "description": "User old password",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "password",
+              "type": "string",
+              "description": "User password",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "password_confirmation",
+              "type": "string",
+              "description": "User password confirmation",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
+          "nickname": "Users#change_password",
+          "method": "patch"
+        }
+      ]
+    },
+    {
+      "path": "/users/{id}/change_email.json",
+      "operations": [
+        {
+          "summary": "Update user password",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "User id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "email",
+              "type": "string",
+              "description": "User new email",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "current_email",
+              "type": "string",
+              "description": "User old email",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "current_password",
+              "type": "string",
+              "description": "User password",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
+          "nickname": "Users#change_email",
+          "method": "patch"
+        }
+      ]
+    },
+    {
+      "path": "/users/{id}/change_general.json",
+      "operations": [
+        {
+          "summary": "Update user password",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "User id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "name",
+              "type": "string",
+              "description": "User name",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "surname",
+              "type": "string",
+              "description": "User surname",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "turn_email_notifications",
+              "type": "boolean",
+              "description": "Turn on email notifications",
+              "required": false
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
+          "nickname": "Users#change_general",
+          "method": "patch"
+        }
+      ]
+    },
+    {
       "path": "/users.json",
       "operations": [
         {
@@ -131,82 +338,6 @@
           ],
           "nickname": "Users#show",
           "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users/{id}.json",
-      "operations": [
-        {
-          "summary": "Update user info",
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "User id",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "old_password",
-              "type": "string",
-              "description": "User old password",
-              "required": false
-            },
-            {
-              "paramType": "form",
-              "name": "password",
-              "type": "string",
-              "description": "User password",
-              "required": false
-            },
-            {
-              "paramType": "form",
-              "name": "password_confirmation",
-              "type": "string",
-              "description": "User password confirmation",
-              "required": false
-            },
-            {
-              "paramType": "form",
-              "name": "turn_email_notifications",
-              "type": "boolean",
-              "description": "Turn on email notifications",
-              "required": false
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
-            },
-            {
-              "code": 422,
-              "responseModel": null,
-              "message": "Unprocessable Entity"
-            }
-          ],
-          "nickname": "Users#update",
-          "method": "patch"
         }
       ]
     },

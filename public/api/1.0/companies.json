@@ -18,6 +18,20 @@
               "required": true
             },
             {
+              "paramType": "query",
+              "name": "width",
+              "type": "integer",
+              "description": "Width to crop",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "height",
+              "type": "integer",
+              "description": "Height to crop",
+              "required": false
+            },
+            {
               "paramType": "header",
               "name": "Authorization",
               "type": "string",
@@ -209,6 +223,20 @@
               "type": "integer",
               "description": "Company id",
               "required": true
+            },
+            {
+              "paramType": "query",
+              "name": "width",
+              "type": "integer",
+              "description": "Width to crop",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "height",
+              "type": "integer",
+              "description": "Height to crop",
+              "required": false
             },
             {
               "paramType": "header",

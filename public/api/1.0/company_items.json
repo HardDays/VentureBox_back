@@ -11,6 +11,20 @@
           "summary": "Retrieve company item image",
           "parameters": [
             {
+              "paramType": "query",
+              "name": "width",
+              "type": "integer",
+              "description": "Width to crop",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "height",
+              "type": "integer",
+              "description": "Height to crop",
+              "required": false
+            },
+            {
               "paramType": "path",
               "name": "id",
               "type": "integer",
@@ -247,10 +261,38 @@
           "parameters": [
             {
               "paramType": "path",
+              "name": "user_id",
+              "type": "integer",
+              "description": "User id",
+              "required": true
+            },
+            {
+              "paramType": "path",
+              "name": "company_id",
+              "type": "integer",
+              "description": "Company id",
+              "required": true
+            },
+            {
+              "paramType": "path",
               "name": "id",
               "type": "integer",
               "description": "Company item id",
               "required": true
+            },
+            {
+              "paramType": "query",
+              "name": "width",
+              "type": "integer",
+              "description": "Width to crop",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "height",
+              "type": "integer",
+              "description": "Height to crop",
+              "required": false
             },
             {
               "paramType": "header",
