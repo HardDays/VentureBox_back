@@ -18,6 +18,9 @@ Rails.application.routes.draw do
   end
 
   resources :users, except: [:index, :update] do
+    collection do
+      get :me
+    end
     member do
       patch :change_password
       patch :change_email

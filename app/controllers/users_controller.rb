@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authorize_user, only: [:show, :change_general, :change_email, :change_password, :destroy]
+  before_action :authorize_user, only: [:show, :me, :change_general, :change_email, :change_password, :destroy]
+  before_action :check_user, only: [:show, :change_general, :change_email, :change_password, :destroy]
   swagger_controller :user, 'User'
 
   # GET /users/1
@@ -12,6 +13,18 @@ class UsersController < ApplicationController
     response :not_found
   end
   def show
+    render json: @user, status: :ok
+  end
+
+  # GET /users/1
+  swagger_api :me do
+    summary "Retrieve my info"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
+    response :ok
+    response :unauthorized
+    response :not_found
+  end
+  def me
     render json: @user, status: :ok
   end
 
@@ -132,7 +145,9 @@ class UsersController < ApplicationController
       if @user == nil
         render status: :unauthorized and return
       end
+    end
 
+    def check_user
       if @user.id != params[:id].to_i
         render json: {errors: :WRONG_USER_ID}, status: :forbidden and return
       end

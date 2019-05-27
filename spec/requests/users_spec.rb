@@ -125,6 +125,39 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  # Test suite for GET /users/me
+  describe 'GET /users/me' do
+    context 'when the record exists' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        get "/users/me", headers: { 'Authorization': token }
+      end
+
+      it 'returns the user' do
+        expect(json).not_to be_empty
+        expect(json['id']).to eq(user.id)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when not authorized' do
+      before { get "/users/me" }
+
+      it 'returns status code 401' do
+        expect(response).to have_http_status(401)
+      end
+
+      it 'returns a not found message' do
+        expect(response.body).to match("")
+      end
+    end
+  end
+
   # Test suite for POST /users/
   describe 'POST /users/' do
     context 'startup' do
