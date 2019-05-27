@@ -1,7 +1,8 @@
 class CompaniesController < ApplicationController
   before_action :authorize_startup, only: [:my, :my_image, :create, :update, :destroy]
-  before_action :set_company, only: [:show, :my, :image, :my_image, :update, :destroy]
-  before_action :check_company_ownership, only: [:my, :my_image, :update, :destroy]
+  before_action :set_company, only: [:show, :image, :my_image, :update, :destroy]
+  before_action :set_my_company, only: [:my]
+  before_action :check_company_ownership, only: [:my_image, :update, :destroy]
   before_action :check_company_exists, only: [:create]
   swagger_controller :company, "Startup company"
 
@@ -95,11 +96,10 @@ class CompaniesController < ApplicationController
     send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
   end
 
-  # GET /users/1/companies/1
+  # GET /users/1/companies/my
   swagger_api :my do
     summary "Retrieve my company info"
     param :path, :user_id, :integer, :required, "Startup user id"
-    param :path, :id, :integer, :required, "Company id"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :forbidden
@@ -201,7 +201,15 @@ class CompaniesController < ApplicationController
       begin
         @company = Company.find(params[:id])
       rescue
-        render status: :not_found
+        render status: :not_found and return
+      end
+    end
+
+    def set_my_company
+      @company = @user.company
+
+      unless @company
+        render status: :not_found and return
       end
     end
 

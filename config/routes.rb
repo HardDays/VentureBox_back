@@ -28,8 +28,10 @@ Rails.application.routes.draw do
     end
 
     resources :companies, only: [:create, :update, :destroy] do
+      collection do
+        get :my
+      end
       member do
-        get :my, path: ""
         get :my_image, path: "image"
 
         resources :invested_companies, path: "investors", only: [] do

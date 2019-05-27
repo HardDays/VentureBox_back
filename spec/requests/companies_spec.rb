@@ -203,14 +203,14 @@ RSpec.describe "Companies", type: :request do
     end
   end
 
-  # Test suite for GET /users/1/companies/1
-  describe 'GET /users/1/companies/1' do
+  # Test suite for GET /users/1/companies/my
+  describe 'GET /users/1/companies/my' do
     context 'when the record exists' do
       before do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        get "/users/#{user.id}/companies/#{company.id}", headers: { 'Authorization': token }
+        get "/users/#{user.id}/companies/my", headers: { 'Authorization': token }
       end
 
       it 'returns the company' do
@@ -233,13 +233,13 @@ RSpec.describe "Companies", type: :request do
     end
 
     context 'when the record does not exist' do
-      let(:company_id) { 0 }
-
       before do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        get "/users/#{user.id}/companies/#{company_id}", headers: { 'Authorization': token }
+        user.company.destroy
+
+        get "/users/#{user.id}/companies/my", headers: { 'Authorization': token }
       end
 
       it 'returns status code 404' do
@@ -256,7 +256,7 @@ RSpec.describe "Companies", type: :request do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
 
-        get "/users/#{user.id}/companies/#{company.id}", headers: {'Authorization': token}
+        get "/users/#{user.id}/companies/my", headers: {'Authorization': token}
       end
 
       it "returns nothing" do
@@ -268,25 +268,8 @@ RSpec.describe "Companies", type: :request do
       end
     end
 
-    context 'when not my company' do
-      before do
-        post "/auth/login", params: {email: user.email, password: password}
-        token = json['token']
-
-        get "/users/#{user.id}/companies/#{company2.id}", headers: {'Authorization': token}
-      end
-
-      it "returns nothing" do
-        expect(response.body).to match("")
-      end
-
-      it 'returns status code 403' do
-        expect(response).to have_http_status(403)
-      end
-    end
-
     context 'when not authorized' do
-      before { get "/users/#{user.id}/companies/#{company.id}" }
+      before { get "/users/#{user.id}/companies/my" }
 
       it 'returns status code 401' do
         expect(response).to have_http_status(401)

@@ -150,7 +150,7 @@
       ]
     },
     {
-      "path": "/users/{user_id}/companies/{id}.json",
+      "path": "/users/{user_id}/companies/my.json",
       "operations": [
         {
           "summary": "Retrieve my company info",
@@ -160,13 +160,6 @@
               "name": "user_id",
               "type": "integer",
               "description": "Startup user id",
-              "required": true
-            },
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Company id",
               "required": true
             },
             {
