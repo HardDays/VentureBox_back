@@ -9,6 +9,18 @@
       "operations": [
         {
           "summary": "Retrieve invested companies list",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
           "parameters": [
             {
               "paramType": "query",
@@ -32,18 +44,6 @@
               "required": true
             }
           ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            }
-          ],
           "nickname": "InvestedCompanies#index",
           "method": "get"
         }
@@ -54,6 +54,28 @@
       "operations": [
         {
           "summary": "Invest into company",
+          "responseMessages": [
+            {
+              "code": 201,
+              "responseModel": null,
+              "message": "Created"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
           "parameters": [
             {
               "paramType": "form",
@@ -84,28 +106,6 @@
               "required": true
             }
           ],
-          "responseMessages": [
-            {
-              "code": 201,
-              "responseModel": null,
-              "message": "Created"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            },
-            {
-              "code": 422,
-              "responseModel": null,
-              "message": "Unprocessable Entity"
-            }
-          ],
           "nickname": "InvestedCompanies#create",
           "method": "post"
         }
@@ -116,6 +116,18 @@
       "operations": [
         {
           "summary": "Retrieve my investors list",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
           "parameters": [
             {
               "paramType": "path",
@@ -151,18 +163,6 @@
               "type": "string",
               "description": "Authentication token",
               "required": true
-            }
-          ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
             }
           ],
           "nickname": "InvestedCompanies#my_investors",

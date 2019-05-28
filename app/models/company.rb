@@ -3,7 +3,7 @@ class Company < ApplicationRecord
   validates :website, url: true, unless: Proc.new { |a| a.website.blank? }
   validates :contact_email, :presence => true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
-  enum stage_of_funding: [:idea, :pre_seed, :seed, :serial_a, :serial_b, :serial_c]
+  enum stage_of_funding: EnumsHelper.stage_of_funding
 
   belongs_to :user
   has_one :company_image, dependent: :destroy

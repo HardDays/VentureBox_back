@@ -1,7 +1,18 @@
 Rails.application.routes.draw do
+  resources :enums do
+    collection do
+      get :c_level
+      get :stage_of_funding
+      get :tags
+    end
+  end
+
   resources :interesting_companies, only: [:index, :destroy]
+
   resources :invested_companies, only: [:index]
+
   resources :startup_news, only: [:index, :show]
+
   resources :company_items, only: [:index, :show] do
     member do
       get :item_image, path: "image"

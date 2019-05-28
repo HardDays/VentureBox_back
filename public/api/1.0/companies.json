@@ -9,6 +9,23 @@
       "operations": [
         {
           "summary": "Get company image",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
           "parameters": [
             {
               "paramType": "path",
@@ -39,23 +56,6 @@
               "required": true
             }
           ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            }
-          ],
           "nickname": "Companies#image",
           "method": "get"
         }
@@ -66,6 +66,18 @@
       "operations": [
         {
           "summary": "Retrieve companies",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
           "parameters": [
             {
               "paramType": "query",
@@ -89,18 +101,6 @@
               "required": true
             }
           ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            }
-          ],
           "nickname": "Companies#index",
           "method": "get"
         }
@@ -111,22 +111,6 @@
       "operations": [
         {
           "summary": "Retrieve company info",
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Company id",
-              "required": true
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "responseMessages": [
             {
               "code": 200,
@@ -144,22 +128,12 @@
               "message": "Not Found"
             }
           ],
-          "nickname": "Companies#show",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users/{user_id}/companies/my.json",
-      "operations": [
-        {
-          "summary": "Retrieve my company info",
           "parameters": [
             {
               "paramType": "path",
-              "name": "user_id",
+              "name": "id",
               "type": "integer",
-              "description": "Startup user id",
+              "description": "Company id",
               "required": true
             },
             {
@@ -170,6 +144,16 @@
               "required": true
             }
           ],
+          "nickname": "Companies#show",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/my.json",
+      "operations": [
+        {
+          "summary": "Retrieve my company info",
           "responseMessages": [
             {
               "code": 200,
@@ -192,6 +176,22 @@
               "message": "Not Found"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "type": "integer",
+              "description": "Startup user id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
           "nickname": "Companies#my",
           "method": "get"
         }
@@ -202,6 +202,23 @@
       "operations": [
         {
           "summary": "Get my company image",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
           "parameters": [
             {
               "paramType": "path",
@@ -239,6 +256,16 @@
               "required": true
             }
           ],
+          "nickname": "Companies#my_image",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/{id}.json",
+      "operations": [
+        {
+          "summary": "Update company info",
           "responseMessages": [
             {
               "code": 200,
@@ -251,21 +278,21 @@
               "message": "Unauthorized"
             },
             {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            },
+            {
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
             }
           ],
-          "nickname": "Companies#my_image",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users/{user_id}/companies/{id}.json",
-      "operations": [
-        {
-          "summary": "Update company info",
           "parameters": [
             {
               "paramType": "path",
@@ -363,6 +390,16 @@
               "required": true
             }
           ],
+          "nickname": "Companies#update",
+          "method": "patch"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/{id}.json",
+      "operations": [
+        {
+          "summary": "Delete company",
           "responseMessages": [
             {
               "code": 200,
@@ -383,23 +420,8 @@
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
-            },
-            {
-              "code": 422,
-              "responseModel": null,
-              "message": "Unprocessable Entity"
             }
           ],
-          "nickname": "Companies#update",
-          "method": "patch"
-        }
-      ]
-    },
-    {
-      "path": "/users/{user_id}/companies/{id}.json",
-      "operations": [
-        {
-          "summary": "Delete company",
           "parameters": [
             {
               "paramType": "path",
@@ -421,28 +443,6 @@
               "type": "string",
               "description": "Authentication token",
               "required": true
-            }
-          ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
             }
           ],
           "nickname": "Companies#destroy",

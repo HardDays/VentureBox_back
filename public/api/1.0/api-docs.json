@@ -4,6 +4,10 @@
   "basePath": "https://venture-box-back.herokuapp.com",
   "apis": [
     {
+      "path": "/api/1.0/enums.{format}",
+      "description": "Enums"
+    },
+    {
       "path": "/api/1.0/interesting_companies.{format}",
       "description": "Interesting companies"
     },

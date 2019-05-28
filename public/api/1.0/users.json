@@ -9,15 +9,6 @@
       "operations": [
         {
           "summary": "Retrieve my info",
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "responseMessages": [
             {
               "code": 200,
@@ -35,6 +26,15 @@
               "message": "Not Found"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
           "nickname": "Users#me",
           "method": "get"
         }
@@ -45,6 +45,28 @@
       "operations": [
         {
           "summary": "Update user password",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
           "parameters": [
             {
               "paramType": "path",
@@ -82,6 +104,16 @@
               "required": true
             }
           ],
+          "nickname": "Users#change_password",
+          "method": "patch"
+        }
+      ]
+    },
+    {
+      "path": "/users/{id}/change_email.json",
+      "operations": [
+        {
+          "summary": "Update user email",
           "responseMessages": [
             {
               "code": 200,
@@ -104,16 +136,6 @@
               "message": "Unprocessable Entity"
             }
           ],
-          "nickname": "Users#change_password",
-          "method": "patch"
-        }
-      ]
-    },
-    {
-      "path": "/users/{id}/change_email.json",
-      "operations": [
-        {
-          "summary": "Update user email",
           "parameters": [
             {
               "paramType": "path",
@@ -151,6 +173,16 @@
               "required": true
             }
           ],
+          "nickname": "Users#change_email",
+          "method": "patch"
+        }
+      ]
+    },
+    {
+      "path": "/users/{id}/change_general.json",
+      "operations": [
+        {
+          "summary": "Update user general info",
           "responseMessages": [
             {
               "code": 200,
@@ -173,16 +205,6 @@
               "message": "Unprocessable Entity"
             }
           ],
-          "nickname": "Users#change_email",
-          "method": "patch"
-        }
-      ]
-    },
-    {
-      "path": "/users/{id}/change_general.json",
-      "operations": [
-        {
-          "summary": "Update user general info",
           "parameters": [
             {
               "paramType": "path",
@@ -220,28 +242,6 @@
               "required": true
             }
           ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
-            },
-            {
-              "code": 422,
-              "responseModel": null,
-              "message": "Unprocessable Entity"
-            }
-          ],
           "nickname": "Users#change_general",
           "method": "patch"
         }
@@ -252,6 +252,18 @@
       "operations": [
         {
           "summary": "Create user",
+          "responseMessages": [
+            {
+              "code": 201,
+              "responseModel": null,
+              "message": "Created"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
           "parameters": [
             {
               "paramType": "form",
@@ -391,18 +403,6 @@
               "required": false
             }
           ],
-          "responseMessages": [
-            {
-              "code": 201,
-              "responseModel": null,
-              "message": "Created"
-            },
-            {
-              "code": 422,
-              "responseModel": null,
-              "message": "Unprocessable Entity"
-            }
-          ],
           "nickname": "Users#create",
           "method": "post"
         }
@@ -413,22 +413,6 @@
       "operations": [
         {
           "summary": "Retrieve user info",
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "User id",
-              "required": true
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "responseMessages": [
             {
               "code": 200,
@@ -446,16 +430,6 @@
               "message": "Not Found"
             }
           ],
-          "nickname": "Users#show",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users/{id}.json",
-      "operations": [
-        {
-          "summary": "Update user info",
           "parameters": [
             {
               "paramType": "path",
@@ -472,6 +446,16 @@
               "required": true
             }
           ],
+          "nickname": "Users#show",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/users/{id}.json",
+      "operations": [
+        {
+          "summary": "Update user info",
           "responseMessages": [
             {
               "code": 200,
@@ -487,6 +471,22 @@
               "code": 403,
               "responseModel": null,
               "message": "Forbidden"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "User id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
             }
           ],
           "nickname": "Users#destroy",

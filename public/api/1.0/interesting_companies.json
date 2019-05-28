@@ -9,6 +9,18 @@
       "operations": [
         {
           "summary": "Retrieve interested in list",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
           "parameters": [
             {
               "paramType": "query",
@@ -32,18 +44,6 @@
               "required": true
             }
           ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            }
-          ],
           "nickname": "InterestingCompanies#index",
           "method": "get"
         }
@@ -54,22 +54,6 @@
       "operations": [
         {
           "summary": "Delete company from interested list",
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Interested item id",
-              "required": true
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "responseMessages": [
             {
               "code": 200,
@@ -92,22 +76,12 @@
               "message": "Not Found"
             }
           ],
-          "nickname": "InterestingCompanies#destroy",
-          "method": "delete"
-        }
-      ]
-    },
-    {
-      "path": "/companies/{id}/interesting_companies.json",
-      "operations": [
-        {
-          "summary": "Add company to interesting list",
           "parameters": [
             {
               "paramType": "path",
               "name": "id",
               "type": "integer",
-              "description": "Company id",
+              "description": "Interested item id",
               "required": true
             },
             {
@@ -118,6 +92,16 @@
               "required": true
             }
           ],
+          "nickname": "InterestingCompanies#destroy",
+          "method": "delete"
+        }
+      ]
+    },
+    {
+      "path": "/companies/{id}/interesting_companies.json",
+      "operations": [
+        {
+          "summary": "Add company to interesting list",
           "responseMessages": [
             {
               "code": 201,
@@ -133,6 +117,22 @@
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Company id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
             }
           ],
           "nickname": "InterestingCompanies#create",

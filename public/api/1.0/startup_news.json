@@ -9,6 +9,23 @@
       "operations": [
         {
           "summary": "Retrieve startup news",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            }
+          ],
           "parameters": [
             {
               "paramType": "query",
@@ -30,23 +47,6 @@
               "type": "string",
               "description": "Authentication token",
               "required": true
-            }
-          ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
             }
           ],
           "nickname": "StartupNews#index",
@@ -59,22 +59,6 @@
       "operations": [
         {
           "summary": "Retrieve startup new info",
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Startup new id",
-              "required": true
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "responseMessages": [
             {
               "code": 200,
@@ -97,6 +81,22 @@
               "message": "Not Found"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Startup new id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
           "nickname": "StartupNews#show",
           "method": "get"
         }
@@ -107,6 +107,23 @@
       "operations": [
         {
           "summary": "Retrieve my startup's news",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            }
+          ],
           "parameters": [
             {
               "paramType": "path",
@@ -144,6 +161,16 @@
               "required": true
             }
           ],
+          "nickname": "StartupNews#my_news",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/{company_id}/startup_news/{id}.json",
+      "operations": [
+        {
+          "summary": "Retrieve my startup new info",
           "responseMessages": [
             {
               "code": 200,
@@ -159,18 +186,13 @@
               "code": 403,
               "responseModel": null,
               "message": "Forbidden"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
             }
           ],
-          "nickname": "StartupNews#my_news",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users/{user_id}/companies/{company_id}/startup_news/{id}.json",
-      "operations": [
-        {
-          "summary": "Retrieve my startup new info",
           "parameters": [
             {
               "paramType": "path",
@@ -201,11 +223,21 @@
               "required": true
             }
           ],
+          "nickname": "StartupNews#my",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/{company_id}/startup_news.json",
+      "operations": [
+        {
+          "summary": "Create startup news",
           "responseMessages": [
             {
-              "code": 200,
+              "code": 201,
               "responseModel": null,
-              "message": "Ok"
+              "message": "Created"
             },
             {
               "code": 401,
@@ -218,21 +250,11 @@
               "message": "Forbidden"
             },
             {
-              "code": 404,
+              "code": 422,
               "responseModel": null,
-              "message": "Not Found"
+              "message": "Unprocessable Entity"
             }
           ],
-          "nickname": "StartupNews#my",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users/{user_id}/companies/{company_id}/startup_news.json",
-      "operations": [
-        {
-          "summary": "Create startup news",
           "parameters": [
             {
               "paramType": "path",
@@ -263,11 +285,21 @@
               "required": true
             }
           ],
+          "nickname": "StartupNews#create",
+          "method": "post"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/{company_id}/startup_news/{id}.json",
+      "operations": [
+        {
+          "summary": "Retrieve my startup new delete",
           "responseMessages": [
             {
-              "code": 201,
+              "code": 200,
               "responseModel": null,
-              "message": "Created"
+              "message": "Ok"
             },
             {
               "code": 401,
@@ -285,16 +317,6 @@
               "message": "Unprocessable Entity"
             }
           ],
-          "nickname": "StartupNews#create",
-          "method": "post"
-        }
-      ]
-    },
-    {
-      "path": "/users/{user_id}/companies/{company_id}/startup_news/{id}.json",
-      "operations": [
-        {
-          "summary": "Retrieve my startup new delete",
           "parameters": [
             {
               "paramType": "path",
@@ -323,28 +345,6 @@
               "type": "string",
               "description": "Authentication token",
               "required": true
-            }
-          ],
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
-            },
-            {
-              "code": 422,
-              "responseModel": null,
-              "message": "Unprocessable Entity"
             }
           ],
           "nickname": "StartupNews#destroy",

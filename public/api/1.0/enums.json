@@ -1,0 +1,60 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "https://venture-box-back.herokuapp.com",
+  "resourcePath": "enums",
+  "apis": [
+    {
+      "path": "/enums/c_level.json",
+      "operations": [
+        {
+          "summary": "C levels enum",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            }
+          ],
+          "nickname": "Enums#c_level",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/enums/stage_of_funding.json",
+      "operations": [
+        {
+          "summary": "Stage of funding enum",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            }
+          ],
+          "nickname": "Enums#stage_of_funding",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/enums/tags.json",
+      "operations": [
+        {
+          "summary": "Company item tags enum",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            }
+          ],
+          "nickname": "Enums#tags",
+          "method": "get"
+        }
+      ]
+    }
+  ],
+  "authorizations": null
+}

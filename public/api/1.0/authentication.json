@@ -9,22 +9,6 @@
       "operations": [
         {
           "summary": "Authorize by email and password",
-          "parameters": [
-            {
-              "paramType": "form",
-              "name": "email",
-              "type": "string",
-              "description": "Email",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "password",
-              "type": "password",
-              "description": "Password",
-              "required": true
-            }
-          ],
           "responseMessages": [
             {
               "code": 200,
@@ -47,6 +31,22 @@
               "message": "Unprocessable Entity"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "form",
+              "name": "email",
+              "type": "string",
+              "description": "Email",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "password",
+              "type": "password",
+              "description": "Password",
+              "required": true
+            }
+          ],
           "nickname": "Authentication#login",
           "method": "post"
         }
@@ -57,15 +57,6 @@
       "operations": [
         {
           "summary": "Remind password",
-          "parameters": [
-            {
-              "paramType": "form",
-              "name": "email",
-              "type": "string",
-              "description": "Email",
-              "required": true
-            }
-          ],
           "responseMessages": [
             {
               "code": 200,
@@ -83,6 +74,15 @@
               "message": "Unauthorized"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "form",
+              "name": "email",
+              "type": "string",
+              "description": "Email",
+              "required": true
+            }
+          ],
           "nickname": "Authentication#forgot_password",
           "method": "post"
         }
@@ -93,15 +93,6 @@
       "operations": [
         {
           "summary": "Logout",
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "responseMessages": [
             {
               "code": 200,
@@ -112,6 +103,15 @@
               "code": 401,
               "responseModel": null,
               "message": "Unauthorized"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
             }
           ],
           "nickname": "Authentication#logout",
