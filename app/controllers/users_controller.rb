@@ -47,6 +47,7 @@ class UsersController < ApplicationController
     param_list :form, :stage_of_funding, :string, :optional, "(required for startup) Company stage of funding", [:idea, :pre_seed, :seed, :serial_a, :serial_b, :serial_c]
     param :form, :investment_amount, :integer, :optional, "Company investment amount"
     param :form, :equality_amount, :integer, :optional, "Company equality amount"
+    param :form, :team_members, :string, :optional, "Company team members [{team_member_name: name, c_level: cto}]"
     response :created
     response :unprocessable_entity
   end

@@ -120,6 +120,10 @@ class CompaniesController < ApplicationController
     param :form, :description, :string, :optional, "Company description"
     param :form, :contact_email, :string, :optional, "Company contact email"
     param :form, :image, :string, :optional, "Company logo"
+    param_list :form, :stage_of_funding, :string, :optional, "(required for startup) Company stage of funding", [:idea, :pre_seed, :seed, :serial_a, :serial_b, :serial_c]
+    param :form, :investment_amount, :integer, :optional, "Company investment amount"
+    param :form, :equality_amount, :integer, :optional, "Company equality amount"
+    param :form, :team_members, :string, :optional, "Company team members [{team_member_name: name, c_level: cto}]"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized

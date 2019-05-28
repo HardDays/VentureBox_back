@@ -317,6 +317,45 @@
               "required": false
             },
             {
+              "paramType": "form",
+              "name": "stage_of_funding",
+              "type": "string",
+              "description": "(required for startup) Company stage of funding",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "idea",
+                  "pre_seed",
+                  "seed",
+                  "serial_a",
+                  "serial_b",
+                  "serial_c"
+                ]
+              }
+            },
+            {
+              "paramType": "form",
+              "name": "investment_amount",
+              "type": "integer",
+              "description": "Company investment amount",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "equality_amount",
+              "type": "integer",
+              "description": "Company equality amount",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "team_members",
+              "type": "string",
+              "description": "Company team members [{team_member_name: name, c_level: cto}]",
+              "required": false
+            },
+            {
               "paramType": "header",
               "name": "Authorization",
               "type": "string",

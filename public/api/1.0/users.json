@@ -382,6 +382,13 @@
               "type": "integer",
               "description": "Company equality amount",
               "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "team_members",
+              "type": "string",
+              "description": "Company team members [{team_member_name: name, c_level: cto}]",
+              "required": false
             }
           ],
           "responseMessages": [
