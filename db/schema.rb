@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_28_105530) do
+ActiveRecord::Schema.define(version: 2019_05_28_132347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,17 @@ ActiveRecord::Schema.define(version: 2019_05_28_105530) do
     t.string "contact_email"
     t.integer "investment"
     t.integer "evaluation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "milestones", force: :cascade do |t|
+    t.string "title"
+    t.string "description"
+    t.datetime "finish_date"
+    t.integer "completeness", default: 0
+    t.integer "company_id"
+    t.boolean "is_done", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

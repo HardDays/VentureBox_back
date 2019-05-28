@@ -32,6 +32,10 @@
       "description": "User"
     },
     {
+      "path": "/api/1.0/milestones.{format}",
+      "description": "Company milestones"
+    },
+    {
       "path": "/api/1.0/authentication.{format}",
       "description": "Authentication"
     }

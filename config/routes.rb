@@ -70,6 +70,8 @@ Rails.application.routes.draw do
           get :my, path: ""
         end
       end
+
+      resources :milestones, only: [:index, :show, :create, :update]
     end
   end
 
