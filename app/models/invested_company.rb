@@ -17,7 +17,7 @@ class InvestedCompany < ApplicationRecord
       res[:investor_email] = contact_email
     end
 
-    res[:company_name] = company.name
+    res[:company_name] = company.company_name
 
     res
   end

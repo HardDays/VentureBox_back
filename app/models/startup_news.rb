@@ -7,7 +7,7 @@ class StartupNews < ApplicationRecord
   def as_json(options={})
     res = super(options)
 
-    res[:company_name] = company.name
+    res[:company_name] = company.company_name
     res
   end
 end

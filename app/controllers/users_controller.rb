@@ -37,16 +37,41 @@ class UsersController < ApplicationController
     param :form, :phone, :string, :optional, "User phone"
     param :form, :password, :string, :required, "User password"
     param :form, :password_confirmation, :string, :required, "User password confirmation"
-    param_list :form, :role, :string, :required, "User role", [:startup, :investor]
     param :form, :goals, :string, :optional, "User goals"
+    param_list :form, :role, :string, :required, "User role", [:startup, :investor]
+    param :form, :company_name, :string, :optional, "(required for startup) Company name"
+    param :form, :website, :string, :optional, "Company website"
+    param :form, :contact_email, :string, :optional, "(required for startup) Company contact email"
+    param :form, :image, :string, :optional, "(required for startup) Company logo"
+    param :form, :description, :string, :optional, "(required for startup) Company description"
+    param_list :form, :stage_of_funding, :string, :optional, "(required for startup) Company stage of funding", [:idea, :pre_seed, :seed, :serial_a, :serial_b, :serial_c]
+    param :form, :investment_amount, :integer, :optional, "Company investment amount"
+    param :form, :equality_amount, :integer, :optional, "Company equality amount"
     response :created
     response :unprocessable_entity
   end
   def create
-    User.transaction do
+    # User.transaction do
       @user = User.new(user_params)
 
       if @user.save
+        if @user.role == "startup"
+          @company = Company.new(company_params)
+          @company.user_id = @user.id
+
+          if @company.save
+            set_company_image
+            set_company_team_members
+
+            if @team_member and not @team_member.errors.empty?
+              render json: @team_member.errors, status: :unprocessable_entity and return
+            end
+          else
+            @user.destroy
+            render json: @company.errors, status: :unprocessable_entity and return
+          end
+        end
+
         token = AuthenticationHelper.process_token(request, @user)
 
         user = @user.as_json
@@ -56,9 +81,9 @@ class UsersController < ApplicationController
         render json: @user.errors, status: :unprocessable_entity
       end
     end
-  rescue
-    render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
-  end
+  # rescue
+  #   render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
+  # end
 
   # PATCH/PUT /users/1/change_password
   swagger_api :change_password do
@@ -153,8 +178,41 @@ class UsersController < ApplicationController
       end
     end
 
+    def set_company_image
+      if params[:image]
+        image = CompanyImage.new(base64: params[:image], company_id: @company.id)
+        image.save
+      end
+    end
+
+    def set_company_team_members
+      if params[:team_members]
+        @company.company_team_members.clear
+        params[:team_members].each do |team_member|
+          @team_member = CompanyTeamMember.new(
+            team_member_name: team_member["team_member_name"],
+            c_level: CompanyTeamMember.c_levels[team_member["c_level"]],
+            company_id: @company.id
+          )
+
+          if @team_member.save
+            @company.company_team_members << @team_member
+            @company.save
+          else
+            @user.destroy
+
+            @team_member
+          end
+        end
+      end
+    end
+
     def user_params
       params.permit(:role, :name, :surname, :email, :phone, :password, :password_confirmation, :old_password, :goals)
+    end
+
+    def company_params
+      params.permit(:company_name, :website, :description, :contact_email, :stage_of_funding, :investment_amount, :equality_amount)
     end
 
     def change_password_params

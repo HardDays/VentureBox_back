@@ -27,7 +27,7 @@ Rails.application.routes.draw do
       patch :change_general
     end
 
-    resources :companies, only: [:create, :update, :destroy] do
+    resources :companies, only: [:update, :destroy] do
       collection do
         get :my
       end

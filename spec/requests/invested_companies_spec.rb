@@ -290,7 +290,7 @@ RSpec.describe "InvestedCompanies", type: :request do
       end
 
       it 'creates a company' do
-        expect(json['company_name']).to eq(company4.name)
+        expect(json['company_name']).to eq(company4.company_name)
         expect(json['company_id']).to eq(company4.id)
         expect(json['investment']).to eq(1000000)
         expect(json['evaluation']).to eq(10)
@@ -353,7 +353,7 @@ RSpec.describe "InvestedCompanies", type: :request do
       end
 
       it 'creates a company' do
-        expect(json['company_name']).to eq(company4.name)
+        expect(json['company_name']).to eq(company4.company_name)
         expect(json['company_id']).to eq(company4.id)
         expect(json['investment']).to eq(1000000)
         expect(json['evaluation']).to eq(10)

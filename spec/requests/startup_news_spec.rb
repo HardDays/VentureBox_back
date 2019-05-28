@@ -133,7 +133,7 @@ RSpec.describe "StartupNews", type: :request do
 
       it "return all company info" do
         expect(json["id"]).to eq(startup_news.id)
-        expect(json["company_name"]).to eq(startup_news.company.name)
+        expect(json["company_name"]).to eq(startup_news.company.company_name)
         expect(json["company_id"]).to eq(startup_news.company_id)
         expect(json["text"]).to eq(startup_news.text)
         expect(json["created_at"]).to be_kind_of(String)
@@ -325,7 +325,7 @@ RSpec.describe "StartupNews", type: :request do
 
       it "return all company info" do
         expect(json["id"]).to eq(startup_news.id)
-        expect(json["company_name"]).to eq(startup_news.company.name)
+        expect(json["company_name"]).to eq(startup_news.company.company_name)
         expect(json["company_id"]).to eq(startup_news.company_id)
         expect(json["text"]).to eq(startup_news.text)
         expect(json["created_at"]).to be_kind_of(String)
@@ -432,7 +432,7 @@ RSpec.describe "StartupNews", type: :request do
       it 'creates a company item' do
         expect(json['text']).to eq('text')
         expect(json['company_id']).to eq(company.id)
-        expect(json['company_name']).to eq(company.name)
+        expect(json['company_name']).to eq(company.company_name)
         expect(json["created_at"]).to be_a_kind_of(String)
       end
 

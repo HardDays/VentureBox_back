@@ -141,7 +141,7 @@ RSpec.describe "InterestingCompanies", type: :request do
       end
 
       it 'creates a company' do
-        expect(json['company_name']).to eq(company3.name)
+        expect(json['company_name']).to eq(company3.company_name)
         expect(json['company_id']).to eq(company3.id)
       end
 

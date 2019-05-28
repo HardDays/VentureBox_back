@@ -64,8 +64,12 @@ class User < ApplicationRecord
 
   def as_json(options={})
     res = super(options)
-
     res.delete('password')
+
+    if role == "startup"
+      res[:company_id] = company.id
+    end
+
     res
   end
 end

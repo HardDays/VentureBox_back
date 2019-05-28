@@ -110,42 +110,12 @@ class CompaniesController < ApplicationController
     render json: @company, status: :ok
   end
 
-  # POST /users/1/companies
-  swagger_api :create do
-    summary "Create company"
-    param :path, :user_id, :integer, :required, "Startup user id"
-    param :form, :name, :string, :required, "Company name"
-    param :form, :website, :string, :required, "Company website"
-    param :form, :description, :string, :optional, "Company description"
-    param :form, :contact_email, :string, :optional, "Company contact email"
-    param :form, :image, :string, :optional, "Company logo"
-    param :header, 'Authorization', :string, :required, 'Authentication token'
-    response :created
-    response :unauthorized
-    response :unprocessable_entity
-  end
-  def create
-    Company.transaction do
-      @company = Company.new(company_params)
-      @company.user_id = @user.id
-
-      if @company.save
-        set_company_image
-        render json: @company, status: :created
-      else
-        render json: @company.errors, status: :unprocessable_entity
-      end
-    end
-  rescue
-    render json: {errors: :FAILED_SAVE_COMPANY}, status: :unprocessable_entity
-  end
-
   # PATCH/PUT /users/1/companies/1
   swagger_api :update do
     summary "Update company info"
     param :path, :user_id, :integer, :required, "Startup user id"
     param :path, :id, :integer, :required, "Company id"
-    param :form, :name, :string, :optional, "Company name"
+    param :form, :company_name, :string, :optional, "Company name"
     param :form, :website, :string, :optional, "Company website"
     param :form, :description, :string, :optional, "Company description"
     param :form, :contact_email, :string, :optional, "Company contact email"
@@ -161,6 +131,7 @@ class CompaniesController < ApplicationController
     remove_image
     if @company.update(company_params)
       set_company_image
+      set_company_team_members
       render json: @company, status: :ok
     else
       render json: @company.errors, status: :unprocessable_entity
@@ -232,6 +203,26 @@ class CompaniesController < ApplicationController
       end
     end
 
+    def set_company_team_members
+      if params[:team_members]
+        @company.company_team_members.clear
+        params[:team_members].each do |team_member|
+          obj = CompanyTeamMember.new(
+            team_member_name: team_member["team_member_name"],
+            c_level: team_member["c_level"],
+            company_id: @company.id
+          )
+
+          if obj.save
+            @company.company_team_members << obj
+            @company.save
+          else
+            render json: obj.errors, status: :unprocessable_entity and return
+          end
+        end
+      end
+    end
+
     def check_company_exists
       if @user.company
         render json: {errors: :ALREADY_HAVE_COMPANY}, status: :forbidden and return
@@ -239,6 +230,6 @@ class CompaniesController < ApplicationController
     end
 
     def company_params
-      params.permit(:name, :website, :description, :contact_email)
+      params.permit(:company_name, :website, :description, :contact_email, :stage_of_funding, :investment_amount, :equality_amount)
     end
 end

@@ -297,6 +297,13 @@
             },
             {
               "paramType": "form",
+              "name": "goals",
+              "type": "string",
+              "description": "User goals",
+              "required": false
+            },
+            {
+              "paramType": "form",
               "name": "role",
               "type": "string",
               "description": "User role",
@@ -311,9 +318,69 @@
             },
             {
               "paramType": "form",
-              "name": "goals",
+              "name": "company_name",
               "type": "string",
-              "description": "User goals",
+              "description": "(required for startup) Company name",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "website",
+              "type": "string",
+              "description": "Company website",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "contact_email",
+              "type": "string",
+              "description": "(required for startup) Company contact email",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "image",
+              "type": "string",
+              "description": "(required for startup) Company logo",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "description",
+              "type": "string",
+              "description": "(required for startup) Company description",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "stage_of_funding",
+              "type": "string",
+              "description": "(required for startup) Company stage of funding",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "idea",
+                  "pre_seed",
+                  "seed",
+                  "serial_a",
+                  "serial_b",
+                  "serial_c"
+                ]
+              }
+            },
+            {
+              "paramType": "form",
+              "name": "investment_amount",
+              "type": "integer",
+              "description": "Company investment amount",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "equality_amount",
+              "type": "integer",
+              "description": "Company equality amount",
               "required": false
             }
           ],

@@ -19,12 +19,12 @@ RSpec.describe CompaniesController, type: :routing do
       expect(:get => "/users/1/companies/my").to route_to("companies#my", :user_id => "1")
     end
 
-    it "routes to #my_imange" do
+    it "routes to #my_image" do
       expect(:get => "/users/1/companies/1/image").to route_to("companies#my_image", :id => "1", :user_id => "1")
     end
 
     it "routes to #create" do
-      expect(:post => "/users/1/companies").to route_to("companies#create", :user_id => "1")
+      expect(:post => "/users/1/companies").not_to be_routable
     end
 
     it "routes to #update via PUT" do

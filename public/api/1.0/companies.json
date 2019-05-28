@@ -262,84 +262,6 @@
       ]
     },
     {
-      "path": "/users/{user_id}/companies.json",
-      "operations": [
-        {
-          "summary": "Create company",
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "user_id",
-              "type": "integer",
-              "description": "Startup user id",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "name",
-              "type": "string",
-              "description": "Company name",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "website",
-              "type": "string",
-              "description": "Company website",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "description",
-              "type": "string",
-              "description": "Company description",
-              "required": false
-            },
-            {
-              "paramType": "form",
-              "name": "contact_email",
-              "type": "string",
-              "description": "Company contact email",
-              "required": false
-            },
-            {
-              "paramType": "form",
-              "name": "image",
-              "type": "string",
-              "description": "Company logo",
-              "required": false
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
-          "responseMessages": [
-            {
-              "code": 201,
-              "responseModel": null,
-              "message": "Created"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 422,
-              "responseModel": null,
-              "message": "Unprocessable Entity"
-            }
-          ],
-          "nickname": "Companies#create",
-          "method": "post"
-        }
-      ]
-    },
-    {
       "path": "/users/{user_id}/companies/{id}.json",
       "operations": [
         {
@@ -361,7 +283,7 @@
             },
             {
               "paramType": "form",
-              "name": "name",
+              "name": "company_name",
               "type": "string",
               "description": "Company name",
               "required": false
