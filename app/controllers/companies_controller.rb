@@ -132,6 +132,11 @@ class CompaniesController < ApplicationController
     if @company.update(company_params)
       set_company_image
       set_company_team_members
+
+      if @team_member and not @team_member.errors.empty?
+        render json: @team_member.errors, status: :unprocessable_entity and return
+      end
+
       render json: @company, status: :ok
     else
       render json: @company.errors, status: :unprocessable_entity
@@ -207,17 +212,15 @@ class CompaniesController < ApplicationController
       if params[:team_members]
         @company.company_team_members.clear
         params[:team_members].each do |team_member|
-          obj = CompanyTeamMember.new(
+          @team_member = CompanyTeamMember.new(
             team_member_name: team_member["team_member_name"],
-            c_level: team_member["c_level"],
+            c_level: CompanyTeamMember.c_levels[team_member["c_level"]],
             company_id: @company.id
           )
 
-          if obj.save
-            @company.company_team_members << obj
+          if @team_member.save
+            @company.company_team_members << @team_member
             @company.save
-          else
-            render json: obj.errors, status: :unprocessable_entity and return
           end
         end
       end
