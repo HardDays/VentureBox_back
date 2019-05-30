@@ -1,5 +1,5 @@
 class CompaniesController < ApplicationController
-  before_action :authorize_investor, only: [:index]
+  before_action :authorize_investor, only: [:index, :investor_companies]
   before_action :authorize_startup, only: [:my, :my_image, :update]
   before_action :set_company, only: [:my, :show, :image, :my_image, :update]
   before_action :check_company_ownership, only: [:my, :my_image, :update]
@@ -63,6 +63,34 @@ class CompaniesController < ApplicationController
     send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
   end
 
+  # GET /companies/my
+  swagger_api :investor_companies do
+    summary "Retrieve investor companies"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
+    response :ok
+    response :unauthorized
+  end
+  def investor_companies
+    @companies = @user.interesting_companies.all + @user.invested_companies.all
+
+    render json: @companies, list: true, status: :ok
+  end
+
+  # GET /users/1/companies/1
+  swagger_api :my do
+    summary "Retrieve my company info"
+    param :path, :user_id, :integer, :required, "Startup user id"
+    param :path, :id, :integer, :required, "Company id"
+    param :header, 'Authorization', :string, :required, 'Authentication token'
+    response :ok
+    response :forbidden
+    response :unauthorized
+    response :not_found
+  end
+  def my
+    render json: @company, status: :ok
+  end
+
   # GET /users/1/companies/1/image
   swagger_api :my_image do
     summary "Get my company image"
@@ -91,21 +119,6 @@ class CompaniesController < ApplicationController
     end
 
     send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
-  end
-
-  # GET /users/1/companies/1
-  swagger_api :my do
-    summary "Retrieve my company info"
-    param :path, :user_id, :integer, :required, "Startup user id"
-    param :path, :id, :integer, :required, "Company id"
-    param :header, 'Authorization', :string, :required, 'Authentication token'
-    response :ok
-    response :forbidden
-    response :unauthorized
-    response :not_found
-  end
-  def my
-    render json: @company, status: :ok
   end
 
   # PATCH/PUT /users/1/companies/1

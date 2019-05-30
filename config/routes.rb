@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   end
 
   resources :companies, only: [:index, :show] do
+    collection do
+      get :investor_companies, path: "my"
+    end
     member do
       get :image
 

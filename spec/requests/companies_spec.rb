@@ -14,6 +14,8 @@ RSpec.describe "Companies", type: :request do
   let!(:company3) { create(:company, user_id: user3.id) }
 
   let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
+  let!(:invested_company) { create(:invested_company, company_id: company.id, investor_id: investor.id)}
+  let!(:interesting_company) { create(:interesting_company, company_id: company.id, investor_id: investor.id)}
   let!(:new_user) { create(:user, password: password, password_confirmation: password, role: :startup)}
 
   let(:resize_params) { { heigh: 200, width: 200 } }
@@ -146,6 +148,68 @@ RSpec.describe "Companies", type: :request do
     context 'when not authorized' do
       before do
         get "/companies"
+      end
+
+      it "returns nothing" do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 401' do
+        expect(response).to have_http_status(401)
+      end
+    end
+  end
+
+  # Test suite for GET /companies/my
+  describe 'GET /companies/my' do
+    context 'when simply get' do
+      before do
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        get "/companies/my", headers: {'Authorization': token}
+      end
+
+      it "return all companies" do
+        expect(json).not_to be_empty
+        expect(json.size).to eq(2)
+      end
+
+      it "returns all company info" do
+        expect(json[0]["id"]).to be_a_kind_of(Integer)
+        expect(json[0]["company_name"]).to be_a_kind_of(String)
+        expect(json[0]["website"]).not_to be_present
+        expect(json[0]["description"]).not_to be_present
+        expect(json[0]["contact_email"]).not_to be_present
+        expect(json[0]["image"]).not_to be_present
+        expect(json[0]["team_members"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when i am not investor' do
+      before do
+        post "/auth/login", params: {email: user.email, password: password}
+        token = json['token']
+
+        get "/companies/my", headers: {'Authorization': token}
+      end
+
+      it "returns nothing" do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 401' do
+        expect(response).to have_http_status(401)
+      end
+    end
+
+    context 'when not authorized' do
+      before do
+        get "/companies/my"
       end
 
       it "returns nothing" do

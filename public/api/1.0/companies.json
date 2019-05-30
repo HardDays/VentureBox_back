@@ -5,6 +5,37 @@
   "resourcePath": "companies",
   "apis": [
     {
+      "path": "/companies/my.json",
+      "operations": [
+        {
+          "summary": "Retrieve investor companies",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "nickname": "Companies#investor_companies",
+          "method": "get"
+        }
+      ]
+    },
+    {
       "path": "/companies/{id}/image.json",
       "operations": [
         {
