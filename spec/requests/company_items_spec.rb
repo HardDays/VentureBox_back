@@ -6,14 +6,14 @@ RSpec.describe "CompanyItems", type: :request do
   let!(:company) { create(:company, user_id: user.id) }
 
   let!(:company_item) { create(:company_item, company_id: company.id) }
-  let!(:company_item_tag) { create(:company_item_tag, company_item_id: company_item.id) }
+  let!(:company_item_tag) { create(:company_item_tag, tag: "blockchain", company_item_id: company_item.id) }
   let!(:company_item_image) { create(:company_item_image, company_item_id: company_item.id) }
 
   let!(:company_item2) { create(:company_item, company_id: company.id) }
-  let!(:company_item_tag2) { create(:company_item_tag, company_item_id: company_item2.id) }
+  let!(:company_item_tag2) { create(:company_item_tag, tag: "coding", company_item_id: company_item2.id) }
 
   let!(:company_item3) { create(:company_item, company_id: company.id) }
-  let!(:company_item_tag3) { create(:company_item_tag, company_item_id: company_item3.id) }
+  let!(:company_item_tag3) { create(:company_item_tag, tag: "product", company_item_id: company_item3.id) }
 
   let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
   let!(:company2) { create(:company, user_id: user2.id) }
@@ -101,6 +101,66 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
+        expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["image"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when use categories search' do
+      before do
+        get "/company_items", params: {tags: ["product", "coding"]}
+      end
+
+      it "returns response with offset categories" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(2)
+        expect(json['items'].size).to eq(2)
+      end
+
+      it "return all item info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
+        expect(json['items'][0]["description"]).to be_a_kind_of(String)
+        expect(json['items'][0]["price"]).to be_a_kind_of(String)
+        expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["image"]).not_to be_present
+
+        tags = json["items"][0]["tags"]
+        tag_found = false
+        if "product".in? tags or "coding".in? tags
+          tag_found = true
+        end
+
+        expect(tag_found).to be(true)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when use text search' do
+      before do
+        get "/company_items", params: {text: company_item.name}
+      end
+
+      it "returns response with offset" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(1)
+        expect(json['items'].size).to eq(1)
+      end
+
+      it "return all item info" do
+        expect(json['items'][0]["id"]).to eq(company_item.id)
+        expect(json['items'][0]["name"]).to eq(company_item.name)
+        expect(json['items'][0]["link_to_store"]).to eq(company_item.link_to_store)
+        expect(json['items'][0]["description"]).to eq(company_item.description)
+        expect(json['items'][0]["price"]).to eq(company_item.price)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
         expect(json['items'][0]["image"]).not_to be_present
       end

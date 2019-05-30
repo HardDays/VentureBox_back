@@ -10,10 +10,14 @@ class CompanyItemsController < ApplicationController
     summary "Retrieve company items"
     param :query, :limit, :integer, :optional, "Limit"
     param :query, :offset, :integer, :optional, "Offset"
+    param :query, :tags, :string, :optional, "Tags array to search"
+    param :query, :text, :string, :optional, "text to search"
     response :ok
   end
   def index
     @company_items = CompanyItem.all
+    search_tags
+    search_text
 
     render json: {
       count: @company_items.count,
@@ -244,6 +248,24 @@ class CompanyItemsController < ApplicationController
     def check_company_item
       if @company.id != @company_item.company_id
         render json: {errors: :ITEM_NOT_BELONG_TO_COMPANY}, status: :forbidden and return
+      end
+    end
+
+    def search_tags
+      if params[:tags]
+        tags = []
+        params[:tags].each do |tag|
+          tags.append(CompanyItemTag.tags[tag])
+        end
+
+        @company_items = @company_items.joins(:company_item_tags).where(:company_item_tags => {tag: tags})
+      end
+    end
+
+    def search_text
+      if params[:text]
+        @company_items = @company_items.where(
+          "(company_items.name ILIKE :query) ", query: "%#{params[:text]}%")
       end
     end
 
