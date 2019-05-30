@@ -1,9 +1,9 @@
 class CompaniesController < ApplicationController
-  before_action :authorize_startup, only: [:my, :my_image, :create, :update, :destroy]
+  before_action :authorize_investor, only: [:index]
+  before_action :authorize_startup, only: [:my, :my_image, :update, :destroy]
   before_action :set_company, only: [:show, :image, :my_image, :update, :destroy]
   before_action :set_my_company, only: [:my]
   before_action :check_company_ownership, only: [:my_image, :update, :destroy]
-  before_action :check_company_exists, only: [:create]
   swagger_controller :company, "Startup company"
 
   # GET /companies
@@ -28,7 +28,6 @@ class CompaniesController < ApplicationController
   swagger_api :show do
     summary "Retrieve company info"
     param :path, :id, :integer, :required, "Company id"
-    param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
     response :not_found
@@ -43,7 +42,6 @@ class CompaniesController < ApplicationController
     param :path, :id, :integer, :required, "Company id"
     param :query, :width, :integer, :optional, "Width to crop"
     param :query, :height, :integer, :optional, "Height to crop"
-    param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
     response :not_found
@@ -165,6 +163,14 @@ class CompaniesController < ApplicationController
   end
 
   private
+    def authorize_investor
+      @user = AuthorizationHelper.authorize_investor(request)
+
+      if @user == nil
+        render status: :unauthorized and return
+      end
+    end
+
     def authorize_startup
       @user = AuthorizationHelper.authorize_startup(request)
 

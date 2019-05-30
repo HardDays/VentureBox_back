@@ -41,23 +41,16 @@ RSpec.describe "Companies", type: :request do
   describe 'GET /companies' do
     context 'when simply get' do
       before do
-        get "/companies"
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        get "/companies", headers: {'Authorization': token}
       end
 
       it "return all companies" do
         expect(json).not_to be_empty
         expect(json['count']).to eq(3)
         expect(json['items'].size).to eq(3)
-      end
-
-      it "return all company info" do
-        expect(json['items'].size).to eq(3)
-        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
-        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
-        expect(json['items'][0]["website"]).not_to be_present
-        expect(json['items'][0]["description"]).not_to be_present
-        expect(json['items'][0]["contact_email"]).not_to be_present
-        expect(json['items'][0]["image"]).not_to be_present
       end
 
       it 'returns status code 200' do
@@ -67,22 +60,16 @@ RSpec.describe "Companies", type: :request do
 
     context 'when use limit' do
       before do
-        get "/companies", params: {limit: 2}
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        get "/companies", params: {limit: 2}, headers: {'Authorization': token}
       end
 
       it "returns 2 entities" do
         expect(json).not_to be_empty
         expect(json['count']).to eq(3)
         expect(json['items'].size).to eq(2)
-      end
-
-      it "return all company info" do
-        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
-        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
-        expect(json['items'][0]["website"]).not_to be_present
-        expect(json['items'][0]["description"]).not_to be_present
-        expect(json['items'][0]["contact_email"]).not_to be_present
-        expect(json['items'][0]["image"]).not_to be_present
       end
 
       it 'returns status code 200' do
@@ -92,7 +79,10 @@ RSpec.describe "Companies", type: :request do
 
     context 'when use offset' do
       before do
-        get "/companies", params: {offset: 2}
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        get "/companies", params: {offset: 2}, headers: {'Authorization': token}
       end
 
       it "returns response with offset" do
@@ -101,17 +91,39 @@ RSpec.describe "Companies", type: :request do
         expect(json['items'].size).to eq(1)
       end
 
-      it "return all company info" do
-        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
-        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
-        expect(json['items'][0]["website"]).not_to be_present
-        expect(json['items'][0]["description"]).not_to be_present
-        expect(json['items'][0]["contact_email"]).not_to be_present
-        expect(json['items'][0]["image"]).not_to be_present
-      end
-
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when i am not investor' do
+      before do
+        post "/auth/login", params: {email: user.email, password: password}
+        token = json['token']
+
+        get "/companies", params: {offset: 2}, headers: {'Authorization': token}
+      end
+
+      it "returns nothing" do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 401' do
+        expect(response).to have_http_status(401)
+      end
+    end
+
+    context 'when not authorized' do
+      before do
+        get "/companies"
+      end
+
+      it "returns nothing" do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 401' do
+        expect(response).to have_http_status(401)
       end
     end
   end

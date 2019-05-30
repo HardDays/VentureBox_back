@@ -47,13 +47,6 @@
               "type": "integer",
               "description": "Height to crop",
               "required": false
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
             }
           ],
           "nickname": "Companies#image",
@@ -134,13 +127,6 @@
               "name": "id",
               "type": "integer",
               "description": "Company id",
-              "required": true
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
               "required": true
             }
           ],
