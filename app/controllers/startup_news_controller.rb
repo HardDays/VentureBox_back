@@ -1,7 +1,8 @@
 class StartupNewsController < ApplicationController
   before_action :authorize_investor, only: [:index, :show]
   before_action :authorize_startup, only: [:my_news, :my, :create, :destroy]
-  before_action :set_company, only: [:my_news, :my, :create, :destroy]
+  before_action :set_company, only: [:company_news]
+  before_action :set_my_company, only: [:my_news, :my, :create, :destroy]
   before_action :set_startup_news, only: [:show, :my, :destroy]
   before_action :check_startup_news, only: [:my, :destroy]
   swagger_controller :startup_news, "Startup news"
@@ -18,6 +19,24 @@ class StartupNewsController < ApplicationController
   end
   def index
     @startup_news = StartupNews.all
+
+    render json: {
+      count: @startup_news.count,
+      items: @startup_news.limit(params[:limit]).offset(params[:offset])
+    }, status: :ok
+  end
+
+  # GET /companies/1/startup_news
+  swagger_api :company_news do
+    summary "Retrieve company news"
+    param :path, :id, :integer, :required, "Company id"
+    param :query, :limit, :integer, :optional, "Limit"
+    param :query, :offset, :integer, :optional, "Offset"
+    response :ok
+    response :not_found
+  end
+  def company_news
+    @startup_news = @company.startup_news.all
 
     render json: {
       count: @startup_news.count,
@@ -137,6 +156,14 @@ class StartupNewsController < ApplicationController
     end
 
     def set_company
+      begin
+        @company = Company.find(params[:id])
+      rescue
+        render status: :not_found and return
+      end
+    end
+
+    def set_my_company
       @company = @user.company
 
       unless @company

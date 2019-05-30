@@ -50,7 +50,7 @@
       ]
     },
     {
-      "path": "/interesting_companies/{id}.json",
+      "path": "/companies/{id}/interesting_companies.json",
       "operations": [
         {
           "summary": "Delete company from interested list",
@@ -81,7 +81,7 @@
               "paramType": "path",
               "name": "id",
               "type": "integer",
-              "description": "Interested item id",
+              "description": "Company id",
               "required": true
             },
             {

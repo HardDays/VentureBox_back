@@ -10,6 +10,10 @@ RSpec.describe StartupNewsController, type: :routing do
       expect(:get => "/startup_news/1").to route_to("startup_news#show", :id => "1")
     end
 
+    it "routes to #companies_news" do
+      expect(:get => "/companies/1/company_news").to route_to("startup_news#company_news", :id => "1")
+    end
+
 
     it "routes to #index" do
       expect(:get => "/users/1/companies/1/startup_news").to route_to("startup_news#my_news", :user_id => "1", :company_id => "1")

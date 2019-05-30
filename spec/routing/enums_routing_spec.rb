@@ -13,5 +13,30 @@ RSpec.describe EnumsController, type: :routing do
     it "routes to #tags" do
       expect(:get => "/enums/tags").to route_to("enums#tags")
     end
+
+
+    it "routes to #index" do
+      expect(:get => "/enums").not_to be_routable
+    end
+
+    it "routes to #show" do
+      expect(:get => "/enums/1").not_to be_routable
+    end
+
+    it "routes to #create" do
+      expect(:post => "/enums").not_to be_routable
+    end
+
+    it "routes to #update via PUT" do
+      expect(:put => "/enums/1").not_to be_routable
+    end
+
+    it "routes to #update via PATCH" do
+      expect(:patch => "/enums/1").not_to be_routable
+    end
+
+    it "routes to #destroy" do
+      expect(:delete => "/enums/11").not_to be_routable
+    end
   end
 end

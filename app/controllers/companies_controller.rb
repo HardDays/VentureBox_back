@@ -1,9 +1,8 @@
 class CompaniesController < ApplicationController
   before_action :authorize_investor, only: [:index]
-  before_action :authorize_startup, only: [:my, :my_image, :update, :destroy]
-  before_action :set_company, only: [:show, :image, :my_image, :update, :destroy]
-  before_action :set_my_company, only: [:my]
-  before_action :check_company_ownership, only: [:my_image, :update, :destroy]
+  before_action :authorize_startup, only: [:my, :my_image, :update]
+  before_action :set_company, only: [:my, :show, :image, :my_image, :update]
+  before_action :check_company_ownership, only: [:my, :my_image, :update]
   swagger_controller :company, "Startup company"
 
   # GET /companies
@@ -94,10 +93,11 @@ class CompaniesController < ApplicationController
     send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
   end
 
-  # GET /users/1/companies/my
+  # GET /users/1/companies/1
   swagger_api :my do
     summary "Retrieve my company info"
     param :path, :user_id, :integer, :required, "Startup user id"
+    param :path, :id, :integer, :required, "Company id"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :forbidden
@@ -145,23 +145,6 @@ class CompaniesController < ApplicationController
     end
   end
 
-  # DELETE /users/1/companies/1
-  swagger_api :destroy do
-    summary "Delete company"
-    param :path, :user_id, :integer, :required, "Startup user id"
-    param :path, :id, :integer, :required, "Company id"
-    param :header, 'Authorization', :string, :required, 'Authentication token'
-    response :ok
-    response :unauthorized
-    response :not_found
-    response :forbidden
-  end
-  def destroy
-    @company.destroy
-
-    render status: :ok
-  end
-
   private
     def authorize_investor
       @user = AuthorizationHelper.authorize_investor(request)
@@ -187,14 +170,6 @@ class CompaniesController < ApplicationController
       begin
         @company = Company.find(params[:id])
       rescue
-        render status: :not_found and return
-      end
-    end
-
-    def set_my_company
-      @company = @user.company
-
-      unless @company
         render status: :not_found and return
       end
     end

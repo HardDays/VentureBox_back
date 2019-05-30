@@ -16,7 +16,7 @@ RSpec.describe CompaniesController, type: :routing do
 
 
     it "routes to #my" do
-      expect(:get => "/users/1/companies/my").to route_to("companies#my", :user_id => "1")
+      expect(:get => "/users/1/companies/1").to route_to("companies#my", :user_id => "1", :id => "1")
     end
 
     it "routes to #my_image" do
@@ -36,7 +36,7 @@ RSpec.describe CompaniesController, type: :routing do
     end
 
     it "routes to #destroy" do
-      expect(:delete => "/users/1/companies/1").to route_to("companies#destroy", :user_id => "1", :id => "1")
+      expect(:delete => "/users/1/companies/1").not_to be_routable
     end
   end
 end

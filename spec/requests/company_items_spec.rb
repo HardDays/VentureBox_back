@@ -270,6 +270,101 @@ RSpec.describe "CompanyItems", type: :request do
     end
   end
 
+  # Test suite for GET /companies/1/company_items
+  describe 'GET /companies/1/company_items' do
+    context 'when simply get' do
+      before do
+        get "/companies/#{company.id}/company_items"
+      end
+
+      it "return all items" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(3)
+        expect(json['items'].size).to eq(3)
+      end
+
+      it "return all item info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
+        expect(json['items'][0]["description"]).to be_a_kind_of(String)
+        expect(json['items'][0]["price"]).to be_a_kind_of(String)
+        expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["image"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when use limit' do
+      before do
+        get "/companies/#{company.id}/company_items", params: {limit: 2}
+      end
+
+      it "returns 2 items" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(3)
+        expect(json['items'].size).to eq(2)
+      end
+
+      it "return all item info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
+        expect(json['items'][0]["description"]).to be_a_kind_of(String)
+        expect(json['items'][0]["price"]).to be_a_kind_of(String)
+        expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["image"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when use offset' do
+      before do
+        get "/companies/#{company.id}/company_items", params: {offset: 2}
+      end
+
+      it "returns response with offset" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(3)
+        expect(json['items'].size).to eq(1)
+      end
+
+      it "return all item info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
+        expect(json['items'][0]["description"]).to be_a_kind_of(String)
+        expect(json['items'][0]["price"]).to be_a_kind_of(String)
+        expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["image"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when company does not exists' do
+      before do
+        get "/companies/0/company_items"
+      end
+
+      it 'response is empty' do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+    end
+  end
+
   # Test suite for GET /users/1/companies/1/company_items
   describe 'GET /users/1/companies/1/company_items' do
     context 'when simply get' do

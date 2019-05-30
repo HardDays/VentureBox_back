@@ -53,6 +53,16 @@ RSpec.describe "Companies", type: :request do
         expect(json['items'].size).to eq(3)
       end
 
+      it "returns all company info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["website"]).not_to be_present
+        expect(json['items'][0]["description"]).not_to be_present
+        expect(json['items'][0]["contact_email"]).not_to be_present
+        expect(json['items'][0]["image"]).not_to be_present
+        expect(json['items'][0]["team_members"]).not_to be_present
+      end
+
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
@@ -72,6 +82,16 @@ RSpec.describe "Companies", type: :request do
         expect(json['items'].size).to eq(2)
       end
 
+      it "returns all company info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["website"]).not_to be_present
+        expect(json['items'][0]["description"]).not_to be_present
+        expect(json['items'][0]["contact_email"]).not_to be_present
+        expect(json['items'][0]["image"]).not_to be_present
+        expect(json['items'][0]["team_members"]).not_to be_present
+      end
+
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
@@ -89,6 +109,16 @@ RSpec.describe "Companies", type: :request do
         expect(json).not_to be_empty
         expect(json['count']).to eq(3)
         expect(json['items'].size).to eq(1)
+      end
+
+      it "returns all company info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["website"]).not_to be_present
+        expect(json['items'][0]["description"]).not_to be_present
+        expect(json['items'][0]["contact_email"]).not_to be_present
+        expect(json['items'][0]["image"]).not_to be_present
+        expect(json['items'][0]["team_members"]).not_to be_present
       end
 
       it 'returns status code 200' do
@@ -141,11 +171,12 @@ RSpec.describe "Companies", type: :request do
       end
 
       it "return all company info" do
-        expect(json["id"]).to be_a_kind_of(Integer)
-        expect(json["company_name"]).to be_a_kind_of(String)
-        expect(json["website"]).to be_a_kind_of(String)
-        expect(json["description"]).to be_a_kind_of(String)
-        expect(json["contact_email"]).to be_a_kind_of(String)
+        expect(json["id"]).to eq(company.id)
+        expect(json["company_name"]).to eq(company.company_name)
+        expect(json["website"]).to eq(company.website)
+        expect(json["description"]).to eq(company.description)
+        expect(json["contact_email"]).to eq(company.contact_email)
+        expect(json["team_members"]).to be_a_kind_of(Array)
         expect(json["image"]).not_to be_present
       end
 
@@ -226,14 +257,14 @@ RSpec.describe "Companies", type: :request do
     end
   end
 
-  # Test suite for GET /users/1/companies/my
-  describe 'GET /users/1/companies/my' do
+  # Test suite for GET /users/1/companies/1
+  describe 'GET /users/1/companies/1' do
     context 'when the record exists' do
       before do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        get "/users/#{user.id}/companies/my", headers: { 'Authorization': token }
+        get "/users/#{user.id}/companies/#{company.id}", headers: { 'Authorization': token }
       end
 
       it 'returns the company' do
@@ -242,11 +273,12 @@ RSpec.describe "Companies", type: :request do
       end
 
       it "return all company info" do
-        expect(json["id"]).to be_a_kind_of(Integer)
-        expect(json["company_name"]).to be_a_kind_of(String)
-        expect(json["website"]).to be_a_kind_of(String)
-        expect(json["description"]).to be_a_kind_of(String)
-        expect(json["contact_email"]).to be_a_kind_of(String)
+        expect(json["id"]).to eq(company.id)
+        expect(json["company_name"]).to eq(company.company_name)
+        expect(json["website"]).to eq(company.website)
+        expect(json["description"]).to eq(company.description)
+        expect(json["contact_email"]).to eq(company.contact_email)
+        expect(json["team_members"]).to be_a_kind_of(Array)
         expect(json["image"]).not_to be_present
       end
 
@@ -260,9 +292,7 @@ RSpec.describe "Companies", type: :request do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
 
-        user.company.destroy
-
-        get "/users/#{user.id}/companies/my", headers: { 'Authorization': token }
+        get "/users/#{user.id}/companies/0", headers: { 'Authorization': token }
       end
 
       it 'returns status code 404' do
@@ -279,7 +309,7 @@ RSpec.describe "Companies", type: :request do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
 
-        get "/users/#{user.id}/companies/my", headers: {'Authorization': token}
+        get "/users/#{user.id}/companies/#{company.id}", headers: {'Authorization': token}
       end
 
       it "returns nothing" do
@@ -291,8 +321,25 @@ RSpec.describe "Companies", type: :request do
       end
     end
 
+    context 'when not my company' do
+      before do
+        post "/auth/login", params: {email: user.email, password: password}
+        token = json['token']
+
+        get "/users/#{user.id}/companies/#{company2.id}", headers: {'Authorization': token}
+      end
+
+      it "returns nothing" do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 401' do
+        expect(response).to have_http_status(403)
+      end
+    end
+
     context 'when not authorized' do
-      before { get "/users/#{user.id}/companies/my" }
+      before { get "/users/#{user.id}/companies/#{company.id}" }
 
       it 'returns status code 401' do
         expect(response).to have_http_status(401)
@@ -579,99 +626,6 @@ RSpec.describe "Companies", type: :request do
     context 'when the user unauthorized' do
       before do
         patch "/users/#{user.id}/companies/#{company.id}", params: valid_attributes
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-    end
-  end
-
-  # Test suite for DELETE /users/1/companies/1
-  describe 'DELETE /users/1/companies/1' do
-    context 'when the request is valid' do
-      let!(:image_count) { CompanyImage.count }
-
-      before do
-        post "/auth/login", params: { email: user.email, password: password}
-        token = json['token']
-
-        delete "/users/#{user.id}/companies/#{company.id}", headers: { 'Authorization': token }
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-
-      it 'deletes image' do
-        expect(image_count - 1).to eq(CompanyImage.count)
-      end
-
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
-      end
-    end
-
-    context 'when company does not exists' do
-      let(:company_id) { 0 }
-
-      before do
-        post "/auth/login", params: { email: user.email, password: password}
-        token = json['token']
-
-        delete "/users/#{user.id}/companies/#{company_id}", headers: { 'Authorization': token }
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
-    end
-
-    context 'when not my company' do
-      before do
-        post "/auth/login", params: { email: user.email, password: password}
-        token = json['token']
-
-        delete "/users/#{user.id}/companies/#{company2.id}", headers: { 'Authorization': token }
-      end
-
-      it 'returns status code 403' do
-        expect(response).to have_http_status(403)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-    end
-
-    context 'when i am not startup' do
-      before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        delete "/users/#{user.id}/companies/#{company.id}", headers: { 'Authorization': token }
-      end
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'response is empty' do
-        expect(response.body).to match("")
-      end
-    end
-
-    context 'when the user unauthorized' do
-      before do
-        delete "/users/#{user.id}/companies/#{company.id}"
       end
 
       it 'returns status code 401' do

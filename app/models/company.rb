@@ -21,6 +21,8 @@ class Company < ApplicationRecord
       res.delete('website')
       res.delete('description')
       res.delete('contact_email')
+    else
+      res[:team_members] = company_team_members.as_json(only: [:team_member_name, :c_level])
     end
 
     res.delete('image')

@@ -14,6 +14,10 @@ RSpec.describe CompanyItemsController, type: :routing do
       expect(:get => "/company_items/1/image").to route_to("company_items#item_image", :id => "1")
     end
 
+    it "routes to #company_items" do
+      expect(:get => "/companies/1/company_items").to route_to("company_items#company_items", :id => "1")
+    end
+
 
     it "routes to #my_items" do
       expect(:get => "/users/1/companies/1/company_items").to route_to("company_items#my_items", :user_id => "1", :company_id => "1")

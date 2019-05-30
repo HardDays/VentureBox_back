@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :enums do
+  resources :enums, only: [] do
     collection do
       get :c_level
       get :stage_of_funding
@@ -23,6 +23,18 @@ Rails.application.routes.draw do
     member do
       get :image
 
+      resources :company_items, only: [] do
+        collection do
+          get :company_items, path: ""
+        end
+      end
+
+      resources :startup_news, path: "company_news", only: [] do
+        collection do
+          get :company_news, path: ""
+        end
+      end
+
       resources :invested_companies, only: [:create]
       resources :interesting_companies, only: [:create] do
         collection do
@@ -42,11 +54,9 @@ Rails.application.routes.draw do
       patch :change_general
     end
 
-    resources :companies, only: [:update, :destroy] do
-      collection do
-        get :my
-      end
+    resources :companies, only: [:update] do
       member do
+        get :my, path: ""
         get :my_image, path: "image"
 
         resources :invested_companies, path: "investors", only: [] do

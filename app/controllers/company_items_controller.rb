@@ -1,6 +1,7 @@
 class CompanyItemsController < ApplicationController
-  before_action :authorize_startup, except: [:index, :show, :item_image]
-  before_action :set_company, except: [:index, :show, :item_image]
+  before_action :authorize_startup, except: [:index, :show, :item_image, :company_items]
+  before_action :set_company, only: [:company_items]
+  before_action :set_my_company, except: [:index, :show, :item_image, :company_items]
   before_action :set_company_item, only: [:show, :item_image, :my_item, :my_item_image, :update, :destroy]
   before_action :check_company_item, only: [:my_item, :my_item_image,  :update, :destroy]
   swagger_controller :company_items, "Company items"
@@ -18,6 +19,24 @@ class CompanyItemsController < ApplicationController
     @company_items = CompanyItem.all
     search_tags
     search_text
+
+    render json: {
+      count: @company_items.count,
+      items: @company_items.limit(params[:limit]).offset(params[:offset])
+    }, status: :ok
+  end
+
+  # GET /companies/1/company_items
+  swagger_api :company_items do
+    summary "Retrieve company items"
+    param :path, :id, :integer, :required, "Company id"
+    param :query, :limit, :integer, :optional, "Limit"
+    param :query, :offset, :integer, :optional, "Offset"
+    response :ok
+    response :not_found
+  end
+  def company_items
+    @company_items = @company.company_items.all
 
     render json: {
       count: @company_items.count,
@@ -222,6 +241,14 @@ class CompanyItemsController < ApplicationController
     end
 
     def set_company
+      begin
+        @company = Company.find(params[:id])
+      rescue
+        render status: :not_found and return
+      end
+    end
+
+    def set_my_company
       @company = @user.company
 
       unless @company
