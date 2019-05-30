@@ -44,16 +44,16 @@ RSpec.describe 'Auth API', type: :request do
     context 'when the password not given' do
       before { post '/auth/login', params: {email: user.email} }
 
-      it 'returns status code 403' do
-        expect(response).to have_http_status(403)
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
       end
     end
 
     context 'when the email not given' do
       before { post '/auth/login', params: {password: password} }
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
       end
     end
   end
@@ -133,8 +133,8 @@ RSpec.describe 'Auth API', type: :request do
         expect(response.body).to match("")
       end
 
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
       end
     end
 

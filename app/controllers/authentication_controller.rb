@@ -8,13 +8,13 @@ class AuthenticationController < ApplicationController
     summary "Remind password"
     param :form, :email, :string, :required, "Email"
     response :ok
-    response :unauthorized
+    response :not_found
     response :bad_request
   end
   def forgot_password
     @user = User.find_by("LOWER(email) = ?", params[:email].downcase)
     unless @user
-      render json: {error: :LOGIN_DOES_NOT_EXIST}, status: :unauthorized and return
+      render json: {error: :LOGIN_DOES_NOT_EXIST}, status: :not_found and return
     end
 
     @attempt = ForgotPasswordAttempt.where(
@@ -54,7 +54,6 @@ class AuthenticationController < ApplicationController
     param :form, :email, :string, :required, "Email"
     param :form, :password, :password, :required, "Password"
     response :ok
-    response :unprocessable_entity
     response :not_found
     response :unauthorized
   end
@@ -62,13 +61,13 @@ class AuthenticationController < ApplicationController
     if params[:password]
       @password = User.encrypt_password(params[:password])
     else
-      render status: :forbidden and return
+      render status: :not_found and return
     end
 
     if params[:email]
       @user = User.find_by("LOWER(email) = ?", params[:email].downcase)
     else
-      render json: {errors: :EMAIL_REQUIRED}, status: :unprocessable_entity and return
+      render json: {errors: :EMAIL_REQUIRED}, status: :not_found and return
     end
 
     unless @user

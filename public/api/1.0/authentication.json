@@ -24,11 +24,6 @@
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
-            },
-            {
-              "code": 422,
-              "responseModel": null,
-              "message": "Unprocessable Entity"
             }
           ],
           "parameters": [
@@ -69,9 +64,9 @@
               "message": "Bad Request"
             },
             {
-              "code": 401,
+              "code": 404,
               "responseModel": null,
-              "message": "Unauthorized"
+              "message": "Not Found"
             }
           ],
           "parameters": [
