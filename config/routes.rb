@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :interesting_companies, only: [:index, :destroy]
+  resources :interesting_companies, only: [:index]
 
   resources :invested_companies, only: [:index]
 
@@ -24,7 +24,11 @@ Rails.application.routes.draw do
       get :image
 
       resources :invested_companies, only: [:create]
-      resources :interesting_companies, only: [:create]
+      resources :interesting_companies, only: [:create] do
+        collection do
+          delete :destroy
+        end
+      end
     end
   end
 

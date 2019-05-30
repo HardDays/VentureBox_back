@@ -24,7 +24,7 @@ RSpec.describe InterestingCompaniesController, type: :routing do
     end
 
     it "routes to #destroy" do
-      expect(:delete => "/interesting_companies/1").to route_to("interesting_companies#destroy", :id => "1")
+      expect(:delete => "/companies/1/interesting_companies").to route_to("interesting_companies#destroy", :id => "1")
     end
   end
 end

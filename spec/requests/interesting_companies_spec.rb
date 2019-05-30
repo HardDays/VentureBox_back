@@ -207,7 +207,7 @@ RSpec.describe "InterestingCompanies", type: :request do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
 
-        delete "/interesting_companies/#{interesting_company1.id}", headers: { 'Authorization': token }
+        delete "/companies/#{company.id}/interesting_companies/", headers: { 'Authorization': token }
       end
 
       it 'response is empty' do
@@ -219,12 +219,12 @@ RSpec.describe "InterestingCompanies", type: :request do
       end
     end
 
-    context 'when not exist' do
+    context 'when company not exist' do
       before do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
 
-        delete "/interesting_companies/0", headers: { 'Authorization': token }
+        delete "/companies/0/interesting_companies", headers: { 'Authorization': token }
       end
 
       it 'returns status code 404' do
@@ -241,7 +241,7 @@ RSpec.describe "InterestingCompanies", type: :request do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
 
-        delete "/interesting_companies/#{interesting_company4.id}", headers: { 'Authorization': token }
+        delete "/companies/#{company4.id}/interesting_companies", headers: { 'Authorization': token }
       end
 
       it 'returns status code 403' do
@@ -255,7 +255,7 @@ RSpec.describe "InterestingCompanies", type: :request do
 
     context 'when the user unauthorized' do
       before do
-        delete "/interesting_companies/#{interesting_company1.id}"
+        delete "/companies/#{company.id}/interesting_companies"
       end
 
       it 'returns status code 401' do

@@ -1,7 +1,7 @@
 class InterestingCompaniesController < ApplicationController
   before_action :authorize_investor
-  before_action :set_company, only: [:create]
-  before_action :set_interesting_company, only: [:destroy]
+  before_action :set_company, only: [:create, :destroy]
+  before_action :check_interesting_company, only: [:destroy]
   before_action :check_investment, only: [:create]
   swagger_controller :interesting_companies, "Interesting companies"
 
@@ -38,7 +38,7 @@ class InterestingCompaniesController < ApplicationController
     @interesting_company.company_id = @company.id
 
     if @interesting_company.save
-      render json: @interesting_company, status: :created, location: @interesting_company
+      render json: @interesting_company, status: :created
     else
       render json: @interesting_company.errors, status: :unprocessable_entity
     end
@@ -47,7 +47,7 @@ class InterestingCompaniesController < ApplicationController
   # DELETE /interesting_companies/1
   swagger_api :destroy do
     summary "Delete company from interested list"
-    param :path, :id, :integer, :required, "Interested item id"
+    param :path, :id, :integer, :required, "Company id"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
@@ -77,15 +77,11 @@ class InterestingCompaniesController < ApplicationController
       end
     end
 
-    def set_interesting_company
-      begin
-        @interesting_company = InterestingCompany.find(params[:id])
+    def check_interesting_company
+      @interesting_company = @user.interesting_companies.find_by(company_id: params[:id])
 
-        unless @interesting_company.investor_id == @user.id
-          render status: :forbidden and return
-        end
-      rescue
-        render status: :not_found and return
+      unless @interesting_company
+        render status: :forbidden and return
       end
     end
 
