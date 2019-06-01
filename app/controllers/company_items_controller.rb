@@ -161,7 +161,7 @@ class CompanyItemsController < ApplicationController
     param :form, :price, :integer, :optional, "Item price"
     param :form, :link_to_store, :string, :required, "Link to store"
     param :form, :description, :string, :optional, "Item about"
-    param :form, :tags, :string, :optional, "Tags array in [:blockchain, :coding, :real_sector, :product, :fintech]"
+    param :form, :tags, :string, :optional, "Tags array in [blockchain, coding, real_sector, product, fintech]"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :created
     response :unauthorized
@@ -191,7 +191,7 @@ class CompanyItemsController < ApplicationController
     param :form, :price, :integer, :optional, "Item price"
     param :form, :link_to_store, :string, :required, "Link to store"
     param :form, :description, :string, :optional, "Item about"
-    param :form, :tags, :string, :optional, "Tags array in [:blockchain, :coding, :real_sector, :product, :fintech]"
+    param :form, :tags, :string, :optional, "Tags array in [blockchain, coding, real_sector, product, fintech]"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :not_found
