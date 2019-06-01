@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   resources :invested_companies, only: [:index]
 
-  resources :startup_news, only: [:index, :show]
+  resources :startup_news, only: [:index]
 
   resources :company_items, only: [:index, :show] do
     member do
@@ -82,9 +82,6 @@ Rails.application.routes.draw do
       resources :startup_news, only: [:create, :destroy] do
         collection do
           get :my_news, path: ""
-        end
-        member do
-          get :my, path: ""
         end
       end
 

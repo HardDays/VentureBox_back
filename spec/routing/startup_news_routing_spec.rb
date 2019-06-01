@@ -7,7 +7,7 @@ RSpec.describe StartupNewsController, type: :routing do
     end
 
     it "routes to #show" do
-      expect(:get => "/startup_news/1").to route_to("startup_news#show", :id => "1")
+      expect(:get => "/startup_news/1").not_to be_routable
     end
 
     it "routes to #companies_news" do
@@ -20,7 +20,7 @@ RSpec.describe StartupNewsController, type: :routing do
     end
 
     it "routes to #show" do
-      expect(:get => "/users/1/companies/1/startup_news/1").to route_to("startup_news#my", :id => "1", :user_id => "1", :company_id => "1")
+      expect(:get => "/users/1/companies/1/startup_news/1").not_to be_routable
     end
 
     it "routes to #create" do

@@ -1,10 +1,10 @@
 class StartupNewsController < ApplicationController
-  before_action :authorize_investor, only: [:index, :show]
-  before_action :authorize_startup, only: [:my_news, :my, :create, :destroy]
+  before_action :authorize_investor, only: [:index]
+  before_action :authorize_startup, only: [:my_news, :create, :destroy]
   before_action :set_company, only: [:company_news]
-  before_action :set_my_company, only: [:my_news, :my, :create, :destroy]
-  before_action :set_startup_news, only: [:show, :my, :destroy]
-  before_action :check_startup_news, only: [:my, :destroy]
+  before_action :set_my_company, only: [:my_news, :create, :destroy]
+  before_action :set_startup_news, only: [:destroy]
+  before_action :check_startup_news, only: [:destroy]
   swagger_controller :startup_news, "Startup news"
 
   # GET /startup_news
@@ -18,7 +18,9 @@ class StartupNewsController < ApplicationController
     response :unauthorized
   end
   def index
-    @startup_news = StartupNews.all
+    company_ids = @user.invested_companies.pluck(:company_id)
+    company_ids += @user.interesting_companies.pluck(:company_id)
+    @startup_news = StartupNews.where(company_id: company_ids)
 
     render json: {
       count: @startup_news.count,
@@ -44,20 +46,6 @@ class StartupNewsController < ApplicationController
     }, status: :ok
   end
 
-  # GET /startup_news/1
-  swagger_api :show do
-    summary "Retrieve startup new info"
-    param :path, :id, :integer, :required, "Startup new id"
-    param :header, 'Authorization', :string, :required, 'Authentication token'
-    response :ok
-    response :not_found
-    response :forbidden
-    response :unauthorized
-  end
-  def show
-    render json: @startup_news, status: :ok
-  end
-
   # GET /users/1/companies/1/startup_news
   swagger_api :my_news do
     summary "Retrieve my startup's news"
@@ -75,22 +63,6 @@ class StartupNewsController < ApplicationController
       count: @company.startup_news.count,
       items: @company.startup_news.limit(params[:limit]).offset(params[:offset])
     }, status: :ok
-  end
-
-  # GET /users/1/companies/1/startup_news/1
-  swagger_api :my do
-    summary "Retrieve my startup new info"
-    param :path, :user_id, :integer, :required, "User id"
-    param :path, :company_id, :integer, :required, "Company id"
-    param :path, :id, :integer, :required, "Startup new id"
-    param :header, 'Authorization', :string, :required, 'Authentication token'
-    response :ok
-    response :not_found
-    response :forbidden
-    response :unauthorized
-  end
-  def my
-    render json: @startup_news, status: :ok
   end
 
   # POST /users/1/companies/1/startup_news
