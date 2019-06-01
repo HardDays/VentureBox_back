@@ -454,7 +454,7 @@
               "paramType": "form",
               "name": "tags",
               "type": "string",
-              "description": "Tags array in [:blockchain, :coding, :real_sector, :product, :fintech]",
+              "description": "Tags array in [blockchain, coding, real_sector, product, fintech]",
               "required": false
             },
             {
@@ -558,7 +558,7 @@
               "paramType": "form",
               "name": "tags",
               "type": "string",
-              "description": "Tags array in [:blockchain, :coding, :real_sector, :product, :fintech]",
+              "description": "Tags array in [blockchain, coding, real_sector, product, fintech]",
               "required": false
             },
             {
