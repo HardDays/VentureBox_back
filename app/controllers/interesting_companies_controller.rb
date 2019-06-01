@@ -20,7 +20,7 @@ class InterestingCompaniesController < ApplicationController
     render json: {
       count: @interesting_companies.count,
       items: @interesting_companies.limit(params[:limit]).offset(params[:offset])
-    }, status: :ok
+    }, list: true, status: :ok
   end
 
   # POST /companies/1/interesting_companies

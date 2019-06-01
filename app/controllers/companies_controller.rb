@@ -20,7 +20,7 @@ class CompaniesController < ApplicationController
     render json: {
       count: @companies.count,
       items: @companies.limit(params[:limit]).offset(params[:offset])
-    }, list: true, status: :ok
+    }, investor_list: true, status: :ok
   end
 
   # GET /companies/1
@@ -73,7 +73,7 @@ class CompaniesController < ApplicationController
   def investor_companies
     @companies = @user.interesting_companies.all + @user.invested_companies.all
 
-    render json: @companies, list: true, status: :ok
+    render json: @companies, only: [:company_id, company: :company_name], status: :ok
   end
 
   # GET /users/1/companies/1

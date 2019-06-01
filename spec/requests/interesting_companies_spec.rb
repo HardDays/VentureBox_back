@@ -43,6 +43,7 @@ RSpec.describe "InterestingCompanies", type: :request do
       it "return all company info" do
         expect(json['items'][0]["company_id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
       end
 
       it 'returns status code 200' do
@@ -67,6 +68,7 @@ RSpec.describe "InterestingCompanies", type: :request do
       it "return all company info" do
         expect(json['items'][0]["company_id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
       end
 
       it 'returns status code 200' do
@@ -91,6 +93,7 @@ RSpec.describe "InterestingCompanies", type: :request do
       it "return all company info" do
         expect(json['items'][0]["company_id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
       end
 
       it 'returns status code 200' do
@@ -143,6 +146,7 @@ RSpec.describe "InterestingCompanies", type: :request do
       it 'creates a company' do
         expect(json['company_name']).to eq(company3.company_name)
         expect(json['company_id']).to eq(company3.id)
+        expect(json['evaluation']).not_to be_present
       end
 
       it 'returns status code 201' do

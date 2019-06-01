@@ -89,9 +89,13 @@ RSpec.describe "Companies", type: :request do
       it "returns all company info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["website"]).not_to be_present
         expect(json['items'][0]["description"]).not_to be_present
         expect(json['items'][0]["contact_email"]).not_to be_present
+        expect(json['items'][0]["stage_of_funding"]).not_to be_present
+        expect(json['items'][0]["investment_amount"]).not_to be_present
+        expect(json['items'][0]["equality_amount"]).not_to be_present
         expect(json['items'][0]["image"]).not_to be_present
         expect(json['items'][0]["team_members"]).not_to be_present
       end
@@ -118,9 +122,13 @@ RSpec.describe "Companies", type: :request do
       it "returns all company info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["website"]).not_to be_present
         expect(json['items'][0]["description"]).not_to be_present
         expect(json['items'][0]["contact_email"]).not_to be_present
+        expect(json['items'][0]["stage_of_funding"]).not_to be_present
+        expect(json['items'][0]["investment_amount"]).not_to be_present
+        expect(json['items'][0]["equality_amount"]).not_to be_present
         expect(json['items'][0]["image"]).not_to be_present
         expect(json['items'][0]["team_members"]).not_to be_present
       end
@@ -147,9 +155,13 @@ RSpec.describe "Companies", type: :request do
       it "returns all company info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["website"]).not_to be_present
         expect(json['items'][0]["description"]).not_to be_present
         expect(json['items'][0]["contact_email"]).not_to be_present
+        expect(json['items'][0]["stage_of_funding"]).not_to be_present
+        expect(json['items'][0]["investment_amount"]).not_to be_present
+        expect(json['items'][0]["equality_amount"]).not_to be_present
         expect(json['items'][0]["image"]).not_to be_present
         expect(json['items'][0]["team_members"]).not_to be_present
       end
@@ -207,8 +219,9 @@ RSpec.describe "Companies", type: :request do
       end
 
       it "returns all company info" do
-        expect(json[0]["id"]).to be_a_kind_of(Integer)
+        expect(json[0]["company_id"]).to be_a_kind_of(Integer)
         expect(json[0]["company_name"]).to be_a_kind_of(String)
+        expect(json[0]["evaluation"]).not_to be_present
         expect(json[0]["website"]).not_to be_present
         expect(json[0]["description"]).not_to be_present
         expect(json[0]["contact_email"]).not_to be_present
@@ -271,6 +284,9 @@ RSpec.describe "Companies", type: :request do
         expect(json["website"]).to eq(company.website)
         expect(json["description"]).to eq(company.description)
         expect(json["contact_email"]).to eq(company.contact_email)
+        expect(json["investment_amount"]).to eq(company.investment_amount)
+        expect(json["equality_amount"]).to eq(company.equality_amount)
+        expect(json["stage_of_funding"]).to eq(company.stage_of_funding)
         expect(json["team_members"]).to be_a_kind_of(Array)
         expect(json["image"]).not_to be_present
       end
@@ -373,6 +389,9 @@ RSpec.describe "Companies", type: :request do
         expect(json["website"]).to eq(company.website)
         expect(json["description"]).to eq(company.description)
         expect(json["contact_email"]).to eq(company.contact_email)
+        expect(json["investment_amount"]).to eq(company.investment_amount)
+        expect(json["equality_amount"]).to eq(company.equality_amount)
+        expect(json["stage_of_funding"]).to eq(company.stage_of_funding)
         expect(json["team_members"]).to be_a_kind_of(Array)
         expect(json["image"]).not_to be_present
       end
@@ -576,6 +595,9 @@ RSpec.describe "Companies", type: :request do
         expect(json['description']).to eq('description1')
         expect(json['website']).to eq('domain1.com')
         expect(json["contact_email"]).to eq('contact@email.com')
+        expect(json["investment_amount"]).to eq(10000)
+        expect(json["equality_amount"]).to eq(10)
+        expect(json["stage_of_funding"]).to eq("idea")
         expect(json["image"]).not_to be_present
         expect(user.company).not_to be_nil
       end
@@ -611,6 +633,9 @@ RSpec.describe "Companies", type: :request do
         expect(json['description']).to eq('description1')
         expect(json['website']).to eq('domain1.com')
         expect(json["contact_email"]).to eq('contact@email.com')
+        expect(json["investment_amount"]).to eq(10000)
+        expect(json["equality_amount"]).to eq(10)
+        expect(json["stage_of_funding"]).to eq("idea")
         expect(json["image"]).not_to be_present
         expect(user.company).not_to be_nil
       end
