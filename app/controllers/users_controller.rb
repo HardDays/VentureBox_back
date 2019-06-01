@@ -38,13 +38,13 @@ class UsersController < ApplicationController
     param :form, :password, :string, :required, "User password"
     param :form, :password_confirmation, :string, :required, "User password confirmation"
     param :form, :goals, :string, :optional, "User goals"
-    param_list :form, :role, :string, :required, "User role", [:startup, :investor]
+    param_list :form, :role, :string, :required, "User role", ["startup", "investor"]
     param :form, :company_name, :string, :optional, "(required for startup) Company name"
     param :form, :website, :string, :optional, "Company website"
     param :form, :contact_email, :string, :optional, "(required for startup) Company contact email"
     param :form, :image, :string, :optional, "(required for startup) Company logo"
     param :form, :description, :string, :optional, "(required for startup) Company description"
-    param_list :form, :stage_of_funding, :string, :optional, "(required for startup) Company stage of funding", [:idea, :pre_seed, :seed, :serial_a, :serial_b, :serial_c]
+    param_list :form, :stage_of_funding, :string, :optional, "(required for startup) Company stage of funding", ["idea", "pre_seed", "seed", "serial_a", "serial_b", "serial_c"]
     param :form, :investment_amount, :integer, :optional, "Company investment amount"
     param :form, :equality_amount, :integer, :optional, "Company equality amount"
     param :form, :team_members, :string, :optional, "Company team members [{team_member_name: name, c_level: cto}]"
@@ -52,7 +52,19 @@ class UsersController < ApplicationController
     response :unprocessable_entity
   end
   def create
-    # User.transaction do
+    if params[:role] == "startup"
+      if params[:stage_of_funding] and not Company.stage_of_fundings[params[:stage_of_funding]]
+        render json: {stage_of_funding: "isn't valid"}, status: :unprocessable_entity and return
+      end
+
+      if params[:team_members]
+        unless params[:team_members].kind_of?(Array)
+          render status: :bad_request and return
+        end
+      end
+    end
+
+    User.transaction do
       @user = User.new(user_params)
 
       if @user.save
@@ -82,9 +94,9 @@ class UsersController < ApplicationController
         render json: @user.errors, status: :unprocessable_entity
       end
     end
-  # rescue
-  #   render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
-  # end
+  rescue
+    render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
+  end
 
   # PATCH/PUT /users/1/change_password
   swagger_api :change_password do
@@ -188,7 +200,6 @@ class UsersController < ApplicationController
 
     def set_company_team_members
       if params[:team_members]
-        @company.company_team_members.clear
         params[:team_members].each do |team_member|
           @team_member = CompanyTeamMember.new(
             team_member_name: team_member["team_member_name"],

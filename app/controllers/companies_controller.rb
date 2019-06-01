@@ -131,7 +131,7 @@ class CompaniesController < ApplicationController
     param :form, :description, :string, :optional, "Company description"
     param :form, :contact_email, :string, :optional, "Company contact email"
     param :form, :image, :string, :optional, "Company logo"
-    param_list :form, :stage_of_funding, :string, :optional, "(required for startup) Company stage of funding", [:idea, :pre_seed, :seed, :serial_a, :serial_b, :serial_c]
+    param_list :form, :stage_of_funding, :string, :optional, "(required for startup) Company stage of funding", ["idea", "pre_seed", "seed", "serial_a", "serial_b", "serial_c"]
     param :form, :investment_amount, :integer, :optional, "Company investment amount"
     param :form, :equality_amount, :integer, :optional, "Company equality amount"
     param :form, :team_members, :string, :optional, "Company team members [{team_member_name: name, c_level: cto}]"
@@ -141,17 +141,26 @@ class CompaniesController < ApplicationController
     response :not_found
     response :forbidden
     response :unprocessable_entity
+    response :bad_request
   end
   def update
-    remove_image
-    if @company.update(company_params)
-      set_company_image
-      set_company_team_members
+    unless Company.stage_of_fundings[params[:stage_of_funding]]
+      render json: {stage_of_funding: "isn't valid"}, status: :unprocessable_entity and return
+    end
 
-      if @team_member and not @team_member.errors.empty?
-        render json: @team_member.errors, status: :unprocessable_entity and return
+    if params[:team_members]
+      unless params[:team_members].kind_of?(Array)
+        render status: :bad_request and return
       end
+    end
 
+    set_company_image
+    set_company_team_members
+    if @team_member and not @team_member.errors.empty?
+      render json: @team_member.errors, status: :unprocessable_entity and return
+    end
+
+    if @company.update(company_params)
       render json: @company, status: :ok
     else
       render json: @company.errors, status: :unprocessable_entity
@@ -193,14 +202,12 @@ class CompaniesController < ApplicationController
       end
     end
 
-    def remove_image
-      if @company.company_image and params[:image]
-        @company.company_image.destroy
-      end
-    end
-
     def set_company_image
       if params[:image]
+        if @company.company_image
+          @company.company_image.destroy
+        end
+
         image = CompanyImage.new(base64: params[:image], company_id: @company.id)
         image.save
       end
@@ -208,17 +215,21 @@ class CompaniesController < ApplicationController
 
     def set_company_team_members
       if params[:team_members]
-        @company.company_team_members.clear
-        params[:team_members].each do |team_member|
-          @team_member = CompanyTeamMember.new(
-            team_member_name: team_member["team_member_name"],
-            c_level: CompanyTeamMember.c_levels[team_member["c_level"]],
-            company_id: @company.id
-          )
+        ActiveRecord::Base.transaction do
+          @company.company_team_members.clear
+          params[:team_members].each do |team_member|
+            @team_member = CompanyTeamMember.new(
+              team_member_name: team_member["team_member_name"],
+              c_level: CompanyTeamMember.c_levels[team_member["c_level"]],
+              company_id: @company.id
+            )
 
-          if @team_member.save
-            @company.company_team_members << @team_member
-            @company.save
+            if @team_member.save
+              @company.company_team_members << @team_member
+              @company.save
+            else
+              raise ActiveRecord::Rollback
+            end
           end
         end
       end

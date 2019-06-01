@@ -2,6 +2,7 @@ class Company < ApplicationRecord
   validates_presence_of :user_id, :company_name, :stage_of_funding, :description
   validates :website, url: true, unless: Proc.new { |a| a.website.blank? }
   validates :contact_email, :presence => true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :equality_amount, :inclusion => 1..99, unless: Proc.new { |a| a.equality_amount.blank? }
 
   enum stage_of_funding: EnumsHelper.stage_of_funding
 

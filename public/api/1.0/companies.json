@@ -297,6 +297,11 @@
               "message": "Ok"
             },
             {
+              "code": 400,
+              "responseModel": null,
+              "message": "Bad Request"
+            },
+            {
               "code": 401,
               "responseModel": null,
               "message": "Unauthorized"
