@@ -19,7 +19,7 @@ RSpec.describe "Companies", type: :request do
   let!(:interesting_company) { create(:interesting_company, company_id: company.id, investor_id: investor.id)}
   let!(:new_user) { create(:user, password: password, password_confirmation: password, role: :startup)}
 
-  let(:resize_params) { { heigh: 200, width: 200 } }
+  let(:resize_params) { { height: 200, width: 200 } }
   let(:update_attributes) { {
     company_name: "name1", website: "domain1.com", description: "description1",
     stage_of_funding: "idea", investment_amount: 10000, equality_amount: 10,

@@ -52,7 +52,7 @@ class CompaniesController < ApplicationController
     end
 
     if params[:width] and params[:height]
-      resized = ResizedImage.find_by(image_id: @image.id, width: params[:width], height: params[:height])
+      resized = ResizedCompanyImage.find_by(company_image_id: @image.id, width: params[:width], height: params[:height])
       unless resized
         resized = ImageHelper.resize_company_image(@image.id, @image.base64, params[:width], params[:height])
       end
@@ -110,7 +110,7 @@ class CompaniesController < ApplicationController
     end
 
     if params[:width] and params[:height]
-      resized = ResizedImage.find_by(image_id: @image.id, width: params[:width], height: params[:height])
+      resized = ResizedCompanyImage.find_by(company_image_id: @image.id, width: params[:width], height: params[:height])
       unless resized
         resized = ImageHelper.resize_company_image(@image.id, @image.base64, params[:width], params[:height])
       end
