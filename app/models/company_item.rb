@@ -12,6 +12,11 @@ class CompanyItem < ApplicationRecord
     res = super(options)
 
     res.delete('image')
+    res[:has_image] = false
+    if company_item_image
+      res[:has_image] = true
+    end
+
     res[:tags] = company_item_tags.pluck(:tag)
     res
   end

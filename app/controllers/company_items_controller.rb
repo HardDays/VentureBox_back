@@ -79,7 +79,7 @@ class CompanyItemsController < ApplicationController
       @image = resized
     end
 
-    send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
+    send_data Base64.decode64(@image.base64.gsub(/^data:image\/[a-z]+;base64,/, '')), :type => 'image/png', :disposition => 'inline'
   end
 
   # GET /users/1/companies/1/company_items
@@ -148,7 +148,7 @@ class CompanyItemsController < ApplicationController
       @image = resized
     end
 
-    send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
+    send_data Base64.decode64(@image.base64.gsub(/^data:image\/[a-z]+;base64,/, '')), :type => 'image/png', :disposition => 'inline'
   end
 
   # POST /users/1/companies/1/company_items

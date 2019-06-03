@@ -48,6 +48,11 @@ class Company < ApplicationRecord
       res[:team_members] = company_team_members.as_json(only: [:team_member_name, :c_level])
     end
 
+    res[:has_image] = false
+    if company_image
+      res[:has_image] = true
+    end
+
     res.delete('image')
     res
   end

@@ -60,7 +60,7 @@ class CompaniesController < ApplicationController
       @image = resized
     end
 
-    send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
+    send_data Base64.decode64(@image.base64.gsub(/^data:image\/[a-z]+;base64,/, '')), :type => 'image/png', :disposition => 'inline'
   end
 
   # GET /companies/my
@@ -118,7 +118,7 @@ class CompaniesController < ApplicationController
       @image = resized
     end
 
-    send_data Base64.decode64(@image.base64), :type => 'image/png', :disposition => 'inline'
+    send_data Base64.decode64(@image.base64.gsub(/^data:image\/[a-z]+;base64,/, '')), :type => 'image/png', :disposition => 'inline'
   end
 
   # PATCH/PUT /users/1/companies/1

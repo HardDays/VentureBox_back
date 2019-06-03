@@ -50,6 +50,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -76,6 +77,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -102,6 +104,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -128,6 +131,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
 
         tags = json["items"][0]["tags"]
@@ -162,6 +166,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to eq(company_item.description)
         expect(json['items'][0]["price"]).to eq(company_item.price)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to eq(true)
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -189,7 +194,34 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json["link_to_store"]).to eq(company_item.link_to_store)
         expect(json["description"]).to eq(company_item.description)
         expect(json["price"]).to eq(company_item.price.to_s)
+        expect(json["has_image"]).to eq(true)
         expect(json["tags"]).to eq(company_item.company_item_tags.pluck(:tag))
+        expect(json["image"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the record without image' do
+      before do
+        get "/company_items/#{company_item2.id}"
+      end
+
+      it 'returns the company' do
+        expect(json).not_to be_empty
+        expect(json['id']).to eq(company_item2.id)
+      end
+
+      it "return all company info" do
+        expect(json["id"]).to eq(company_item2.id)
+        expect(json["name"]).to eq(company_item2.name)
+        expect(json["link_to_store"]).to eq(company_item2.link_to_store)
+        expect(json["description"]).to eq(company_item2.description)
+        expect(json["price"]).to eq(company_item2.price.to_s)
+        expect(json["has_image"]).to eq(false)
+        expect(json["tags"]).to eq(company_item2.company_item_tags.pluck(:tag))
         expect(json["image"]).not_to be_present
       end
 
@@ -290,6 +322,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -316,6 +349,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -342,6 +376,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -388,6 +423,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -417,6 +453,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -446,6 +483,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
         expect(json['items'][0]["image"]).not_to be_present
       end
 
@@ -523,6 +561,36 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json["description"]).to eq(company_item.description)
         expect(json["price"]).to eq(company_item.price.to_s)
         expect(json["tags"]).to eq(company_item.company_item_tags.pluck(:tag))
+        expect(json["has_image"]).to eq(true)
+        expect(json["image"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the record without image' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        get "/users/#{user.id}/companies/#{company.id}/company_items/#{company_item2.id}", headers: { 'Authorization': token }
+      end
+
+      it 'returns the company' do
+        expect(json).not_to be_empty
+        expect(json['id']).to eq(company_item2.id)
+      end
+
+      it "return all company info" do
+        expect(json["id"]).to eq(company_item2.id)
+        expect(json["name"]).to eq(company_item2.name)
+        expect(json["link_to_store"]).to eq(company_item2.link_to_store)
+        expect(json["description"]).to eq(company_item2.description)
+        expect(json["price"]).to eq(company_item2.price.to_s)
+        expect(json["tags"]).to eq(company_item2.company_item_tags.pluck(:tag))
+        expect(json["has_image"]).to eq(false)
         expect(json["image"]).not_to be_present
       end
 
@@ -761,6 +829,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['description']).to eq('description')
         expect(json['link_to_store']).to eq('domain.com')
         expect(json["price"]).to eq('100')
+        expect(json["has_image"]).to eq(true)
         expect(json["image"]).not_to be_present
         expect(user.company).not_to be_nil
       end
@@ -895,6 +964,7 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['description']).to eq('description1')
         expect(json['link_to_store']).to eq('domain1.com')
         expect(json["price"]).to eq('101')
+        expect(json["has_image"]).to eq(true)
         expect(json["image"]).not_to be_present
       end
 
