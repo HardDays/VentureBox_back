@@ -72,7 +72,10 @@ class StartupGraphicsController < ApplicationController
     response :unauthorized
   end
   def score
-    render json: {score: 25}, status: :ok
+    @signum_exchange = SignumExchange.new
+    @score = @signum_exchange.get_index(@company.website)
+
+    render json: {score: @score}, status: :ok
   end
 
   swagger_api :evaluation do

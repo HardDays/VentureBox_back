@@ -1,11 +1,12 @@
 module EnumsHelper
 
   def self.c_level
-    return [:cto, :cfo, :cio, :coo, :cco, :cko, :cso, :cdo, :cmo]
+    return [:ceo, :cto, :cfo, :cio, :coo, :cco, :cko, :cso, :cdo, :cmo]
   end
 
   def self.c_level_readable_json
     return {
+      ceo: "CEO",
       cto: "CTO",
       cfo: "CFO",
       cio: "CIO",
