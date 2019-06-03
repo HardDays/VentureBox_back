@@ -36,6 +36,10 @@
       "description": "Company milestones"
     },
     {
+      "path": "/api/1.0/startup_graphics.{format}",
+      "description": "Startup dashboard graphics"
+    },
+    {
       "path": "/api/1.0/authentication.{format}",
       "description": "Authentication"
     }

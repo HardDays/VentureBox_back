@@ -86,6 +86,16 @@ Rails.application.routes.draw do
       end
 
       resources :milestones, only: [:index, :show, :create, :update]
+
+      resources :startup_graphics, only: [] do
+        collection do
+          get :sales
+          get :total_investment
+          get :total_earn
+          get :score
+          get :evaluation
+        end
+      end
     end
   end
 

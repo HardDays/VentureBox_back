@@ -46,6 +46,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -73,6 +74,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -100,6 +102,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -127,6 +130,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -162,6 +166,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to eq(company_item.id)
         expect(json['items'][0]["name"]).to eq(company_item.name)
+        expect(json['items'][0]["company_name"]).to eq(company_item.company.company_name)
         expect(json['items'][0]["link_to_store"]).to eq(company_item.link_to_store)
         expect(json['items'][0]["description"]).to eq(company_item.description)
         expect(json['items'][0]["price"]).to eq(company_item.price)
@@ -191,6 +196,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all company info" do
         expect(json["id"]).to eq(company_item.id)
         expect(json["name"]).to eq(company_item.name)
+        expect(json["company_name"]).to eq(company_item.company.company_name)
         expect(json["link_to_store"]).to eq(company_item.link_to_store)
         expect(json["description"]).to eq(company_item.description)
         expect(json["price"]).to eq(company_item.price.to_s)
@@ -217,6 +223,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all company info" do
         expect(json["id"]).to eq(company_item2.id)
         expect(json["name"]).to eq(company_item2.name)
+        expect(json["company_name"]).to eq(company_item.company.company_name)
         expect(json["link_to_store"]).to eq(company_item2.link_to_store)
         expect(json["description"]).to eq(company_item2.description)
         expect(json["price"]).to eq(company_item2.price.to_s)
@@ -318,6 +325,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -345,6 +353,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -372,6 +381,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -419,6 +429,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -449,6 +460,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -479,6 +491,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all item info" do
         expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
         expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
         expect(json['items'][0]["description"]).to be_a_kind_of(String)
         expect(json['items'][0]["price"]).to be_a_kind_of(String)
@@ -557,6 +570,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all company info" do
         expect(json["id"]).to eq(company_item.id)
         expect(json["name"]).to eq(company_item.name)
+        expect(json["company_name"]).to eq(company_item.company.company_name)
         expect(json["link_to_store"]).to eq(company_item.link_to_store)
         expect(json["description"]).to eq(company_item.description)
         expect(json["price"]).to eq(company_item.price.to_s)
@@ -586,6 +600,7 @@ RSpec.describe "CompanyItems", type: :request do
       it "return all company info" do
         expect(json["id"]).to eq(company_item2.id)
         expect(json["name"]).to eq(company_item2.name)
+        expect(json["company_name"]).to eq(company_item2.company.company_name)
         expect(json["link_to_store"]).to eq(company_item2.link_to_store)
         expect(json["description"]).to eq(company_item2.description)
         expect(json["price"]).to eq(company_item2.price.to_s)
@@ -826,6 +841,7 @@ RSpec.describe "CompanyItems", type: :request do
 
       it 'creates a company item' do
         expect(json['name']).to eq('name')
+        expect(json["company_name"]).to eq(company.company_name)
         expect(json['description']).to eq('description')
         expect(json['link_to_store']).to eq('domain.com')
         expect(json["price"]).to eq('100')
@@ -961,6 +977,7 @@ RSpec.describe "CompanyItems", type: :request do
       it 'updates a company item' do
         expect(json['id']).to eq(company_item.id)
         expect(json['name']).to eq('name1')
+        expect(json["company_name"]).to eq(company_item.company.company_name)
         expect(json['description']).to eq('description1')
         expect(json['link_to_store']).to eq('domain1.com')
         expect(json["price"]).to eq('101')

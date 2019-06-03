@@ -17,6 +17,7 @@ class CompanyItem < ApplicationRecord
       res[:has_image] = true
     end
 
+    res[:company_name] = company.company_name
     res[:tags] = company_item_tags.pluck(:tag)
     res
   end
