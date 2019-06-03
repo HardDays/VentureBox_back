@@ -316,7 +316,7 @@ class CompanyItemsController < ApplicationController
     end
 
     def remove_image
-      if @company_item.company_item_image and params[:image]
+      if @company_item.company_item_image
         @company_item.company_item_image.destroy
       end
     end
