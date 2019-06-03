@@ -179,7 +179,7 @@ RSpec.describe "StartupGraphicsSpec", type: :request do
       end
     end
 
-    context 'when get vitout investments' do
+    context 'when get without investments' do
       before do
         post "/auth/login", params: { email: user2.email, password: password}
         token = json['token']

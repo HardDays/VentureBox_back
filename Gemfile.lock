@@ -223,6 +223,9 @@ GEM
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.9)
+    time_diff (0.3.0)
+      activesupport
+      i18n
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     valid_url (0.0.4)
@@ -252,6 +255,7 @@ DEPENDENCIES
   shoulda-matchers (~> 3.1)
   swagger-docs
   therubyracer
+  time_diff
   tzinfo-data
   valid_url
 

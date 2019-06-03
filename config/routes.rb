@@ -57,6 +57,15 @@ Rails.application.routes.draw do
       patch :change_general
     end
 
+    resources :investor_graphics, only: [] do
+      collection do
+        get :total_current_value
+        get :amount_of_companies
+        get :amount_invested
+        get :rate_of_return
+      end
+    end
+
     resources :companies, only: [:update] do
       member do
         get :my, path: ""

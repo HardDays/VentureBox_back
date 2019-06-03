@@ -32,6 +32,10 @@
       "description": "User"
     },
     {
+      "path": "/api/1.0/investor_graphics.{format}",
+      "description": "Investor dashboard graphics"
+    },
+    {
       "path": "/api/1.0/milestones.{format}",
       "description": "Company milestones"
     },
