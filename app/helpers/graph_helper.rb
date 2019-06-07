@@ -1,5 +1,43 @@
 module GraphHelper
 
+  def self.date_step(type)
+    if type == 'day'
+      return 1.hour
+    elsif type == 'week'
+      return 1.day
+    elsif type == 'month'
+      return 1.day
+    elsif type == 'year'
+      return 1.month
+    end
+  end
+
+  def self.date_range(type)
+    if type == 'month'
+      return (DateTime.now - 1.month).to_i..DateTime.now.to_i
+    elsif type == 'year'
+      return (DateTime.now - 1.year).to_i..DateTime.now.to_i
+    end
+  end
+
+  def self.axis_dates(type)
+    axis = []
+    (date_range(type)).step(date_step(type)).each { |v|
+      axis.push(Time.at(v))
+    }
+
+    return axis
+  end
+
+  def self.custom_axis_dates(step, dates)
+    axis = []
+    (dates[0].to_i..dates[1].to_i).step(date_step(step)).each { |v|
+      axis.push(Time.at(v))
+    }
+
+    return axis
+  end
+
   def self.axis(type)
     axis = []
     (date_range(type)).step(date_step(type)).each { |v|
@@ -18,33 +56,13 @@ module GraphHelper
     return axis
   end
 
-  def self.date_range(type)
-    if type == 'month'
-      return (DateTime.now - 1.month).to_i..DateTime.now.to_i
-    elsif type == 'year'
-      return (DateTime.now - 1.year).to_i..DateTime.now.to_i
-    end
-  end
-
-  def self.sql_date_range(type)
-    if type == 'month'
-      return (DateTime.now - 1.month)..DateTime.now
-    elsif type == 'year'
-      return (DateTime.now - 1.year)..DateTime.now
-    end
-  end
-
-  def self.date_step(type)
-    if type == 'day'
-      return 1.hour
-    elsif type == 'week'
-      return 1.day
-    elsif type == 'month'
-      return 1.day
-    elsif type == 'year'
-      return 1.month
-    end
-  end
+  # def self.sql_date_range(type)
+  #   if type == 'month'
+  #     return (DateTime.now - 1.month)..DateTime.now
+  #   elsif type == 'year'
+  #     return (DateTime.now - 1.year)..DateTime.now
+  #   end
+  # end
 
   def self.type_str(type)
     if type == 'day'

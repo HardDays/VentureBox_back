@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "StartupGraphicsSpec", type: :request do
   let(:password) { "123123" }
   let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
-  let!(:company) { create(:company, user_id: user.id) }
+  let!(:company) { create(:company, user_id: user.id, created_at: DateTime.parse("2019-05-07")) }
   let!(:company_item) { create(:company_item, company_id: company.id) }
   let!(:company_item2) { create(:company_item, company_id: company.id) }
   let!(:company_item3) { create(:company_item, company_id: company.id) }
@@ -12,7 +12,7 @@ RSpec.describe "StartupGraphicsSpec", type: :request do
   let!(:company2) { create(:company, user_id: user2.id) }
 
   let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
-  let!(:invested_company) { create(:invested_company, investment: 100, company_id: company.id, investor_id: investor.id )}
+  let!(:invested_company) { create(:invested_company, investment: 100, company_id: company.id, investor_id: investor.id, created_at: DateTime.parse("2019-05-18") )}
 
 
   # Test suite for GET /users/1/companies/1/startup_graphics/sales
@@ -313,6 +313,45 @@ RSpec.describe "StartupGraphicsSpec", type: :request do
         token = json['token']
 
         get "/users/#{user.id}/companies/#{company.id}/startup_graphics/evaluation", headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when get with period month' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        get "/users/#{user.id}/companies/#{company.id}/startup_graphics/evaluation", params: {period: "month"}, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when get with period year' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        get "/users/#{user.id}/companies/#{company.id}/startup_graphics/evaluation", params: {period: "year"}, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when get with period all' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        get "/users/#{user.id}/companies/#{company.id}/startup_graphics/evaluation", params: {period: "all"}, headers: { 'Authorization': token }
       end
 
       it 'returns status code 200' do

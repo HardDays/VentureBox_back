@@ -21,7 +21,13 @@ class StartupGraphicsController < ApplicationController
       value = 100 / @products.count
       result = []
       @products.each do |product|
-        result.append({name: product.name, value: value})
+        result.append(
+          {
+            id: product.id,
+            name: product.name,
+            percent: 1000 + Random.rand(100),
+            value: value
+          })
       end
 
       render json: {sales: result}, status: :ok
@@ -90,7 +96,39 @@ class StartupGraphicsController < ApplicationController
     response :unauthorized
   end
   def evaluation
-    render status: :ok
+    unless params[:period]
+      params[:period] = "month"
+    end
+
+    type = params[:period]
+    if params[:period] == 'all'
+      dates = [@user.created_at, DateTime.now]
+      diff = Time.diff(dates[0], dates[1])
+      if diff[:month] > 0
+        new_step = 'year'
+      elsif diff[:week] > 0
+        new_step = 'month'
+      elsif diff[:day] > 0
+        new_step = 'week'
+      else
+        new_step = 'day'
+      end
+
+      date_range = GraphHelper.custom_axis_dates(new_step, dates)
+      type = new_step
+    else
+      date_range = GraphHelper.axis_dates(params[:period])
+    end
+
+    result = []
+    date_range.each do |date_value|
+      result << {
+        date: date_value.strftime(GraphHelper.type_str(type)),
+        value: @company.get_evaluation_on_date(date_value)
+      }
+    end
+
+    render json: {evaluatons: result}, status: :ok
   end
 
   private

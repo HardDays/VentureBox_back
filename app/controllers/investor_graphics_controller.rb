@@ -19,6 +19,7 @@ class InvestorGraphicsController < ApplicationController
       params[:period] = "month"
     end
 
+    type = params[:period]
     if params[:period] == 'all'
       dates = [@user.created_at, DateTime.now]
       diff = Time.diff(dates[0], dates[1])
@@ -33,28 +34,24 @@ class InvestorGraphicsController < ApplicationController
       end
 
       axis = GraphHelper.custom_axis(new_step, dates)
-      dates_range = dates[0]..dates[1]
-      params[:period] = new_step
+      date_range = GraphHelper.custom_axis_dates(new_step, dates)
+      type = new_step
     else
       axis = GraphHelper.axis(params[:period])
-      dates_range = GraphHelper.sql_date_range(params[:period])
+      date_range = GraphHelper.axis_dates(params[:period])
     end
 
-    # events = Event.where(
-    #   created_at: dates_range
-    # ).order(:is_crowdfunding_event, :created_at).to_a.group_by(
-    #   &:is_crowdfunding_event
-    # ).each_with_object({}) {
-    #   |(k, v), h| h[k] = v.group_by{ |e| e.created_at.strftime(GraphHelper.type_str(params[:period])) }
-    # }.each { |(k, h)|
-    #   h.each { |m, v|
-    #     h[m] = v.count
-    #   }
-    # }
+    result = {}
+    date_range.each do |date_value|
+      result[date_value.strftime(GraphHelper.type_str(type))] = 0
+      @user.invested_companies.each do |investment|
+        result[date_value.strftime(GraphHelper.type_str(type))] += investment.company.get_evaluation_on_date(date_value)
+      end
+    end
 
     render json: {
       axis: axis,
-      total_current_value: [],
+      total_current_values: result,
     }, status: :ok
   end
 
@@ -69,11 +66,18 @@ class InvestorGraphicsController < ApplicationController
     response :unauthorized
   end
   def amount_of_companies
-    unless params[:period]
-      params[:period] = "month"
+    @investments = @user.invested_companies
+
+    if params[:company_id]
+      @investments = @investments.where(company_id: @company.id)
     end
 
-    render json: {amount_of_companies: 1000000}, status: :ok
+    result = 0
+    @investments.each do |investment|
+      result += investment.company.get_evaluation
+    end
+
+    render json: {amount_of_companies: result}, status: :ok
   end
 
   swagger_api :amount_invested do
@@ -87,10 +91,6 @@ class InvestorGraphicsController < ApplicationController
     response :unauthorized
   end
   def amount_invested
-    unless params[:period]
-      params[:period] = "month"
-    end
-
     @investments = @user.invested_companies
 
     if params[:company_id]
@@ -116,7 +116,42 @@ class InvestorGraphicsController < ApplicationController
       params[:period] = "month"
     end
 
-    render status: :ok
+    type = params[:period]
+    if params[:period] == 'all'
+      dates = [@user.created_at, DateTime.now]
+      diff = Time.diff(dates[0], dates[1])
+      if diff[:month] > 0
+        new_step = 'year'
+      elsif diff[:week] > 0
+        new_step = 'month'
+      elsif diff[:day] > 0
+        new_step = 'week'
+      else
+        new_step = 'day'
+      end
+
+      axis = GraphHelper.custom_axis(new_step, dates)
+      date_range = GraphHelper.custom_axis_dates(new_step, dates)
+      type = new_step
+    else
+      axis = GraphHelper.axis(params[:period])
+      date_range = GraphHelper.axis_dates(params[:period])
+    end
+
+    # пока тут то же самое,
+    # надо делить то, что заработали на эту дату после вычета всех налогов на колличество инвестиций
+    result = {}
+    date_range.each do |date_value|
+      result[date_value.strftime(GraphHelper.type_str(type))] = 0
+      @user.invested_companies.each do |investment|
+        result[date_value.strftime(GraphHelper.type_str(type))] += investment.company.get_evaluation_on_date(date_value)
+      end
+    end
+
+    render json: {
+      axis: axis,
+      rate_of_return: result,
+    }, status: :ok
   end
 
   private

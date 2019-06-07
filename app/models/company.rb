@@ -38,13 +38,7 @@ class Company < ApplicationRecord
       res.delete('created_at')
       res.delete('updated_at')
 
-      res[:evaluation] = 0
-      if invested_companies.exists?
-        investment = invested_companies.last
-        res[:evaluation] = (investment.investment / (investment.evaluation * 0.01)).ceil
-      elsif investment_amount and equality_amount
-        res[:evaluation] = (investment_amount / (equality_amount * 0.01)).ceil
-      end
+      res[:evaluation] = get_evaluation
     else
       res[:team_members] = company_team_members.as_json(only: [:team_member_name, :c_level])
     end
@@ -56,5 +50,41 @@ class Company < ApplicationRecord
 
     res.delete('image')
     res
+  end
+
+  def get_evaluation
+    evaluation = 0
+
+    if invested_companies.exists?
+      investment = invested_companies.last
+      evaluation = (investment.investment / (investment.evaluation * 0.01)).ceil
+    elsif investment_amount and equality_amount
+      evaluation = (investment_amount / (equality_amount * 0.01)).ceil
+    end
+
+    evaluation
+  end
+
+  def get_evaluation_on_date(date)
+    evaluation = 0
+
+    if created_at <= date
+      # если создана раньше переданной даты, то эвалюация как минимум та, что в параметрах создания
+      if investment_amount and equality_amount
+        evaluation = (investment_amount / (equality_amount * 0.01)).ceil
+      end
+
+      # попробуем еще найти ивестиции на эту дату
+      # берем все инвестиции с даты создания (она уже меньше чем переданная) до переданной,
+      # нас интересует самая последняя их получившихся
+      if invested_companies.exists?
+        investment = invested_companies.where(created_at: created_at..date).order(created_at: :desc).first
+        if investment
+          evaluation = (investment.investment / (investment.evaluation * 0.01)).ceil
+        end
+      end
+    end
+
+    evaluation
   end
 end
