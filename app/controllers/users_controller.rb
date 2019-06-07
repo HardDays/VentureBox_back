@@ -54,7 +54,7 @@ class UsersController < ApplicationController
   def create
     if params[:role] == "startup"
       if params[:stage_of_funding] and not Company.stage_of_fundings[params[:stage_of_funding]]
-        render json: {stage_of_funding: "isn't valid"}, status: :unprocessable_entity and return
+        render json: {stage_of_funding: ["isn't valid"]}, status: :unprocessable_entity and return
       end
 
       if params[:team_members]

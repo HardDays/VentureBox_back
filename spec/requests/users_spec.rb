@@ -864,7 +864,7 @@ RSpec.describe "Users", type: :request do
 
         it 'returns a validation failure message' do
           expect(response.body)
-            .to match("{\"stage_of_funding\":\"isn't valid\"}")
+            .to match("{\"stage_of_funding\":[\"isn't valid\"]}")
         end
 
         it 'does not creates image' do

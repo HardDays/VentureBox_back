@@ -145,7 +145,7 @@ class CompaniesController < ApplicationController
   end
   def update
     unless Company.stage_of_fundings[params[:stage_of_funding]]
-      render json: {stage_of_funding: "isn't valid"}, status: :unprocessable_entity and return
+      render json: {stage_of_funding: ["isn't valid"]}, status: :unprocessable_entity and return
     end
 
     if params[:team_members]

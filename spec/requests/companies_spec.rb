@@ -893,7 +893,7 @@ RSpec.describe "Companies", type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match("{\"stage_of_funding\":\"isn't valid\"}")
+          .to match("{\"stage_of_funding\":[\"isn't valid\"]}")
       end
 
       it 'does not changes image count' do
