@@ -168,12 +168,23 @@ class CompanyItemsController < ApplicationController
     response :forbidden
   end
   def create
+    if params[:tags]
+      unless params[:tags].kind_of?(Array)
+        render status: :bad_request and return
+      end
+    end
+
     @company_item = CompanyItem.new(company_item_params)
     @company_item.company_id = @company.id
 
     if @company_item.save
-      set_item_tags
       set_item_image
+      set_item_tags
+
+      if @tag and not @tag.errors.empty?
+        render json: @tag.errors, status: :unprocessable_entity and return
+      end
+
       render json: @company_item, status: :created
     else
       render json: @company_item.errors, status: :unprocessable_entity
@@ -199,10 +210,20 @@ class CompanyItemsController < ApplicationController
     response :forbidden
   end
   def update
+    if params[:tags]
+      unless params[:tags].kind_of?(Array)
+        render status: :bad_request and return
+      end
+    end
+
     remove_image
+    set_item_image
+    set_item_tags
+    if @tag and not @tag.errors.empty?
+      render json: @tag.errors, status: :unprocessable_entity and return
+    end
+
     if @company_item.update(company_item_params)
-      set_item_image
-      set_item_tags
       render json: @company_item, status: :ok
     else
       render json: @company_item.errors, status: :unprocessable_entity
@@ -298,13 +319,22 @@ class CompanyItemsController < ApplicationController
 
     def set_item_tags
       if params[:tags]
-        @company_item.company_item_tags.clear
-        params[:tags].each do |tag|
-          obj = CompanyItemTag.new(tag: tag)
-          obj.save
-          @company_item.company_item_tags << obj
+        ActiveRecord::Base.transaction do
+          @company_item.company_item_tags.clear
+          params[:tags].each do |tag|
+            @tag = CompanyItemTag.new(
+              tag: CompanyItemTag.tags[tag],
+              company_item_id: @company_item.id
+            )
+
+            if @tag.save
+              @company_item.company_item_tags << @tag
+              @company_item.save
+            else
+              raise ActiveRecord::Rollback
+            end
+          end
         end
-        @company_item.save
       end
     end
 
