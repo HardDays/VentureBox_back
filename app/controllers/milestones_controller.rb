@@ -24,7 +24,7 @@ class MilestonesController < ApplicationController
 
     render json: {
       count: @milestones.count,
-      items: @milestones.limit(params[:limit]).offset(params[:offset])
+      items: @milestones.limit(params[:limit]).offset(params[:offset]).order(:finish_date)
     }, status: :ok
   end
 
