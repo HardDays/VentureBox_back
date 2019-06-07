@@ -2,6 +2,7 @@ class CompanyItem < ApplicationRecord
   validates_presence_of :name
   validates_presence_of :link_to_store
   validates :link_to_store, url: true, unless: Proc.new { |a| a.link_to_store.blank? }
+  validates :link_to_store, http_url: true, unless: Proc.new { |a| a.link_to_store.blank? }
   validates_presence_of :company_id
 
   belongs_to :company
