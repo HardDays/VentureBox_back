@@ -229,7 +229,7 @@
             },
             {
               "paramType": "form",
-              "name": "turn_email_notifications",
+              "name": "is_email_notifications_available",
               "type": "boolean",
               "description": "Turn on email notifications",
               "required": false

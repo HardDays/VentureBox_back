@@ -1555,7 +1555,7 @@ RSpec.describe "Users", type: :request do
         end
       end
 
-      context 'request with wrong old password' do
+      context 'request with wrong old email' do
         before do
           post "/auth/login", params: {email: user.email, password: password}
           token = json['token']

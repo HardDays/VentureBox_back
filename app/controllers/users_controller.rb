@@ -146,7 +146,7 @@ class UsersController < ApplicationController
     param :path, :id, :integer, :required, "User id"
     param :form, :name, :string, :required, "User name"
     param :form, :surname, :string, :required, "User surname"
-    param :form, :turn_email_notifications, :boolean, :optional, "Turn on email notifications"
+    param :form, :is_email_notifications_available, :boolean, :optional, "Turn on email notifications"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
