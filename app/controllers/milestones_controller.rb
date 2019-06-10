@@ -59,7 +59,11 @@ class MilestonesController < ApplicationController
     response :forbidden
   end
   def create
-    @milestone = Milestone.new(milestone_params)
+    if params[:finish_date] and params[:finish_date] < DateTime.now
+      render json: {finish_date: ["isn't valid"]}, status: :unprocessable_entity and return
+    end
+
+    @milestone = Milestone.new(create_milestone_params)
     @milestone.company_id = @company.id
 
     if @milestone.save
@@ -86,6 +90,10 @@ class MilestonesController < ApplicationController
     response :forbidden
   end
   def update
+    if params[:finish_date] and params[:finish_date] < DateTime.now
+      render json: {finish_date: ["isn't valid"]}, status: :unprocessable_entity and return
+    end
+
     if @milestone.update(milestone_params)
       render json: @milestone
     else
@@ -140,6 +148,10 @@ class MilestonesController < ApplicationController
       if @milestone.is_done == true
         render json: {errors: :MILESTONE_ALREADY_FINISHED}, status: :forbidden and return
       end
+    end
+
+    def create_milestone_params
+      params.permit(:title, :description, :finish_date)
     end
 
     def milestone_params

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "CompanyItems", type: :request do
+RSpec.describe "Milestones", type: :request do
   let(:password) { "123123" }
   let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
   let!(:company) { create(:company, user_id: user.id) }
@@ -19,6 +19,8 @@ RSpec.describe "CompanyItems", type: :request do
   let(:valid_attributes) { { title: "title", description: "description", finish_date: "12-12-2020" } }
   let(:without_title) { { description: "description", finish_date: "12-12-2020" } }
   let(:without_finish_date) { { title: "title", description: "description" } }
+  let(:finish_date_in_the_past) { { title: "title", finish_date: "12-12-2018", description: "description" } }
+  let(:invalid_completeness) { { title: "title", finish_date: "12-12-2020", description: "description", completeness: 101 } }
 
   let(:valid_attributes1) { { title: "title1", description: "description1", finish_date: "12-12-2020", completeness: 50, is_done: false } }
 
@@ -328,6 +330,46 @@ RSpec.describe "CompanyItems", type: :request do
       end
     end
 
+    context 'when the request finish date in the past' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        post "/users/#{user.id}/companies/#{company.id}/milestones", params: finish_date_in_the_past, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"finish_date\":[\"isn't valid\"]}")
+      end
+    end
+
+    context 'when the request completeness invalid' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        post "/users/#{user.id}/companies/#{company.id}/milestones", params: invalid_completeness, headers: { 'Authorization': token }
+      end
+
+      it 'creates a company item' do
+        expect(json["id"]).to be_kind_of(Integer)
+        expect(json["title"]).to eq("title")
+        expect(json["finish_date"]).to be_kind_of(String)
+        expect(json["description"]).to eq("description")
+        expect(json["completeness"]).to eq(0)
+        expect(json["is_done"]).to eq(false)
+      end
+
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+    end
+
     context 'when i am not startup' do
       before do
         post "/auth/login", params: { email: investor.email, password: password}
@@ -425,6 +467,42 @@ RSpec.describe "CompanyItems", type: :request do
 
       it 'returns status code 403' do
         expect(response).to have_http_status(403)
+      end
+    end
+
+    context 'when the request finish date in the past' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        patch "/users/#{user.id}/companies/#{company.id}/milestones/#{milestone.id}", params: finish_date_in_the_past, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"finish_date\":[\"isn't valid\"]}")
+      end
+    end
+
+    context 'when the request with invalid completeness' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        patch "/users/#{user.id}/companies/#{company.id}/milestones/#{milestone.id}", params: invalid_completeness, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"completeness\":[\"is not included in the list\"]}")
       end
     end
 
