@@ -107,6 +107,33 @@ RSpec.describe "StartupNews", type: :request do
       end
     end
 
+    context 'when use offset' do
+      before do
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        get "/startup_news", params: {company_id: company.id}, headers: {'Authorization': token}
+      end
+
+      it "returns response with offset" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(3)
+        expect(json['items'].size).to eq(3)
+      end
+
+      it "return all item info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["text"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["created_at"]).to be_a_kind_of(String)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
     context 'when not authorized' do
       before do
         get "/startup_news"

@@ -78,6 +78,13 @@
           ],
           "parameters": [
             {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Company id",
+              "required": true
+            },
+            {
               "paramType": "form",
               "name": "investment",
               "type": "integer",

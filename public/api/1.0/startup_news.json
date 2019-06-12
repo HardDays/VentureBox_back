@@ -29,6 +29,13 @@
           "parameters": [
             {
               "paramType": "query",
+              "name": "company_id",
+              "type": "integer",
+              "description": "Company id",
+              "required": false
+            },
+            {
+              "paramType": "query",
               "name": "limit",
               "type": "integer",
               "description": "Limit",

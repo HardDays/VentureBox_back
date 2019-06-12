@@ -47,7 +47,7 @@ class InvestedCompaniesController < ApplicationController
   # POST /companies/1/invested_companies
   swagger_api :create do
     summary "Invest into company"
-    param :path, :company_id, :integer, :required, "Company id"
+    param :path, :id, :integer, :required, "Company id"
     param :form, :investment, :integer, :required, "Investment amount"
     param :form, :evaluation, :integer, :required, "Evaluation"
     param :form, :contact_email, :string, :optional, "Contact email"

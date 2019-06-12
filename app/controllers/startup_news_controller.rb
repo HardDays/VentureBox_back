@@ -10,6 +10,7 @@ class StartupNewsController < ApplicationController
   # GET /startup_news
   swagger_api :index do
     summary "Retrieve startup news"
+    param :query, :company_id, :integer, :optional, "Company id"
     param :query, :limit, :integer, :optional, "Limit"
     param :query, :offset, :integer, :optional, "Offset"
     param :header, 'Authorization', :string, :required, 'Authentication token'
@@ -21,6 +22,10 @@ class StartupNewsController < ApplicationController
     company_ids = @user.invested_companies.pluck(:company_id)
     company_ids += @user.interesting_companies.pluck(:company_id)
     @startup_news = StartupNews.where(company_id: company_ids)
+
+    if params[:company_id]
+      @startup_news = @startup_news.where(company_id: params[:company_id])
+    end
 
     render json: {
       count: @startup_news.count,
