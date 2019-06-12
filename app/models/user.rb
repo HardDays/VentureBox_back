@@ -2,6 +2,7 @@ class User < ApplicationRecord
   validates_presence_of :name
   validates_presence_of :surname
 
+  before_validation :lower_email
   validates :email, presence: true, uniqueness: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, unless: Proc.new { |a| a.email.blank? }
   validate :check_current_email, if: :email_changed?, on: :update
@@ -44,6 +45,10 @@ class User < ApplicationRecord
     else
       errors.add(:old_password, 'MUST_EXIST')
     end
+  end
+
+  def lower_email
+    self.email = self.email.downcase if self.email
   end
 
   def check_current_email
