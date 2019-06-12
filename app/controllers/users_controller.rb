@@ -62,6 +62,10 @@ class UsersController < ApplicationController
           render status: :bad_request and return
         end
       end
+
+      unless params[:image]
+        render json: {image: ["can't be blank"]}, status: :unprocessable_entity and return
+      end
     end
 
     User.transaction do

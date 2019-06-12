@@ -154,7 +154,6 @@ class CompaniesController < ApplicationController
       end
     end
 
-    remove_image
     set_company_image
     set_company_team_members
     if @team_member and not @team_member.errors.empty?
@@ -203,14 +202,12 @@ class CompaniesController < ApplicationController
       end
     end
 
-    def remove_image
-      if @company.company_image
-        @company.company_image.destroy
-      end
-    end
-
     def set_company_image
       if params[:image]
+        if @company.company_image
+          @company.company_image.destroy
+        end
+
         image = CompanyImage.new(base64: params[:image], company_id: @company.id)
         image.save
       end
