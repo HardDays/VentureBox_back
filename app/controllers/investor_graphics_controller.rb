@@ -58,7 +58,6 @@ class InvestorGraphicsController < ApplicationController
   swagger_api :amount_of_companies do
     summary "Amount of companies value"
     param :path, :user_id, :integer, :required, "User id"
-    param :query, :company_id, :integer, :optional, "Company filter"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :not_found
@@ -68,14 +67,7 @@ class InvestorGraphicsController < ApplicationController
   def amount_of_companies
     @investments = @user.invested_companies
 
-    if params[:company_id]
-      @investments = @investments.where(company_id: @company.id)
-    end
-
-    result = 0
-    @investments.each do |investment|
-      result += investment.company.get_evaluation
-    end
+    result = @investments.group(:company_id).count.count
 
     render json: {amount_of_companies: result}, status: :ok
   end

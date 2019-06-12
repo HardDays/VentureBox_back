@@ -120,24 +120,7 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
       end
 
       it "returns all evaluations" do
-        expect(json["amount_of_companies"]).to match(1000)
-      end
-
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
-      end
-    end
-
-    context 'when get by invested company' do
-      before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        get "/users/#{investor.id}/investor_graphics/amount_of_companies", params: {company_id: company.id}, headers: { 'Authorization': token }
-      end
-
-      it "returns all evaluations" do
-        expect(json["amount_of_companies"]).to match(1000)
+        expect(json["amount_of_companies"]).to match(1)
       end
 
       it 'returns status code 200' do
@@ -159,28 +142,11 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
         )
         new_investment.save
 
-        get "/users/#{investor.id}/investor_graphics/amount_of_companies", params: {company_id: company.id}, headers: { 'Authorization': token }
+        get "/users/#{investor.id}/investor_graphics/amount_of_companies", headers: { 'Authorization': token }
       end
 
       it "returns all evaluations" do
-        expect(json["amount_of_companies"]).to match(10000)
-      end
-
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
-      end
-    end
-
-    context 'when get by not invested company' do
-      before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        get "/users/#{investor.id}/investor_graphics/amount_of_companies", params: {company_id: company2.id}, headers: { 'Authorization': token }
-      end
-
-      it "returns all evaluations" do
-        expect(json["amount_of_companies"]).to match(0)
+        expect(json["amount_of_companies"]).to match(1)
       end
 
       it 'returns status code 200' do
