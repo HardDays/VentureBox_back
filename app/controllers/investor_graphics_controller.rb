@@ -144,7 +144,7 @@ class InvestorGraphicsController < ApplicationController
     date_range.each do |date_value|
       result[date_value.strftime(GraphHelper.type_str(type))] = 0
       @user.invested_companies.each do |investment|
-        result[date_value.strftime(GraphHelper.type_str(type))] += investment.company.get_evaluation_on_date(date_value)
+        result[date_value.strftime(GraphHelper.type_str(type))] = Random.rand(100)
       end
     end
 
