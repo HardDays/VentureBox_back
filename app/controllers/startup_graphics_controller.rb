@@ -18,15 +18,15 @@ class StartupGraphicsController < ApplicationController
     @products = @company.company_items.all
 
     if @products.count > 0
-      value = 100 / @products.count
+      percent = (100.0 / @products.count).round(1)
       result = []
       @products.each do |product|
         result.append(
           {
             id: product.id,
             name: product.name,
-            percent: 1000 + Random.rand(100),
-            value: value
+            value: 1000 + Random.rand(100),
+            percent: percent
           })
       end
 
