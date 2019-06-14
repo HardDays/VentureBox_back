@@ -14,9 +14,9 @@ module GraphHelper
 
   def self.date_range(type)
     if type == 'month'
-      return (DateTime.now - 1.month).to_i..DateTime.now.to_i
+      return (DateTime.now.beginning_of_day - 1.month).to_i..DateTime.now.beginning_of_day.to_i
     elsif type == 'year'
-      return (DateTime.now - 1.year).to_i..DateTime.now.to_i
+      return (DateTime.now.beginning_of_day - 1.year).to_i..DateTime.now.beginning_of_day.to_i
     end
   end
 
@@ -55,14 +55,6 @@ module GraphHelper
 
     return axis
   end
-
-  # def self.sql_date_range(type)
-  #   if type == 'month'
-  #     return (DateTime.now - 1.month)..DateTime.now
-  #   elsif type == 'year'
-  #     return (DateTime.now - 1.year)..DateTime.now
-  #   end
-  # end
 
   def self.type_str(type)
     if type == 'day'
