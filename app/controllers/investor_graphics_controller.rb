@@ -130,8 +130,7 @@ class InvestorGraphicsController < ApplicationController
       date_range = GraphHelper.axis_dates(params[:period])
     end
 
-    # пока тут то же самое,
-    # надо делить то, что заработали на эту дату после вычета всех налогов на колличество инвестиций
+    # TODO: надо делить то, что заработали на эту дату после вычета всех налогов на колличество инвестиций
     result = {}
     date_range.each do |date_value|
       result[date_value.strftime(GraphHelper.type_str(type))] = 0
