@@ -14,9 +14,9 @@ module GraphHelper
 
   def self.date_range(type)
     if type == 'month'
-      return (DateTime.now.beginning_of_day - 1.month).to_i..DateTime.now.beginning_of_day.to_i
+      return (DateTime.now.beginning_of_day - 1.month).to_i..DateTime.now.end_of_day.to_i
     elsif type == 'year'
-      return (DateTime.now.beginning_of_day - 1.year).to_i..DateTime.now.beginning_of_day.to_i
+      return (DateTime.now.beginning_of_day - 1.year).to_i..DateTime.now.end_of_day.to_i
     end
   end
 
