@@ -15,7 +15,8 @@ class StartupGraphicsController < ApplicationController
     response :unauthorized
   end
   def sales
-    @products = @company.company_items.all
+    # TODO: get TOP 3 by sales
+    @products = @company.company_items.limit(3)
 
     if @products.count > 0
       percent = (100.0 / @products.count).round(1)
