@@ -224,6 +224,45 @@ RSpec.describe "Users", type: :request do
         expect(json['goals']).to eq(user.goals)
         expect(json['company_id']).to be_kind_of(Integer)
         expect(json['password']).not_to be_present
+        expect(json['access_token']).not_to be_present
+        expect(json['refresh_token']).not_to be_present
+        expect(json['google_calendar_id']).not_to be_present
+        expect(json['has_google_calendar']).to eq(false)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+    context 'when the record exists with google calendar' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        user.google_calendar_id = "123123123"
+        user.password = password
+        user.password_confirmation = password
+        user.old_password = password
+        user.save!
+
+        get "/users/#{user.id}", headers: { 'Authorization': token }
+      end
+
+      it 'returns the user' do
+        expect(json).not_to be_empty
+        expect(json['id']).to eq(user.id)
+        expect(json['name']).to eq(user.name)
+        expect(json['surname']).to eq(user.surname)
+        expect(json['email']).to eq(user.email)
+        expect(json['role']).to eq(user.role)
+        expect(json['phone']).to eq(user.phone)
+        expect(json['goals']).to eq(user.goals)
+        expect(json['company_id']).to be_kind_of(Integer)
+        expect(json['password']).not_to be_present
+        expect(json['access_token']).not_to be_present
+        expect(json['refresh_token']).not_to be_present
+        expect(json['google_calendar_id']).not_to be_present
+        expect(json['has_google_calendar']).to eq(true)
       end
 
       it 'returns status code 200' do
@@ -250,6 +289,10 @@ RSpec.describe "Users", type: :request do
         expect(json['goals']).to eq(investor_user.goals)
         expect(json['company_id']).not_to be_present
         expect(json['password']).not_to be_present
+        expect(json['access_token']).not_to be_present
+        expect(json['refresh_token']).not_to be_present
+        expect(json['google_calendar_id']).not_to be_present
+        expect(json['has_google_calendar']).not_to be_present
       end
 
       it 'returns status code 200' do
@@ -308,6 +351,42 @@ RSpec.describe "Users", type: :request do
         expect(json['goals']).to eq(user.goals)
         expect(json['company_id']).to be_kind_of(Integer)
         expect(json['password']).not_to be_present
+        expect(json['access_token']).not_to be_present
+        expect(json['refresh_token']).not_to be_present
+        expect(json['google_calendar_id']).not_to be_present
+        expect(json['has_google_calendar']).to eq(false)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+    context 'when the record exists with google calendar' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        user.google_calendar_id = "123123123"
+        user.save
+
+        get "/users/me", headers: { 'Authorization': token }
+      end
+
+      it 'returns the user' do
+        expect(json).not_to be_empty
+        expect(json['id']).to eq(user.id)
+        expect(json['name']).to eq(user.name)
+        expect(json['surname']).to eq(user.surname)
+        expect(json['email']).to eq(user.email)
+        expect(json['role']).to eq(user.role)
+        expect(json['phone']).to eq(user.phone)
+        expect(json['goals']).to eq(user.goals)
+        expect(json['company_id']).to be_kind_of(Integer)
+        expect(json['password']).not_to be_present
+        expect(json['access_token']).not_to be_present
+        expect(json['refresh_token']).not_to be_present
+        expect(json['google_calendar_id']).not_to be_present
+        expect(json['has_google_calendar']).to eq(false)
       end
 
       it 'returns status code 200' do
@@ -334,6 +413,10 @@ RSpec.describe "Users", type: :request do
         expect(json['goals']).to eq(investor_user.goals)
         expect(json['company_id']).not_to be_present
         expect(json['password']).not_to be_present
+        expect(json['access_token']).not_to be_present
+        expect(json['refresh_token']).not_to be_present
+        expect(json['google_calendar_id']).not_to be_present
+        expect(json['has_google_calendar']).not_to be_present
       end
 
       it 'returns status code 200' do
@@ -376,6 +459,10 @@ RSpec.describe "Users", type: :request do
           expect(json['goals']).to eq('goals')
           expect(json['company_id']).to be_kind_of(Integer)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).to eq(false)
         end
 
         it 'creates image' do
@@ -418,6 +505,10 @@ RSpec.describe "Users", type: :request do
           expect(json['goals']).to eq('goals')
           expect(json['company_id']).to be_kind_of(Integer)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).to eq(false)
         end
 
         it 'creates image' do
@@ -1219,6 +1310,10 @@ RSpec.describe "Users", type: :request do
           expect(json['goals']).to eq('goals')
           expect(json['company_id']).not_to be_present
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).not_to be_present
         end
 
         it 'returns status code 201' do
@@ -1388,6 +1483,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(user.phone)
           expect(json['goals']).to eq(user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).to eq(false)
         end
 
         it 'returns status code 200' do
@@ -1521,6 +1620,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(investor_user.phone)
           expect(json['goals']).to eq(investor_user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).not_to be_present
         end
 
         it 'returns status code 200' do
@@ -1659,6 +1762,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(user.phone)
           expect(json['goals']).to eq(user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).to eq(false)
         end
 
         it 'returns status code 200' do
@@ -1861,6 +1968,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(investor_user.phone)
           expect(json['goals']).to eq(investor_user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).not_to be_present
         end
 
         it 'returns status code 200' do
@@ -2065,6 +2176,10 @@ RSpec.describe "Users", type: :request do
           expect(json['goals']).to eq(user.goals)
           expect(json['is_email_notifications_available']).to eq(true)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).to eq(false)
         end
 
         it 'returns status code 200' do
@@ -2097,6 +2212,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(user.phone)
           expect(json['goals']).to eq(user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).to eq(false)
         end
 
         it 'returns status code 200' do
@@ -2129,6 +2248,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(user.phone)
           expect(json['goals']).to eq(user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).to eq(false)
         end
 
         it 'returns status code 200' do
@@ -2159,6 +2282,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(user.phone)
           expect(json['goals']).to eq(user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).to eq(false)
         end
 
         it 'returns status code 200' do
@@ -2220,6 +2347,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(investor_user.phone)
           expect(json['goals']).to eq(investor_user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).not_to be_present
         end
 
         it 'returns status code 200' do
@@ -2252,6 +2383,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(investor_user.phone)
           expect(json['goals']).to eq(investor_user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).not_to be_present
         end
 
         it 'returns status code 200' do
@@ -2284,6 +2419,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(investor_user.phone)
           expect(json['goals']).to eq(investor_user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).not_to be_present
         end
 
         it 'returns status code 200' do
@@ -2314,6 +2453,10 @@ RSpec.describe "Users", type: :request do
           expect(json['phone']).to eq(investor_user.phone)
           expect(json['goals']).to eq(investor_user.goals)
           expect(json['password']).not_to be_present
+          expect(json['access_token']).not_to be_present
+          expect(json['refresh_token']).not_to be_present
+          expect(json['google_calendar_id']).not_to be_present
+          expect(json['has_google_calendar']).not_to be_present
         end
 
         it 'returns status code 200' do

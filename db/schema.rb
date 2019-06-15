@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_28_132347) do
+ActiveRecord::Schema.define(version: 2019_06_15_082302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,9 @@ ActiveRecord::Schema.define(version: 2019_05_28_132347) do
     t.datetime "updated_at", null: false
     t.boolean "is_email_notifications_available", default: false
     t.string "phone"
+    t.string "access_token"
+    t.string "refresh_token"
+    t.string "google_calendar_id"
   end
 
 end

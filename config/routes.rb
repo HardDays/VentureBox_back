@@ -105,6 +105,12 @@ Rails.application.routes.draw do
           get :evaluation
         end
       end
+
+      resources :google_events, only: [:index, :create] do
+        collection do
+          post :set_google_calendar
+        end
+      end
     end
   end
 

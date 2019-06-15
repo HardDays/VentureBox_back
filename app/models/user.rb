@@ -70,9 +70,17 @@ class User < ApplicationRecord
   def as_json(options={})
     res = super(options)
     res.delete('password')
+    res.delete('access_token')
+    res.delete('refresh_token')
+    res.delete('google_calendar_id')
 
     if role == "startup"
       res[:company_id] = company.id
+      if google_calendar_id
+        res[:has_google_calendar] = true
+      else
+        res[:has_google_calendar] = false
+      end
     end
 
     res
