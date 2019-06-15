@@ -30,10 +30,6 @@ RSpec.describe InvestorGraphicsController, type: :routing do
       expect(:get => "/users/1/investor_graphics/total_current_value").to route_to("investor_graphics#total_current_value", :user_id => "1")
     end
 
-    it "routes to #total_earn" do
-      expect(:get => "/users/1/investor_graphics/amount_of_companies").to route_to("investor_graphics#amount_of_companies", :user_id => "1")
-    end
-
     it "routes to #total_investment" do
       expect(:get => "/users/1/investor_graphics/amount_invested").to route_to("investor_graphics#amount_invested", :user_id => "1")
     end

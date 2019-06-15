@@ -109,64 +109,6 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
     end
   end
 
-  # Test suite for GET /users/1/investor_graphics/amount_of_companies
-  describe 'GET /users/1/investor_graphics/amount_of_companies' do
-    context 'when simply get' do
-      before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        get "/users/#{investor.id}/investor_graphics/amount_of_companies", headers: { 'Authorization': token }
-      end
-
-      it "returns all evaluations" do
-        expect(json["amount_of_companies"]).to match(1)
-      end
-
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
-      end
-    end
-
-    context 'when get by many investments' do
-      before do
-        post "/auth/login", params: { email: investor.email, password: password}
-        token = json['token']
-
-        new_investment = InvestedCompany.new(
-          investment: 1000,
-          evaluation: 10,
-          company_id: company.id,
-          investor_id: investor2.id,
-          contact_email: company.contact_email
-        )
-        new_investment.save
-
-        get "/users/#{investor.id}/investor_graphics/amount_of_companies", headers: { 'Authorization': token }
-      end
-
-      it "returns all evaluations" do
-        expect(json["amount_of_companies"]).to match(1)
-      end
-
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
-      end
-    end
-
-    context 'when not authorized' do
-      before { get "/users/#{user.id}/investor_graphics/amount_of_companies" }
-
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'returns a not found message' do
-        expect(response.body).to match("")
-      end
-    end
-  end
-
   # Test suite for GET /users/1/investor_graphics/amount_invested
   describe 'GET /users/1/investor_graphics/amount_invested' do
     context 'when simply get' do
@@ -196,6 +138,31 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
 
       it "returns all investments" do
         expect(json["amount_invested"]).to match(100)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when get by invested company' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        investment = InvestedCompany.new(
+          investor_id: investor.id,
+          company_id: company.id,
+          investment: 100,
+          evaluation: 1,
+          contact_email: company.contact_email)
+        investment.save!
+
+        get "/users/#{investor.id}/investor_graphics/amount_invested", params: {company_id: company.id}, headers: { 'Authorization': token }
+      end
+
+      it "returns all investments" do
+        expect(json["amount_invested"]).to match(200)
       end
 
       it 'returns status code 200' do

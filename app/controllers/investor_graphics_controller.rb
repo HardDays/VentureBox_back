@@ -55,23 +55,6 @@ class InvestorGraphicsController < ApplicationController
     }, status: :ok
   end
 
-  swagger_api :amount_of_companies do
-    summary "Amount of companies value"
-    param :path, :user_id, :integer, :required, "User id"
-    param :header, 'Authorization', :string, :required, 'Authentication token'
-    response :ok
-    response :not_found
-    response :forbidden
-    response :unauthorized
-  end
-  def amount_of_companies
-    @investments = @user.invested_companies
-
-    result = @investments.group(:company_id).count.count
-
-    render json: {amount_of_companies: result}, status: :ok
-  end
-
   swagger_api :amount_invested do
     summary "Amount invested value"
     param :path, :user_id, :integer, :required, "User id"
