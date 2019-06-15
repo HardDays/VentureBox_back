@@ -44,6 +44,10 @@
       "description": "Startup dashboard graphics"
     },
     {
+      "path": "/api/1.0/google_events.{format}",
+      "description": "Startup's google events"
+    },
+    {
       "path": "/api/1.0/authentication.{format}",
       "description": "Authentication"
     }

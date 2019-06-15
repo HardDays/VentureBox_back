@@ -2,13 +2,80 @@
   "apiVersion": "1.0",
   "swaggerVersion": "1.2",
   "basePath": "https://venture-box-back.herokuapp.com",
-  "resourcePath": "investor_graphics",
+  "resourcePath": "google_events",
   "apis": [
     {
-      "path": "/users/{user_id}/investor_graphics/total_current_value.json",
+      "path": "/users/{user_id}/companies/{company_id}/google_events/set_google_calendar.json",
       "operations": [
         {
-          "summary": "Total current value graph",
+          "summary": "Set google calendar id",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 403,
+              "responseModel": null,
+              "message": "Forbidden"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "type": "integer",
+              "description": "User id",
+              "required": true
+            },
+            {
+              "paramType": "path",
+              "name": "company_id",
+              "type": "integer",
+              "description": "Company id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "google_calendar_id",
+              "type": "string",
+              "description": "Google google calendar id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "nickname": "GoogleEvents#set_google_calendar",
+          "method": "post"
+        }
+      ]
+    },
+    {
+      "path": "/users/{user_id}/companies/{company_id}/google_events.json",
+      "operations": [
+        {
+          "summary": "Retrieve 6 closest events",
           "responseMessages": [
             {
               "code": 200,
@@ -40,26 +107,11 @@
               "required": true
             },
             {
-              "paramType": "query",
-              "name": "period",
-              "type": "string",
-              "description": "Period",
-              "required": true,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "month",
-                  "year",
-                  "all"
-                ]
-              }
-            },
-            {
-              "paramType": "query",
+              "paramType": "path",
               "name": "company_id",
               "type": "integer",
-              "description": "Company filter",
-              "required": false
+              "description": "Company id",
+              "required": true
             },
             {
               "paramType": "header",
@@ -69,16 +121,16 @@
               "required": true
             }
           ],
-          "nickname": "InvestorGraphics#total_current_value",
+          "nickname": "GoogleEvents#index",
           "method": "get"
         }
       ]
     },
     {
-      "path": "/users/{user_id}/investor_graphics/amount_of_companies.json",
+      "path": "/users/{user_id}/companies/{company_id}/google_events.json",
       "operations": [
         {
-          "summary": "Amount of companies value",
+          "summary": "Set google auth code",
           "responseMessages": [
             {
               "code": 200,
@@ -99,6 +151,11 @@
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
             }
           ],
           "parameters": [
@@ -110,59 +167,25 @@
               "required": true
             },
             {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
-          "nickname": "InvestorGraphics#amount_of_companies",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users/{user_id}/investor_graphics/amount_invested.json",
-      "operations": [
-        {
-          "summary": "Amount invested value",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            }
-          ],
-          "parameters": [
-            {
               "paramType": "path",
-              "name": "user_id",
-              "type": "integer",
-              "description": "User id",
-              "required": true
-            },
-            {
-              "paramType": "query",
               "name": "company_id",
               "type": "integer",
-              "description": "Company filter",
-              "required": false
+              "description": "Company id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "access_token",
+              "type": "string",
+              "description": "Google auth code",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "refresh_token",
+              "type": "string",
+              "description": "Google refresh token",
+              "required": true
             },
             {
               "paramType": "header",
@@ -172,78 +195,8 @@
               "required": true
             }
           ],
-          "nickname": "InvestorGraphics#amount_invested",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users/{user_id}/investor_graphics/rate_of_return.json",
-      "operations": [
-        {
-          "summary": "Rate of return graph",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            }
-          ],
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "user_id",
-              "type": "integer",
-              "description": "User id",
-              "required": true
-            },
-            {
-              "paramType": "query",
-              "name": "period",
-              "type": "string",
-              "description": "Period",
-              "required": true,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "month",
-                  "year",
-                  "all"
-                ]
-              }
-            },
-            {
-              "paramType": "query",
-              "name": "company_id",
-              "type": "integer",
-              "description": "Company filter",
-              "required": false
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
-          "nickname": "InvestorGraphics#rate_of_return",
-          "method": "get"
+          "nickname": "GoogleEvents#create",
+          "method": "post"
         }
       ]
     }
