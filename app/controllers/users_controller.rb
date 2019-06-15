@@ -1,20 +1,7 @@
 class UsersController < ApplicationController
-  before_action :authorize_user, only: [:show, :me, :change_general, :change_email, :change_password, :destroy]
-  before_action :check_user, only: [:show, :change_general, :change_email, :change_password, :destroy]
+  before_action :authorize_user, only: [:me, :change_general, :change_email, :change_password, :destroy]
+  before_action :check_user, only: [:change_general, :change_email, :change_password, :destroy]
   swagger_controller :user, 'User'
-
-  # GET /users/1
-  swagger_api :show do
-    summary "Retrieve user info"
-    param :path, :id, :integer, :required, "User id"
-    param :header, 'Authorization', :string, :required, 'Authentication token'
-    response :ok
-    response :unauthorized
-    response :not_found
-  end
-  def show
-    render json: @user, status: :ok
-  end
 
   # GET /users/1
   swagger_api :me do

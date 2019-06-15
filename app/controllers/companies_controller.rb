@@ -20,22 +20,29 @@ class CompaniesController < ApplicationController
     render json: {
       count: @companies.count,
       items: @companies.limit(params[:limit]).offset(params[:offset])
-    }, investor_list: true, status: :ok
+    }, investor_list: true, investor_id: @user.id, status: :ok
   end
 
   # GET /companies/1
   swagger_api :show do
     summary "Retrieve company info"
     param :path, :id, :integer, :required, "Company id"
+    param :header, 'Authorization', :string, :optional, 'Authentication token'
     response :ok
     response :unauthorized
     response :not_found
   end
   def show
-    render json: @company, status: :ok
+    investor_id = 0  # to distinguish id absence from param passed
+    @user = AuthorizationHelper.authorize_investor(request)
+    if @user
+      investor_id = @user.id
+    end
+
+    render json: @company, investor_id: investor_id, status: :ok
   end
 
-  # GET /companies/1
+  # GET /companies/1/image
   swagger_api :image do
     summary "Get company image"
     param :path, :id, :integer, :required, "Company id"

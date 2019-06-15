@@ -47,7 +47,7 @@ class StartupNewsController < ApplicationController
 
     render json: {
       count: @startup_news.count,
-      items: @startup_news.limit(params[:limit]).offset(params[:offset])
+      items: @startup_news.order(created_at: :desc).limit(params[:limit]).offset(params[:offset])
     }, status: :ok
   end
 
@@ -66,7 +66,7 @@ class StartupNewsController < ApplicationController
   def my_news
     render json: {
       count: @company.startup_news.count,
-      items: @company.startup_news.limit(params[:limit]).offset(params[:offset])
+      items: @company.startup_news.order(created_at: :desc).limit(params[:limit]).offset(params[:offset])
     }, status: :ok
   end
 

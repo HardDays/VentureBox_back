@@ -47,7 +47,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users, except: [:index, :update] do
+  resources :users, except: [:index, :update, :show] do
     collection do
       get :me
     end

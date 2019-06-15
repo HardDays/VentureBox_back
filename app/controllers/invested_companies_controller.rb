@@ -58,13 +58,17 @@ class InvestedCompaniesController < ApplicationController
     response :unprocessable_entity
   end
   def create
+    unless params[:contact_email]
+      render json: {contact_email: ["can't be blank"]}, status: :unprocessable_entity and return
+    end
+
+    unless params[:contact_email] == @company.contact_email
+      render json: {contact_email: ["doesn't match"]}, status: :unprocessable_entity and return
+    end
+
     @invested_company = InvestedCompany.new(invested_company_params)
     @invested_company.company_id = @company.id
     @invested_company.investor_id = @user.id
-
-    unless params[:contact_email]
-      @invested_company.contact_email = @user.email
-    end
 
     if @invested_company.save
       render json: @invested_company, status: :created

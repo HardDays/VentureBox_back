@@ -48,6 +48,10 @@ class Company < ApplicationRecord
       res[:has_image] = true
     end
 
+    if options[:investor_id]
+      res[:is_interested] = interesting_companies.where(investor_id: options[:investor_id]).exists?
+    end
+
     res.delete('image')
     res
   end

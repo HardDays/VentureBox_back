@@ -3,9 +3,13 @@ class SignumExchange
   base_uri 'scout.tenoris.net'
 
   def get_index(company_domain)
-    result = self.class.get("/index-output.php?domain=#{company_domain}").body
+    result = self.class.get("/index-output.php?domain=#{company_domain}")
 
-    result = JSON.parse result
+    unless result.code == 200
+      return 0
+    end
+
+    result = JSON.parse result.body
     result["index"]
   end
 end
