@@ -80,7 +80,7 @@ class CompaniesController < ApplicationController
   def investor_companies
     @companies = @user.interesting_companies.all + @user.invested_companies.all
 
-    render json: @companies, only: [:company_id, company: :company_name], status: :ok
+    render json: @companies, investor_companies: true, status: :ok
   end
 
   # GET /users/1/companies/1

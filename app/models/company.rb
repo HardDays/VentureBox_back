@@ -18,6 +18,9 @@ class Company < ApplicationRecord
 
   def as_json(options={})
     res = super(options)
+    if options[:only]
+      return res
+    end
 
     if options[:list]
       res.delete('website')

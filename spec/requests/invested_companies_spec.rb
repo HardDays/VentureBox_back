@@ -49,6 +49,7 @@ RSpec.describe "InvestedCompanies", type: :request do
       it "return all company info" do
         expect(json['items'][0]["company_id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_has_image"]).to be_in([true, false])
         expect(json['items'][0]["investment"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["contact_email"]).not_to be_present
@@ -76,6 +77,7 @@ RSpec.describe "InvestedCompanies", type: :request do
       it "return all company info" do
         expect(json['items'][0]["company_id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_has_image"]).to be_in([true, false])
         expect(json['items'][0]["investment"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["contact_email"]).not_to be_present
@@ -103,6 +105,7 @@ RSpec.describe "InvestedCompanies", type: :request do
       it "return all company info" do
         expect(json['items'][0]["company_id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_has_image"]).to be_in([true, false])
         expect(json['items'][0]["investment"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["contact_email"]).not_to be_present
@@ -138,6 +141,7 @@ RSpec.describe "InvestedCompanies", type: :request do
       it "return all company info" do
         expect(json['items'][0]["company_id"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_has_image"]).to be_in([true, false])
         expect(json['items'][0]["investment"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
         expect(json['items'][0]["contact_email"]).not_to be_present
@@ -369,7 +373,8 @@ RSpec.describe "InvestedCompanies", type: :request do
       end
 
       it 'creates a company' do
-        expect(json['company_name']).to eq(company4.company_name)
+        expect(json['company_name']).not_to be_present
+        expect(json['company_has_image']).not_to be_present
         expect(json['company_id']).to eq(company4.id)
         expect(json['investment']).to eq(1000000)
         expect(json['evaluation']).to eq(10)

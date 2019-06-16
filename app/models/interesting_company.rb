@@ -7,17 +7,26 @@ class InterestingCompany < ApplicationRecord
 
   def as_json(options={})
     res = super(options)
+    if options[:only]
+      return res
+    end
 
-    res[:company_name] = company.company_name
+    if options[:investor_companies]
+      res.delete("investor_id")
+      res.delete("created_at")
+      res.delete("updated_at")
+      res[:company_name] = company.company_name
+      return res
+    end
 
     if options[:list]
-      res[:evaluation] = 0
-      if company.invested_companies.exists?
-        investment = company.invested_companies.last
-        res[:evaluation] = (investment.investment / (investment.evaluation * 0.01)).ceil
-      elsif company.investment_amount and company.equality_amount
-        res[:evaluation] = (company.investment_amount / (company.equality_amount * 0.01)).ceil
+      res[:company_name] = company.company_name
+      res[:company_has_image] = false
+      if company.company_image
+        res[:company_has_image] = true
       end
+
+      res[:evaluation] = company.get_evaluation
     end
 
     res
