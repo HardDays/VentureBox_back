@@ -5,6 +5,8 @@ class InvestedCompany < ApplicationRecord
   belongs_to :user, foreign_key: :investor_id
   belongs_to :company
 
+  default_scope { order(created_at: :desc) }
+
   def as_json(options={})
     res = super(options)
 
@@ -14,7 +16,7 @@ class InvestedCompany < ApplicationRecord
 
     if options[:investor]
       res[:investor_name] = "#{user.surname} #{user.name}"
-      res[:investor_email] = contact_email
+      res[:investor_email] = user.email
     end
 
     res[:company_name] = company.company_name

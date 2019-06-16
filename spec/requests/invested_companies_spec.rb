@@ -113,6 +113,41 @@ RSpec.describe "InvestedCompanies", type: :request do
       end
     end
 
+    context 'when i invested more that once' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        investment = InvestedCompany.new(
+          investor_id: investor.id,
+          company_id: company.id,
+          investment: 100,
+          evaluation: 1,
+          contact_email: company.contact_email)
+        investment.save!
+
+        get "/invested_companies", headers: { 'Authorization': token }
+      end
+
+      it "returns response count not change" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(3)
+        expect(json['items'].size).to eq(3)
+      end
+
+      it "return all company info" do
+        expect(json['items'][0]["company_id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["investment"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["contact_email"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
     context 'when i am startup' do
       before do
         post "/auth/login", params: { email: user.email, password: password}
@@ -209,6 +244,43 @@ RSpec.describe "InvestedCompanies", type: :request do
       before do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
+
+        get "/users/#{user.id}/companies/#{company.id}/investors", params: {offset: 1}, headers: { 'Authorization': token }
+      end
+
+      it "returns response with offset" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(2)
+        expect(json['items'].size).to eq(1)
+      end
+
+      it "return all company info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["investor_id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["investor_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["investor_email"]).to be_a_kind_of(String)
+        expect(json['items'][0]["investment"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["evaluation"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["contact_email"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when invested more that once' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        investment = InvestedCompany.new(
+          investor_id: investor.id,
+          company_id: company.id,
+          investment: 100,
+          evaluation: 1,
+          contact_email: company.contact_email)
+        investment.save!
 
         get "/users/#{user.id}/companies/#{company.id}/investors", params: {offset: 1}, headers: { 'Authorization': token }
       end

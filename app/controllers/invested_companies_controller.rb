@@ -16,10 +16,15 @@ class InvestedCompaniesController < ApplicationController
     response :unauthorized
   end
   def index
-    @invested_companies = @user.invested_companies.all
+    @invested_companies = @user.invested_companies.select(
+      "MIN(invested_companies.id) as id,
+       SUM(invested_companies.investment) as investment,
+       SUM(invested_companies.evaluation) as evaluation,
+       MAX(invested_companies.created_at), company_id"
+    ).group(:company_id).reorder(Arel.sql("MAX(invested_companies.created_at) DESC"))
 
     render json: {
-      count: @invested_companies.count,
+      count: @invested_companies.count('id').size,
       items: @invested_companies.limit(params[:limit]).offset(params[:offset])
     }, list: true, status: :ok
   end
@@ -36,10 +41,16 @@ class InvestedCompaniesController < ApplicationController
     response :unauthorized
   end
   def my_investors
-    @invested_companies = @company.invested_companies.all
+    @invested_companies = @company.invested_companies.select(
+      "MIN(invested_companies.id) as id,
+       SUM(invested_companies.investment) as investment,
+       SUM(invested_companies.evaluation) as evaluation,
+       MAX(invested_companies.created_at), investor_id,
+       MIN(invested_companies.company_id) as company_id"  # must be equal for all, cause we filtered by company_id
+    ).group(:investor_id).reorder(Arel.sql("MAX(invested_companies.created_at) DESC"))
 
     render json: {
-      count: @invested_companies.count,
+      count: @invested_companies.count('id').size,
       items: @invested_companies.limit(params[:limit]).offset(params[:offset])
     }, list: true, investor: true, status: :ok
   end
