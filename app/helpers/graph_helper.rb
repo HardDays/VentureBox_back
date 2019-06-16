@@ -1,57 +1,81 @@
 module GraphHelper
 
-  def self.date_step(type)
+  def self.next_date(date, type)
     if type == 'day'
-      return 1.hour
+      return (date + 1.hour).end_of_hour
     elsif type == 'week'
-      return 1.day
+      return date.next_day(1).end_of_day
     elsif type == 'month'
-      return 1.day
+      return date.next_day(1)
     elsif type == 'year'
-      return 1.month
+      return date.next_month(1).end_of_month
     end
+  end
+
+  def self.to_time(date, type)
+    if type == 'year'
+      return date.end_of_day
+    end
+
+    return date
   end
 
   def self.date_range(type)
     if type == 'month'
-      return (DateTime.now.end_of_day - 1.month).to_i..DateTime.now.end_of_day.to_i
+      return (DateTime.now.end_of_day - 1.month)..DateTime.now.end_of_day
     elsif type == 'year'
-      return (DateTime.now.end_of_month - 1.year).to_i..DateTime.now.end_of_month.to_i
+      return (DateTime.now.end_of_month - 1.year)..DateTime.now.end_of_month
     end
   end
 
   def self.axis_dates(type)
     axis = []
-    (date_range(type)).step(date_step(type)).each { |v|
-      axis.push(Time.at(v).end_of_day)
-    }
+    _date_range = date_range(type)
+
+    date = _date_range.first
+    while date.in? _date_range do
+      axis.push(to_time(date, type))
+      date = next_date(date, type)
+    end
 
     return axis
   end
 
   def self.custom_axis_dates(step, dates)
     axis = []
-    (dates[0].to_i..dates[1].to_i).step(date_step(step)).each { |v|
-      axis.push(Time.at(v).end_of_day)
-    }
+    _date_range = dates[0]..dates[1]
+
+    date = _date_range.first
+    while date.in? _date_range do
+      axis.push(to_time(date, step))
+      date = next_date(date, step)
+    end
 
     return axis
   end
 
   def self.axis(type)
     axis = []
-    (date_range(type)).step(date_step(type)).each { |v|
-      axis.push(Time.at(v).end_of_day.strftime(type_str(type)))
-    }
+    _date_range = date_range(type)
+
+    date = _date_range.first
+    while date.in? _date_range do
+      axis.push(to_time(date, type).strftime(type_str(type)))
+      date = next_date(date, type)
+    end
 
     return axis
   end
 
   def self.custom_axis(step, dates)
     axis = []
-    (dates[0].to_i..dates[1].to_i).step(date_step(step)).each { |v|
-      axis.push(Time.at(v).end_of_day.strftime(type_str(step)))
-    }
+    _date_range = dates[0]..dates[1]
+
+    date = _date_range.first
+    while date.in? _date_range do
+      axis.push(to_time(date, step).strftime(type_str(step)))
+      date = next_date(date, step)
+    end
 
     return axis
   end
