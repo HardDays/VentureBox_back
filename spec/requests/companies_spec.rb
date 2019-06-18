@@ -157,7 +157,7 @@ RSpec.describe "Companies", type: :request do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
 
-        get "/companies", params: {offset: 1}, headers: {'Authorization': token}
+        get "/companies", params: {offset: 2}, headers: {'Authorization': token}
       end
 
       it "returns response with offset" do

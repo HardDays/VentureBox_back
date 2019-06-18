@@ -15,7 +15,7 @@ class CompaniesController < ApplicationController
     response :unauthorized
   end
   def index
-    @my_companies = @user.invested_companies.pluck(:company_id) + @user.interesting_companies.pluck(:company_id)
+    @my_companies = @user.invested_companies.pluck(:company_id)
     @companies = Company.where.not(id: @my_companies.uniq)
 
     render json: {
