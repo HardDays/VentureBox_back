@@ -95,7 +95,7 @@ class CompaniesController < ApplicationController
     response :not_found
   end
   def my
-    render json: @company, status: :ok
+    render json: @company, my: true, status: :ok
   end
 
   # GET /users/1/companies/1/image
@@ -168,7 +168,7 @@ class CompaniesController < ApplicationController
     end
 
     if @company.update(company_params)
-      render json: @company, status: :ok
+      render json: @company, my: true, status: :ok
     else
       render json: @company.errors, status: :unprocessable_entity
     end

@@ -3,7 +3,6 @@ class InvestedCompaniesController < ApplicationController
   before_action :authorize_startup, only: [:my_investors]
   before_action :set_company, only: [:create, :my_investors]
   before_action :check_company_ownership, only: [:my_investors]
-  before_action :delete_from_interesting, only: [:create]
   swagger_controller :invested_companies, "Invested companies"
 
   # GET /invested_companies
@@ -82,6 +81,7 @@ class InvestedCompaniesController < ApplicationController
     @invested_company.investor_id = @user.id
 
     if @invested_company.save
+      delete_from_interesting
       render json: @invested_company, status: :created
     else
       render json: @invested_company.errors, status: :unprocessable_entity

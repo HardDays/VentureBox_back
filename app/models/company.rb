@@ -53,6 +53,11 @@ class Company < ApplicationRecord
 
     if options[:investor_id]
       res[:is_interested] = interesting_companies.where(investor_id: options[:investor_id]).exists?
+      res[:is_invested] = invested_companies.where(investor_id: options[:investor_id]).exists?
+    end
+
+    unless options[:my]
+      res.delete('contact_email')
     end
 
     res.delete('image')

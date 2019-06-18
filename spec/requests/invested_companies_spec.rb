@@ -386,9 +386,9 @@ RSpec.describe "InvestedCompanies", type: :request do
       end
 
       it 'deletes interesting company item' do
-        exitst = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
 
-        expect(exitst).to eq(false)
+        expect(exists).to eq(false)
       end
     end
 
@@ -396,6 +396,9 @@ RSpec.describe "InvestedCompanies", type: :request do
       before do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
 
         post "/companies/#{company4.id}/invested_companies", params: without_investment, headers: { 'Authorization': token }
       end
@@ -408,12 +411,21 @@ RSpec.describe "InvestedCompanies", type: :request do
         expect(response.body)
           .to match("{\"investment\":[\"can't be blank\"]}")
       end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
     end
 
     context 'when the request without evaluation' do
       before do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
 
         post "/companies/#{company4.id}/invested_companies", params: without_evaluation, headers: { 'Authorization': token }
       end
@@ -426,12 +438,21 @@ RSpec.describe "InvestedCompanies", type: :request do
         expect(response.body)
           .to match("{\"evaluation\":[\"can't be blank\"]}")
       end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
     end
 
     context 'when the request without email' do
       before do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
 
         post "/companies/#{company4.id}/invested_companies", params: without_contact_email, headers: { 'Authorization': token }
       end
@@ -444,12 +465,21 @@ RSpec.describe "InvestedCompanies", type: :request do
         expect(response.body)
           .to match("{\"contact_email\":[\"can't be blank\"]}")
       end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
     end
 
     context 'when the request with wrong email' do
       before do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
 
         post "/companies/#{company4.id}/invested_companies", params: context_email_not_match, headers: { 'Authorization': token }
       end
@@ -462,12 +492,21 @@ RSpec.describe "InvestedCompanies", type: :request do
         expect(response.body)
           .to match("{\"contact_email\":[\"doesn't match\"]}")
       end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
     end
 
     context 'when the request with wrong email format' do
       before do
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
 
         post "/companies/#{company4.id}/invested_companies", params: wrong_contact_email_format, headers: { 'Authorization': token }
       end
@@ -480,12 +519,21 @@ RSpec.describe "InvestedCompanies", type: :request do
         expect(response.body)
           .to match("{\"contact_email\":[\"doesn't match\"]}")
       end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
     end
 
     context 'when i am startup' do
       before do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
 
         post "/companies/#{company4.id}/invested_companies", params: valid_attributes, headers: { 'Authorization': token }
       end
@@ -497,10 +545,19 @@ RSpec.describe "InvestedCompanies", type: :request do
       it 'response is empty' do
         expect(response.body).to match("")
       end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
     end
 
     context 'when the user unauthorized' do
       before do
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
+
         post "/companies/#{company4.id}/invested_companies", params: valid_attributes
       end
 
@@ -510,6 +567,12 @@ RSpec.describe "InvestedCompanies", type: :request do
 
       it 'response is empty' do
         expect(response.body).to match("")
+      end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
       end
     end
   end
