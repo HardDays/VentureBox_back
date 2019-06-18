@@ -90,8 +90,8 @@ RSpec.describe "Companies", type: :request do
 
       it "return all companies" do
         expect(json).not_to be_empty
-        expect(json['count']).to eq(2)
-        expect(json['items'].size).to eq(2)
+        expect(json['count']).to eq(3)
+        expect(json['items'].size).to eq(3)
       end
 
       it "returns all company info" do
@@ -126,7 +126,7 @@ RSpec.describe "Companies", type: :request do
 
       it "returns 2 entities" do
         expect(json).not_to be_empty
-        expect(json['count']).to eq(2)
+        expect(json['count']).to eq(3)
         expect(json['items'].size).to eq(2)
       end
 
@@ -162,7 +162,7 @@ RSpec.describe "Companies", type: :request do
 
       it "returns response with offset" do
         expect(json).not_to be_empty
-        expect(json['count']).to eq(2)
+        expect(json['count']).to eq(3)
         expect(json['items'].size).to eq(1)
       end
 
