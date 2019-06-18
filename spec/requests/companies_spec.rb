@@ -251,6 +251,70 @@ RSpec.describe "Companies", type: :request do
       end
     end
 
+    context 'when ask invested' do
+      before do
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        get "/companies/my", params: { type: "invested" }, headers: {'Authorization': token}
+      end
+
+      it "return all companies" do
+        expect(json).not_to be_empty
+        expect(json.size).to eq(1)
+      end
+
+      it "returns all company info" do
+        expect(json[0]["company_id"]).to eq(company.id)
+        expect(json[0]["company_name"]).to eq(company.company_name)
+        expect(json[0]["has_image"]).not_to be_present
+        expect(json[0]["evaluation"]).not_to be_present
+        expect(json[0]["website"]).not_to be_present
+        expect(json[0]["description"]).not_to be_present
+        expect(json[0]["contact_email"]).not_to be_present
+        expect(json[0]["image"]).not_to be_present
+        expect(json[0]["team_members"]).not_to be_present
+        expect(json[0]["is_interested"]).not_to be_present
+        expect(json[0]["is_invested"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when ask interested' do
+      before do
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        get "/companies/my", params: { type: "interested" }, headers: {'Authorization': token}
+      end
+
+      it "return all companies" do
+        expect(json).not_to be_empty
+        expect(json.size).to eq(1)
+      end
+
+      it "returns all company info" do
+        expect(json[0]["company_id"]).to eq(company2.id)
+        expect(json[0]["company_name"]).to eq(company2.company_name)
+        expect(json[0]["has_image"]).not_to be_present
+        expect(json[0]["evaluation"]).not_to be_present
+        expect(json[0]["website"]).not_to be_present
+        expect(json[0]["description"]).not_to be_present
+        expect(json[0]["contact_email"]).not_to be_present
+        expect(json[0]["image"]).not_to be_present
+        expect(json[0]["team_members"]).not_to be_present
+        expect(json[0]["is_interested"]).not_to be_present
+        expect(json[0]["is_invested"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
     context 'when i am not investor' do
       before do
         post "/auth/login", params: {email: user.email, password: password}
@@ -406,7 +470,7 @@ RSpec.describe "Companies", type: :request do
         expect(json["investment_amount"]).to eq(company3.investment_amount)
         expect(json["equality_amount"]).to eq(company3.equality_amount)
         expect(json["stage_of_funding"]).to eq(company3.stage_of_funding)
-        expect(json["has_image"]).to eq(true)
+        expect(json["has_image"]).to eq(false)
         expect(json["is_interested"]).to eq(false)
         expect(json["is_invested"]).to eq(false)
         expect(json["team_members"]).to be_a_kind_of(Array)

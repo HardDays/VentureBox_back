@@ -73,12 +73,22 @@ class CompaniesController < ApplicationController
   # GET /companies/my
   swagger_api :investor_companies do
     summary "Retrieve investor companies"
+    param_list :query, :type, :string, :optional, "Type of companies", ["invested", "interested"]
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
   end
   def investor_companies
-    @companies = @user.interesting_companies.all + @user.invested_companies.all
+    @invested_companies = @user.invested_companies.all
+    @interested_companies = @user.interesting_companies.all
+
+    if params[:type] == "invested"
+      @companies = @invested_companies
+    elsif params[:type] == "interested"
+      @companies = @interested_companies
+    else
+      @companies = @interested_companies + @interested_companies
+    end
 
     render json: @companies, investor_companies: true, status: :ok
   end
