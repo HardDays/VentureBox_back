@@ -312,8 +312,8 @@ class CompanyItemsController < ApplicationController
 
     def search_text
       if params[:text]
-        @company_items = @company_items.where(
-          "(company_items.name ILIKE :query) ", query: "%#{params[:text]}%")
+        @company_items = @company_items.joins(:company).where(
+          "(company_items.name ILIKE :query OR companies.company_name ILIKE :query) ", query: "%#{params[:text]}%")
       end
     end
 

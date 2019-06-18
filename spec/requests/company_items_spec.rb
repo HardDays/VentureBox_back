@@ -162,7 +162,7 @@ RSpec.describe "CompanyItems", type: :request do
         get "/company_items", params: {text: company_item.name}
       end
 
-      it "returns response with offset" do
+      it "returns company item" do
         expect(json).not_to be_empty
         expect(json['count']).to eq(1)
         expect(json['items'].size).to eq(1)
@@ -177,6 +177,62 @@ RSpec.describe "CompanyItems", type: :request do
         expect(json['items'][0]["price"]).to eq(company_item.price)
         expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
         expect(json['items'][0]["has_image"]).to eq(true)
+        expect(json['items'][0]["image"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when use text search' do
+      before do
+        get "/company_items", params: {text: company.company_name}
+      end
+
+      it "returns company's items" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(3)
+        expect(json['items'].size).to eq(3)
+      end
+
+      it "return all item info" do
+        expect(json['items'][0]["id"]).to be_a_kind_of(Integer)
+        expect(json['items'][0]["name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["company_name"]).to be_a_kind_of(String)
+        expect(json['items'][0]["link_to_store"]).to be_a_kind_of(String)
+        expect(json['items'][0]["description"]).to be_a_kind_of(String)
+        expect(json['items'][0]["price"]).to be_a_kind_of(String)
+        expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to be_in([true, false])
+        expect(json['items'][0]["image"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when use text and tags search' do
+      before do
+        get "/company_items", params: {text: company.company_name, tags: ["coding"]}
+      end
+
+      it "returns company's items" do
+        expect(json).not_to be_empty
+        expect(json['count']).to eq(1)
+        expect(json['items'].size).to eq(1)
+      end
+
+      it "return all item info" do
+        expect(json['items'][0]["id"]).to eq(company_item2.id)
+        expect(json['items'][0]["name"]).to eq(company_item2.name)
+        expect(json['items'][0]["company_name"]).to eq(company_item2.company.company_name)
+        expect(json['items'][0]["link_to_store"]).to eq(company_item2.link_to_store)
+        expect(json['items'][0]["description"]).to eq(company_item2.description)
+        expect(json['items'][0]["price"]).to eq(company_item2.price)
+        expect(json['items'][0]["tags"]).to be_a_kind_of(Array)
+        expect(json['items'][0]["has_image"]).to eq(false)
         expect(json['items'][0]["image"]).not_to be_present
       end
 
