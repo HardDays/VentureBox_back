@@ -14,6 +14,9 @@ RSpec.describe "Companies", type: :request do
   let!(:user3)  { create(:user, password: password, password_confirmation: password, role: :startup) }
   let!(:company3) { create(:company, user_id: user3.id) }
 
+  let!(:user4)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:company4) { create(:company, user_id: user4.id) }
+
   let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
   let!(:invested_company) { create(:invested_company, company_id: company.id, investor_id: investor.id)}
   let!(:interesting_company) { create(:interesting_company, company_id: company2.id, investor_id: investor.id)}
@@ -87,8 +90,8 @@ RSpec.describe "Companies", type: :request do
 
       it "return all companies" do
         expect(json).not_to be_empty
-        expect(json['count']).to eq(3)
-        expect(json['items'].size).to eq(3)
+        expect(json['count']).to eq(2)
+        expect(json['items'].size).to eq(2)
       end
 
       it "returns all company info" do
@@ -123,7 +126,7 @@ RSpec.describe "Companies", type: :request do
 
       it "returns 2 entities" do
         expect(json).not_to be_empty
-        expect(json['count']).to eq(3)
+        expect(json['count']).to eq(2)
         expect(json['items'].size).to eq(2)
       end
 
@@ -154,12 +157,12 @@ RSpec.describe "Companies", type: :request do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
 
-        get "/companies", params: {offset: 2}, headers: {'Authorization': token}
+        get "/companies", params: {offset: 1}, headers: {'Authorization': token}
       end
 
       it "returns response with offset" do
         expect(json).not_to be_empty
-        expect(json['count']).to eq(3)
+        expect(json['count']).to eq(2)
         expect(json['items'].size).to eq(1)
       end
 
