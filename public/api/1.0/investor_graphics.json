@@ -75,54 +75,6 @@
       ]
     },
     {
-      "path": "/users/{user_id}/investor_graphics/amount_of_companies.json",
-      "operations": [
-        {
-          "summary": "Amount of companies value",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            }
-          ],
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "user_id",
-              "type": "integer",
-              "description": "User id",
-              "required": true
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
-          "nickname": "InvestorGraphics#amount_of_companies",
-          "method": "get"
-        }
-      ]
-    },
-    {
       "path": "/users/{user_id}/investor_graphics/amount_invested.json",
       "operations": [
         {

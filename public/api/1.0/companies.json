@@ -23,6 +23,20 @@
           ],
           "parameters": [
             {
+              "paramType": "query",
+              "name": "type",
+              "type": "string",
+              "description": "Type of companies",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "invested",
+                  "interested"
+                ]
+              }
+            },
+            {
               "paramType": "header",
               "name": "Authorization",
               "type": "string",
@@ -159,6 +173,13 @@
               "type": "integer",
               "description": "Company id",
               "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": false
             }
           ],
           "nickname": "Companies#show",

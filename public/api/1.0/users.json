@@ -412,49 +412,6 @@
       "path": "/users/{id}.json",
       "operations": [
         {
-          "summary": "Retrieve user info",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": null,
-              "message": "Ok"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            }
-          ],
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "User id",
-              "required": true
-            },
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
-          "nickname": "Users#show",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/users/{id}.json",
-      "operations": [
-        {
           "summary": "Update user info",
           "responseMessages": [
             {
