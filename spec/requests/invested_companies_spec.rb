@@ -15,7 +15,7 @@ RSpec.describe "InvestedCompanies", type: :request do
   let!(:company4) { create(:company, user_id: user4.id) }
 
   let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
-  let!(:invested_company1) { create(:invested_company, company_id: company.id, investor_id: investor.id)}
+  let!(:invested_company1) { create(:invested_company, company_id: company.id, investor_id: investor.id, evaluation: 20)}
   let!(:invested_company2) { create(:invested_company, company_id: company2.id, investor_id: investor.id)}
   let!(:invested_company3) { create(:invested_company, company_id: company3.id, investor_id: investor.id)}
 
@@ -30,6 +30,7 @@ RSpec.describe "InvestedCompanies", type: :request do
   let(:without_contact_email) { { investment: 1000000, evaluation: 10 } }
   let(:context_email_not_match) { { investment: 1000000, evaluation: 10, contact_email: company.contact_email } }
   let(:wrong_contact_email_format) { { investment: 1000000, evaluation: 10 , contact_email: "contactemail.com" } }
+  let(:evaluation_more_than_100) { { investment: 1000000, evaluation: 100 , contact_email: company4.contact_email } }
 
   # Test suite for GET /invested_companies
   describe 'GET /invested_companies' do
@@ -393,6 +394,30 @@ RSpec.describe "InvestedCompanies", type: :request do
       end
     end
 
+    context 'when double investment in the same company' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        valid_attributes[:contact_email] = company.contact_email
+
+        post "/companies/#{company.id}/invested_companies", params: valid_attributes, headers: { 'Authorization': token }
+      end
+
+      it 'creates a company' do
+        expect(json['company_name']).not_to be_present
+        expect(json['company_has_image']).not_to be_present
+        expect(json['company_id']).to eq(company.id)
+        expect(json['investment']).to eq(1000000)
+        expect(json['evaluation']).to eq(10)
+        expect(json["contact_email"]).to eq(company.contact_email)
+      end
+
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+    end
+
     context 'when the request is valid with email in capital' do
       before do
         post "/auth/login", params: { email: investor.email, password: password}
@@ -550,6 +575,33 @@ RSpec.describe "InvestedCompanies", type: :request do
       it 'returns a validation failure message' do
         expect(response.body)
           .to match("{\"contact_email\":[\"doesn't match\"]}")
+      end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
+    end
+
+    context 'when the request with total evaluation more that 100' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
+
+        post "/companies/#{company4.id}/invested_companies", params: evaluation_more_than_100, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"evaluation\":[\"can't be more than 100\"]}")
       end
 
       it 'does not deletes interesting company item' do

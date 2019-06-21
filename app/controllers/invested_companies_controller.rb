@@ -4,6 +4,7 @@ class InvestedCompaniesController < ApplicationController
   before_action :set_company, only: [:create, :my_investors]
   before_action :check_company_ownership, only: [:my_investors]
   before_action :check_company_email, only: [:create]
+  before_action :check_company_investment_percents, only: [:create]
   swagger_controller :invested_companies, "Invested companies"
 
   # GET /invested_companies
@@ -124,6 +125,14 @@ class InvestedCompaniesController < ApplicationController
       params[:contact_email] = params[:contact_email].downcase
       unless params[:contact_email] == @company.contact_email
         render json: {contact_email: ["doesn't match"]}, status: :unprocessable_entity and return
+      end
+    end
+
+    def check_company_investment_percents
+      @investments_sum = @company.invested_companies.sum(:evaluation)
+
+      if @investments_sum + params[:evaluation].to_i >= 100
+        render json: {evaluation: ["can't be more than 100"]}, status: :unprocessable_entity and return
       end
     end
 
