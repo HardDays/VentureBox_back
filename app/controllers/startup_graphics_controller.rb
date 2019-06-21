@@ -125,7 +125,7 @@ class StartupGraphicsController < ApplicationController
     date_range.each do |date_value|
       result << {
         date: date_value.strftime(GraphHelper.type_str(type)),
-        value: @company.get_evaluation_on_date(@company.created_at, date_value)
+        value: @company.get_my_evaluation_on_date(date_value)
       }
     end
 

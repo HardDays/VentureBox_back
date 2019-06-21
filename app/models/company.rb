@@ -83,14 +83,25 @@ class Company < ApplicationRecord
   def get_evaluation_on_date(start_date, date)
     evaluation = 0
 
-    # дата начала это дата инвестиции или дата создания компании
-    # все, что было до инвестирования нас не интересует
-    if created_at >= start_date and investment_amount and equality_amount
+    # берем все инвестиции с даты нашего первого инвестирования до переданной,
+    # нас интересует самая последняя их получившихся
+    if invested_companies.exists?
+      investment = invested_companies.where(created_at: start_date..date).order(created_at: :desc).first
+      if investment
+        evaluation = (investment.investment / (investment.evaluation * 0.01)).ceil
+      end
+    end
+
+    evaluation
+  end
+
+  def get_my_evaluation_on_date(date)
+    evaluation = 0
+
+    if investment_amount and equality_amount
       evaluation = (investment_amount / (equality_amount * 0.01)).ceil
     end
 
-    # берем все инвестиции с даты нашего первого инвестирования до переданной,
-    # нас интересует самая последняя их получившихся
     if invested_companies.exists?
       investment = invested_companies.where(created_at: start_date..date).order(created_at: :desc).first
       if investment
