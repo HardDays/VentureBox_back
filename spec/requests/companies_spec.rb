@@ -368,12 +368,12 @@ RSpec.describe "Companies", type: :request do
         expect(json["website"]).to eq(company.website)
         expect(json["description"]).to eq(company.description)
         expect(json["contact_email"]).not_to be_present
-        expect(json["investment_amount"]).to eq(company.investment_amount)
-        expect(json["equality_amount"]).to eq(company.equality_amount)
+        expect(json["investment_amount"]).to eq(company.investment_amount + invested_company.investment)
+        expect(json["equality_amount"]).to eq(company.equality_amount + invested_company.evaluation)
         expect(json["stage_of_funding"]).to eq(company.stage_of_funding)
         expect(json["has_image"]).to eq(true)
-        expect(json["is_interested"]).to eq(false)
-        expect(json["is_invested"]).to eq(false)
+        expect(json["is_interested"]).not_to be_present
+        expect(json["is_invested"]).not_to be_present
         expect(json["team_members"]).to be_a_kind_of(Array)
         expect(json["image"]).not_to be_present
       end
@@ -383,7 +383,38 @@ RSpec.describe "Companies", type: :request do
       end
     end
 
-    context 'when request as investor interested' do
+    context 'when simply get not invested company' do
+      before do
+        get "/companies/#{company2.id}"
+      end
+
+      it 'returns the company' do
+        expect(json).not_to be_empty
+        expect(json['id']).to eq(company2.id)
+      end
+
+      it "return all company info" do
+        expect(json["id"]).to eq(company2.id)
+        expect(json["company_name"]).to eq(company2.company_name)
+        expect(json["website"]).to eq(company2.website)
+        expect(json["description"]).to eq(company2.description)
+        expect(json["contact_email"]).not_to be_present
+        expect(json["investment_amount"]).to eq(company2.investment_amount)
+        expect(json["equality_amount"]).to eq(company2.equality_amount)
+        expect(json["stage_of_funding"]).to eq(company2.stage_of_funding)
+        expect(json["has_image"]).to eq(true)
+        expect(json["is_interested"]).not_to be_present
+        expect(json["is_invested"]).not_to be_present
+        expect(json["team_members"]).to be_a_kind_of(Array)
+        expect(json["image"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when request as investor invested' do
       before do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
@@ -402,8 +433,8 @@ RSpec.describe "Companies", type: :request do
         expect(json["website"]).to eq(company.website)
         expect(json["description"]).to eq(company.description)
         expect(json["contact_email"]).not_to be_present
-        expect(json["investment_amount"]).to eq(company.investment_amount)
-        expect(json["equality_amount"]).to eq(company.equality_amount)
+        expect(json["investment_amount"]).to eq(company.investment_amount + invested_company.investment)
+        expect(json["equality_amount"]).to eq(company.equality_amount + invested_company.evaluation)
         expect(json["stage_of_funding"]).to eq(company.stage_of_funding)
         expect(json["has_image"]).to eq(true)
         expect(json["is_interested"]).to eq(false)
@@ -417,7 +448,7 @@ RSpec.describe "Companies", type: :request do
       end
     end
 
-    context 'when request as investor invested company' do
+    context 'when request as investor interested company' do
       before do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
@@ -505,8 +536,8 @@ RSpec.describe "Companies", type: :request do
         expect(json["equality_amount"]).to eq(company3.equality_amount)
         expect(json["stage_of_funding"]).to eq(company3.stage_of_funding)
         expect(json["has_image"]).to eq(false)
-        expect(json["is_interested"]).to eq(false)
-        expect(json["is_invested"]).to eq(false)
+        expect(json["is_interested"]).not_to be_present
+        expect(json["is_invested"]).not_to be_present
         expect(json["team_members"]).to be_a_kind_of(Array)
         expect(json["image"]).not_to be_present
       end
@@ -609,9 +640,43 @@ RSpec.describe "Companies", type: :request do
         expect(json["website"]).to eq(company.website)
         expect(json["description"]).to eq(company.description)
         expect(json["contact_email"]).to eq(company.contact_email)
-        expect(json["investment_amount"]).to eq(company.investment_amount)
-        expect(json["equality_amount"]).to eq(company.equality_amount)
+        expect(json["investment_amount"]).to eq(company.investment_amount + invested_company.investment)
+        expect(json["equality_amount"]).to eq(company.equality_amount + invested_company.evaluation)
         expect(json["stage_of_funding"]).to eq(company.stage_of_funding)
+        expect(json["has_image"]).to eq(true)
+        expect(json["team_members"]).to be_a_kind_of(Array)
+        expect(json["image"]).not_to be_present
+        expect(json["is_interested"]).not_to be_present
+        expect(json["is_invested"]).not_to be_present
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the record without investment' do
+      before do
+        post "/auth/login", params: { email: user2.email, password: password}
+        token = json['token']
+
+        get "/users/#{user2.id}/companies/#{company2.id}", headers: { 'Authorization': token }
+      end
+
+      it 'returns the company' do
+        expect(json).not_to be_empty
+        expect(json['id']).to eq(company2.id)
+      end
+
+      it "return all company info" do
+        expect(json["id"]).to eq(company2.id)
+        expect(json["company_name"]).to eq(company2.company_name)
+        expect(json["website"]).to eq(company2.website)
+        expect(json["description"]).to eq(company2.description)
+        expect(json["contact_email"]).to eq(company2.contact_email)
+        expect(json["investment_amount"]).to eq(company2.investment_amount)
+        expect(json["equality_amount"]).to eq(company2.equality_amount)
+        expect(json["stage_of_funding"]).to eq(company2.stage_of_funding)
         expect(json["has_image"]).to eq(true)
         expect(json["team_members"]).to be_a_kind_of(Array)
         expect(json["image"]).not_to be_present
@@ -852,8 +917,8 @@ RSpec.describe "Companies", type: :request do
         expect(json['description']).to eq('description1')
         expect(json['website']).to eq('http://domain1.com')
         expect(json["contact_email"]).to eq('contact@email.com')
-        expect(json["investment_amount"]).to eq(10000)
-        expect(json["equality_amount"]).to eq(10)
+        expect(json["investment_amount"]).to eq(10000 + invested_company.investment)
+        expect(json["equality_amount"]).to eq(10 + invested_company.evaluation)
         expect(json["stage_of_funding"]).to eq("idea")
         expect(json["has_image"]).to eq(true)
         expect(json["image"]).not_to be_present
@@ -893,8 +958,8 @@ RSpec.describe "Companies", type: :request do
         expect(json['description']).to eq('description1')
         expect(json['website']).to eq('http://domain1.com')
         expect(json["contact_email"]).to eq('contact@email.com')
-        expect(json["investment_amount"]).to eq(10000)
-        expect(json["equality_amount"]).to eq(10)
+        expect(json["investment_amount"]).to eq(10000 + invested_company.investment)
+        expect(json["equality_amount"]).to eq(10 + invested_company.evaluation)
         expect(json["stage_of_funding"]).to eq("idea")
         expect(json["has_image"]).to eq(true)
         expect(json["image"]).not_to be_present

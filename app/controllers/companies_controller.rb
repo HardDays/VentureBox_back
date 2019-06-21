@@ -34,7 +34,7 @@ class CompaniesController < ApplicationController
     response :not_found
   end
   def show
-    investor_id = 0  # to distinguish id absence from param passed
+    investor_id = nil
     @user = AuthorizationHelper.authorize_investor(request)
     if @user
       investor_id = @user.id
