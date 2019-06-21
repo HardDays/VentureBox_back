@@ -4,6 +4,7 @@ class Company < ApplicationRecord
   validates :website, http_url: true, unless: Proc.new { |a| a.website.blank? }
   validates :contact_email, :presence => true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :equality_amount, :inclusion => 1..99, unless: Proc.new { |a| a.equality_amount.blank? }
+  validates_uniqueness_of :user_id
 
   enum stage_of_funding: EnumsHelper.stage_of_funding
 
@@ -79,23 +80,15 @@ class Company < ApplicationRecord
     evaluation
   end
 
-  def get_evaluation_on_date(date)
+  def get_evaluation_on_date(start_date, date)
     evaluation = 0
 
-    if created_at <= date
-      # если создана раньше переданной даты, то эвалюация как минимум та, что в параметрах создания
-      if investment_amount and equality_amount
-        evaluation = (investment_amount / (equality_amount * 0.01)).ceil
-      end
-
-      # попробуем еще найти ивестиции на эту дату
-      # берем все инвестиции с даты создания (она уже меньше чем переданная) до переданной,
-      # нас интересует самая последняя их получившихся
-      if invested_companies.exists?
-        investment = invested_companies.where(created_at: created_at..date).order(created_at: :desc).first
-        if investment
-          evaluation = (investment.investment / (investment.evaluation * 0.01)).ceil
-        end
+    # берем все инвестиции с даты нашего первого инвестирования до переданной,
+    # нас интересует самая последняя их получившихся
+    if invested_companies.exists?
+      investment = invested_companies.where(created_at: start_date..date).order(created_at: :desc).first
+      if investment
+        evaluation = (investment.investment / (investment.evaluation * 0.01)).ceil
       end
     end
 

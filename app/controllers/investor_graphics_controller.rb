@@ -21,7 +21,7 @@ class InvestorGraphicsController < ApplicationController
 
     type = params[:period]
     if params[:period] == 'all'
-      dates = [@user.created_at, DateTime.now]
+      dates = [Time.at(@user.created_at).to_datetime, DateTime.now]
       diff = Time.diff(dates[0], dates[1])
       if diff[:month] > 0
         new_step = 'year'
@@ -41,11 +41,17 @@ class InvestorGraphicsController < ApplicationController
       date_range = GraphHelper.axis_dates(params[:period])
     end
 
+    @invested_companies = @user.invested_companies
+    if params[:company_id]
+      @invested_companies = @invested_companies.where(company_id: params[:company_id])
+    end
+
     result = {}
     date_range.each do |date_value|
       result[date_value.strftime(GraphHelper.type_str(type))] = 0
-      @user.invested_companies.each do |investment|
-        result[date_value.strftime(GraphHelper.type_str(type))] += investment.company.get_evaluation_on_date(date_value)
+      @invested_companies.each do |investment|
+        result[date_value.strftime(GraphHelper.type_str(type))] += investment.company.get_evaluation_on_date(
+          investment.created_at, date_value)
       end
     end
 
@@ -93,7 +99,7 @@ class InvestorGraphicsController < ApplicationController
 
     type = params[:period]
     if params[:period] == 'all'
-      dates = [@user.created_at, DateTime.now]
+      dates = [Time.at(@user.created_at).to_datetime, DateTime.now]
       diff = Time.diff(dates[0], dates[1])
       if diff[:month] > 0
         new_step = 'year'
@@ -113,11 +119,16 @@ class InvestorGraphicsController < ApplicationController
       date_range = GraphHelper.axis_dates(params[:period])
     end
 
+    @invested_companies = @user.invested_companies
+    if params[:company_id]
+      @invested_companies = @invested_companies.where(company_id: params[:company_id])
+    end
+
     # TODO: надо делить то, что заработали на эту дату после вычета всех налогов на колличество инвестиций
     result = {}
     date_range.each do |date_value|
       result[date_value.strftime(GraphHelper.type_str(type))] = 0
-      @user.invested_companies.each do |investment|
+      @invested_companies.each do |investment|
         result[date_value.strftime(GraphHelper.type_str(type))] = Random.rand(100)
       end
     end

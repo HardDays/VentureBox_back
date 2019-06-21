@@ -2,22 +2,26 @@ module GraphHelper
 
   def self.next_date(date, type)
     if type == 'day'
-      return (date + 1.hour).end_of_hour
+      return (date + 1.hour)
     elsif type == 'week'
-      return date.next_day(1).end_of_day
+      return date.next_day(1)
     elsif type == 'month'
       return date.next_day(1)
     elsif type == 'year'
-      return date.next_month(1).end_of_month
+      return date.next_month(1)
     end
   end
 
   def self.to_time(date, type)
-    if type == 'year'
+    if type == 'day'
+      return date.end_of_hour
+    elsif type == 'week'
       return date.end_of_day
+    elsif type == 'month'
+      return date.end_of_day
+    elsif type == 'year'
+      return date.end_of_month
     end
-
-    return date
   end
 
   def self.date_range(type)

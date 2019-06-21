@@ -20,7 +20,7 @@ RSpec.describe "InvestedCompanies", type: :request do
   let!(:invested_company3) { create(:invested_company, company_id: company3.id, investor_id: investor.id)}
 
   let!(:investor2) { create(:user, password: password, password_confirmation: password, role: :investor )}
-  let!(:invested_company4) { create(:invested_company, company_id: company.id, investor_id: investor2.id)}
+  let!(:invested_company4) { create(:invested_company, company_id: company.id, investor_id: investor2.id, evaluation: 20)}
   let!(:invested_company5) { create(:invested_company, company_id: company2.id, investor_id: investor2.id)}
 
   let(:valid_attributes) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email } }
