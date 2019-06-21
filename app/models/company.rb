@@ -83,6 +83,10 @@ class Company < ApplicationRecord
   def get_evaluation_on_date(start_date, date)
     evaluation = 0
 
+    if investment_amount and equality_amount
+      evaluation = (investment_amount / (equality_amount * 0.01)).ceil
+    end
+
     # берем все инвестиции с даты нашего первого инвестирования до переданной,
     # нас интересует самая последняя их получившихся
     if invested_companies.exists?
