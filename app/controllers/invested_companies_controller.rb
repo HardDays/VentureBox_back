@@ -3,6 +3,7 @@ class InvestedCompaniesController < ApplicationController
   before_action :authorize_startup, only: [:my_investors]
   before_action :set_company, only: [:create, :my_investors]
   before_action :check_company_ownership, only: [:my_investors]
+  before_action :check_company_email, only: [:create]
   swagger_controller :invested_companies, "Invested companies"
 
   # GET /invested_companies
@@ -68,14 +69,6 @@ class InvestedCompaniesController < ApplicationController
     response :unprocessable_entity
   end
   def create
-    unless params[:contact_email]
-      render json: {contact_email: ["can't be blank"]}, status: :unprocessable_entity and return
-    end
-
-    unless params[:contact_email] == @company.contact_email
-      render json: {contact_email: ["doesn't match"]}, status: :unprocessable_entity and return
-    end
-
     @invested_company = InvestedCompany.new(invested_company_params)
     @invested_company.company_id = @company.id
     @invested_company.investor_id = @user.id
@@ -120,6 +113,17 @@ class InvestedCompaniesController < ApplicationController
     def check_company_ownership
       unless @company.user_id == @user.id
         render status: :forbidden and return
+      end
+    end
+
+    def check_company_email
+      unless params[:contact_email]
+        render json: {contact_email: ["can't be blank"]}, status: :unprocessable_entity and return
+      end
+
+      params[:contact_email] = params[:contact_email].downcase
+      unless params[:contact_email] == @company.contact_email
+        render json: {contact_email: ["doesn't match"]}, status: :unprocessable_entity and return
       end
     end
 

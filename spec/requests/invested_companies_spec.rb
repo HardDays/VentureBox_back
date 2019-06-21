@@ -24,6 +24,7 @@ RSpec.describe "InvestedCompanies", type: :request do
   let!(:invested_company5) { create(:invested_company, company_id: company2.id, investor_id: investor2.id)}
 
   let(:valid_attributes) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email } }
+  let(:valid_attributes_with_email_in_capital) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email.capitalize } }
   let(:without_investment) { { evaluation: 10, contact_email: company4.contact_email } }
   let(:without_evaluation) { { investment: 1000000, contact_email: company4.contact_email } }
   let(:without_contact_email) { { investment: 1000000, evaluation: 10 } }
@@ -370,6 +371,37 @@ RSpec.describe "InvestedCompanies", type: :request do
         interesting_company.save
 
         post "/companies/#{company4.id}/invested_companies", params: valid_attributes, headers: { 'Authorization': token }
+      end
+
+      it 'creates a company' do
+        expect(json['company_name']).not_to be_present
+        expect(json['company_has_image']).not_to be_present
+        expect(json['company_id']).to eq(company4.id)
+        expect(json['investment']).to eq(1000000)
+        expect(json['evaluation']).to eq(10)
+        expect(json["contact_email"]).to eq(company4.contact_email)
+      end
+
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+
+      it 'deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(false)
+      end
+    end
+
+    context 'when the request is valid with email in capital' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
+
+        post "/companies/#{company4.id}/invested_companies", params: valid_attributes_with_email_in_capital, headers: { 'Authorization': token }
       end
 
       it 'creates a company' do
