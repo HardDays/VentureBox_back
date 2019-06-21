@@ -294,7 +294,7 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
 
         date = date_range.first
         while date.in? date_range do
-          axis_dates.push(date.strftime("%H"))
+          axis_dates.push(date.beginning_of_hour.strftime("%H:%M"))
           date += 1.hour
         end
 

@@ -14,7 +14,7 @@ module GraphHelper
 
   def self.to_time(date, type)
     if type == 'day'
-      return date.end_of_hour
+      return date.beginning_of_hour
     elsif type == 'week'
       return date.end_of_day
     elsif type == 'month'
@@ -86,7 +86,7 @@ module GraphHelper
 
   def self.type_str(type)
     if type == 'day'
-      return "%H"
+      return "%H:%M"
     elsif type == 'week'
       return "%e/%b"
     elsif type == 'month'

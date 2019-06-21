@@ -103,7 +103,7 @@ class StartupGraphicsController < ApplicationController
 
     type = params[:period]
     if params[:period] == 'all'
-      dates = [@user.created_at, DateTime.now]
+      dates = [Time.at(@user.created_at).to_datetime, DateTime.now]
       diff = Time.diff(dates[0], dates[1])
       if diff[:month] > 0
         new_step = 'year'
