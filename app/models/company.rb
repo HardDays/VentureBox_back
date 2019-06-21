@@ -83,7 +83,9 @@ class Company < ApplicationRecord
   def get_evaluation_on_date(start_date, date)
     evaluation = 0
 
-    if investment_amount and equality_amount
+    # дата начала это дата инвестиции или дата создания компании
+    # все, что было до инвестирования нас не интересует
+    if created_at >= start_date and investment_amount and equality_amount
       evaluation = (investment_amount / (equality_amount * 0.01)).ceil
     end
 

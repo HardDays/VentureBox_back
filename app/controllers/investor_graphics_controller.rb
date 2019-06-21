@@ -48,9 +48,11 @@ class InvestorGraphicsController < ApplicationController
 
     result = {}
     date_range.each do |date_value|
-      result[date_value.strftime(GraphHelper.type_str(type))] = 0
+      date_str = date_value.beginning_of_hour.strftime(GraphHelper.type_str(type))
+
+      result[date_str] = 0
       @invested_companies.each do |investment|
-        result[date_value.strftime(GraphHelper.type_str(type))] += investment.company.get_evaluation_on_date(
+        result[date_str] += investment.company.get_evaluation_on_date(
           investment.created_at, date_value)
       end
     end

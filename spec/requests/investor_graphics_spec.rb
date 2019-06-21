@@ -307,7 +307,7 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
 
         date = date_range.first
         while date.in? date_range do
-          date_str = date.strftime("%H")
+          date_str = date.beginning_of_hour.strftime("%H:%M")
           date_end = date.end_of_hour
 
           total_current_values[date_str] = 0

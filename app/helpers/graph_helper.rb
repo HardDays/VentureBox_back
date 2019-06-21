@@ -14,7 +14,7 @@ module GraphHelper
 
   def self.to_time(date, type)
     if type == 'day'
-      return date.beginning_of_hour
+      return date.end_of_hour
     elsif type == 'week'
       return date.end_of_day
     elsif type == 'month'
@@ -64,7 +64,7 @@ module GraphHelper
 
     date = _date_range.first
     while date.in? _date_range do
-      axis.push(to_time(date, type).strftime(type_str(type)))
+      axis.push(to_time(date, type).beginning_of_hour.strftime(type_str(type)))
       date = next_date(date, type)
     end
 
@@ -77,7 +77,7 @@ module GraphHelper
 
     date = _date_range.first
     while date.in? _date_range do
-      axis.push(to_time(date, step).strftime(type_str(step)))
+      axis.push(to_time(date, step).beginning_of_hour.strftime(type_str(step)))
       date = next_date(date, step)
     end
 
