@@ -53,7 +53,7 @@ class InvestorGraphicsController < ApplicationController
       result[date_str] = 0
       @invested_companies.each do |investment|
         result[date_str] += investment.company.get_evaluation_on_date(
-          investment.created_at, date_value)
+          investment.created_at, date_value.end_of_hour)
       end
     end
 
