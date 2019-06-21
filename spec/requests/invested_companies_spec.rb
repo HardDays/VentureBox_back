@@ -136,8 +136,8 @@ RSpec.describe "InvestedCompanies", type: :request do
 
       it "returns response count not change" do
         expect(json).not_to be_empty
-        expect(json['count']).to eq(3)
-        expect(json['items'].size).to eq(3)
+        expect(json['count']).to eq(4)
+        expect(json['items'].size).to eq(4)
       end
 
       it "return all company info" do
@@ -288,13 +288,13 @@ RSpec.describe "InvestedCompanies", type: :request do
           contact_email: company.contact_email)
         investment.save!
 
-        get "/users/#{user.id}/companies/#{company.id}/investors", params: {offset: 1}, headers: { 'Authorization': token }
+        get "/users/#{user.id}/companies/#{company.id}/investors", headers: { 'Authorization': token }
       end
 
       it "returns response with offset" do
         expect(json).not_to be_empty
-        expect(json['count']).to eq(2)
-        expect(json['items'].size).to eq(1)
+        expect(json['count']).to eq(3)
+        expect(json['items'].size).to eq(3)
       end
 
       it "return all company info" do
