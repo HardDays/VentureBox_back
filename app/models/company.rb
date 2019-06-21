@@ -98,12 +98,12 @@ class Company < ApplicationRecord
   def get_my_evaluation_on_date(date)
     evaluation = 0
 
-    if investment_amount and equality_amount
+    if created_at <= date and investment_amount and equality_amount
       evaluation = (investment_amount / (equality_amount * 0.01)).ceil
     end
 
     if invested_companies.exists?
-      investment = invested_companies.where(created_at: start_date..date).order(created_at: :desc).first
+      investment = invested_companies.where(created_at: created_at..date).order(created_at: :desc).first
       if investment
         evaluation = (investment.investment / (investment.evaluation * 0.01)).ceil
       end
