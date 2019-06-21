@@ -4,6 +4,7 @@ class MilestonesController < ApplicationController
   before_action :set_milestone, only: [:show, :update]
   before_action :check_milestone, only: [:show,  :update]
   before_action :check_milestone_done, only: [:update]
+  before_action :check_date, only: [:create, :update]
   swagger_controller :milestones, "Company milestones"
 
   # GET /users/1/companies/1/milestones
@@ -59,10 +60,6 @@ class MilestonesController < ApplicationController
     response :forbidden
   end
   def create
-    if params[:finish_date] and params[:finish_date] < DateTime.now
-      render json: {finish_date: ["isn't valid"]}, status: :unprocessable_entity and return
-    end
-
     @milestone = Milestone.new(create_milestone_params)
     @milestone.company_id = @company.id
 
@@ -90,10 +87,6 @@ class MilestonesController < ApplicationController
     response :forbidden
   end
   def update
-    if params[:finish_date] and params[:finish_date] < DateTime.now
-      render json: {finish_date: ["isn't valid"]}, status: :unprocessable_entity and return
-    end
-
     if @milestone.update(milestone_params)
       render json: @milestone
     else
@@ -141,6 +134,12 @@ class MilestonesController < ApplicationController
     def check_milestone
       if @company.id != @milestone.company_id
         render json: {errors: :ITEM_NOT_BELONG_TO_COMPANY}, status: :forbidden and return
+      end
+    end
+
+    def check_date
+      if params[:finish_date] and DateTime.parse(params[:finish_date]) < DateTime.now.to_date
+        render json: {finish_date: ["isn't valid"]}, status: :unprocessable_entity and return
       end
     end
 

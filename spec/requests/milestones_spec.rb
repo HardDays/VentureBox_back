@@ -17,13 +17,14 @@ RSpec.describe "Milestones", type: :request do
   let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
 
   let(:valid_attributes) { { title: "title", description: "description", finish_date: "12-12-2020" } }
+  let(:valid_attributes_finish_now) { { title: "title", description: "description", finish_date: DateTime.now } }
   let(:without_title) { { description: "description", finish_date: "12-12-2020" } }
   let(:without_finish_date) { { title: "title", description: "description" } }
   let(:finish_date_in_the_past) { { title: "title", finish_date: "12-12-2018", description: "description" } }
   let(:invalid_completeness) { { title: "title", finish_date: "12-12-2020", description: "description", completeness: 101 } }
 
   let(:valid_attributes1) { { title: "title1", description: "description1", finish_date: "12-12-2020", completeness: 50, is_done: false } }
-
+  let(:valid_attributes1_finish_now) { { title: "title1", description: "description1", finish_date: DateTime.now, completeness: 50, is_done: false } }
 
   # Test suite for GET /users/1/companies/1/milestones
   describe 'GET /users/1/companies/1/milestones' do
@@ -294,6 +295,28 @@ RSpec.describe "Milestones", type: :request do
       end
     end
 
+    context 'when the request is valid with finish date now' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        post "/users/#{user.id}/companies/#{company.id}/milestones", params: valid_attributes_finish_now, headers: { 'Authorization': token }
+      end
+
+      it 'creates a company item' do
+        expect(json["id"]).to be_kind_of(Integer)
+        expect(json["title"]).to eq("title")
+        expect(json["finish_date"]).to be_kind_of(String)
+        expect(json["description"]).to eq("description")
+        expect(json["completeness"]).to eq(0)
+        expect(json["is_done"]).to eq(false)
+      end
+
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+    end
+
     context 'when the request without title' do
       before do
         post "/auth/login", params: { email: user.email, password: password}
@@ -422,8 +445,6 @@ RSpec.describe "Milestones", type: :request do
   # Test suite for PATCH /users/1/companies/1/milestones/1
   describe 'PATCH /users/1/companies/1/milestones/1' do
     context 'when the request is valid' do
-      let!(:image_count) { CompanyItemImage.count }
-
       before do
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
@@ -440,12 +461,48 @@ RSpec.describe "Milestones", type: :request do
         expect(json["is_done"]).to eq(false)
       end
 
-      it 'does not changes image count' do
-        expect(image_count).to eq(CompanyItemImage.count)
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the request is valid with finish now' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        patch "/users/#{user.id}/companies/#{company.id}/milestones/#{milestone.id}", params: valid_attributes1_finish_now, headers: { 'Authorization': token }
+      end
+
+      it 'updates a company item' do
+        expect(json['id']).to eq(milestone.id)
+        expect(json['title']).to eq('title1')
+        expect(json['description']).to eq('description1')
+        expect(json['finish_date']).to be_kind_of(String)
+        expect(json["completeness"]).to eq(50)
+        expect(json["is_done"]).to eq(false)
       end
 
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the request finish date in the past' do
+      before do
+        post "/auth/login", params: { email: user.email, password: password}
+        token = json['token']
+
+        patch "/users/#{user.id}/companies/#{company.id}/milestones/#{milestone.id}", params: finish_date_in_the_past, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"finish_date\":[\"isn't valid\"]}")
       end
     end
 
