@@ -19,26 +19,17 @@ class InvestorGraphicsController < ApplicationController
       params[:period] = "month"
     end
 
-    type = params[:period]
     if params[:period] == 'all'
-      dates = [Time.at(@user.created_at).to_datetime, DateTime.now]
-      diff = Time.diff(dates[0], dates[1])
-      if diff[:month] > 0
-        new_step = 'year'
-      elsif diff[:week] > 0
-        new_step = 'month'
-      elsif diff[:day] > 0
-        new_step = 'week'
+      axis, date_range, step = GraphHelper.get_all_period_info(Time.at(@user.created_at).to_datetime)
+    else
+      if params[:period] == "month"
+        step = "day"
       else
-        new_step = 'day'
+        step = "month"
       end
 
-      axis = GraphHelper.custom_axis(new_step, dates)
-      date_range = GraphHelper.custom_axis_dates(new_step, dates)
-      type = new_step
-    else
-      axis = GraphHelper.axis(params[:period])
-      date_range = GraphHelper.axis_dates(params[:period])
+      axis = GraphHelper.axis(params[:period], step)
+      date_range = GraphHelper.axis_dates(params[:period], step)
     end
 
     @invested_companies = @user.invested_companies
@@ -48,7 +39,7 @@ class InvestorGraphicsController < ApplicationController
 
     result = {}
     date_range.each do |date_value|
-      date_str = date_value.beginning_of_hour.strftime(GraphHelper.type_str(type))
+      date_str = date_value.beginning_of_hour.strftime(GraphHelper.date_to_axis_str(step))
 
       result[date_str] = 0
       @invested_companies.each do |investment|
@@ -99,26 +90,17 @@ class InvestorGraphicsController < ApplicationController
       params[:period] = "month"
     end
 
-    type = params[:period]
     if params[:period] == 'all'
-      dates = [Time.at(@user.created_at).to_datetime, DateTime.now]
-      diff = Time.diff(dates[0], dates[1])
-      if diff[:month] > 0
-        new_step = 'year'
-      elsif diff[:week] > 0
-        new_step = 'month'
-      elsif diff[:day] > 0
-        new_step = 'week'
+      axis, date_range, step = GraphHelper.get_all_period_info(Time.at(@user.created_at).to_datetime)
+    else
+      if params[:period] == "month"
+        step = "day"
       else
-        new_step = 'day'
+        step = "month"
       end
 
-      axis = GraphHelper.custom_axis(new_step, dates)
-      date_range = GraphHelper.custom_axis_dates(new_step, dates)
-      type = new_step
-    else
-      axis = GraphHelper.axis(params[:period])
-      date_range = GraphHelper.axis_dates(params[:period])
+      axis = GraphHelper.axis(params[:period], step)
+      date_range = GraphHelper.axis_dates(params[:period], step)
     end
 
     @invested_companies = @user.invested_companies
@@ -129,9 +111,11 @@ class InvestorGraphicsController < ApplicationController
     # TODO: надо делить то, что заработали на эту дату после вычета всех налогов на колличество инвестиций
     result = {}
     date_range.each do |date_value|
-      result[date_value.strftime(GraphHelper.type_str(type))] = 0
+      date_str = date_value.beginning_of_hour.strftime(GraphHelper.date_to_axis_str(step))
+
+      result[date_str] = 0
       @invested_companies.each do |investment|
-        result[date_value.strftime(GraphHelper.type_str(type))] = Random.rand(100)
+        result[date_str] = Random.rand(100)
       end
     end
 

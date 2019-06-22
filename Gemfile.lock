@@ -226,6 +226,7 @@ GEM
     time_diff (0.3.0)
       activesupport
       i18n
+    timecop (0.9.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     valid_url (0.0.4)
@@ -256,6 +257,7 @@ DEPENDENCIES
   swagger-docs
   therubyracer
   time_diff
+  timecop
   tzinfo-data
   valid_url
 
