@@ -101,30 +101,22 @@ class StartupGraphicsController < ApplicationController
       params[:period] = "month"
     end
 
-    type = params[:period]
     if params[:period] == 'all'
-      dates = [Time.at(@user.created_at).to_datetime, DateTime.now]
-      diff = Time.diff(dates[0], dates[1])
-      if diff[:month] > 0
-        new_step = 'year'
-      elsif diff[:week] > 0
-        new_step = 'month'
-      elsif diff[:day] > 0
-        new_step = 'week'
+      _, date_range, step = GraphHelper.get_all_period_info(Time.at(@company.created_at).to_datetime)
+    else
+      if params[:period] == "month"
+        step = "day"
       else
-        new_step = 'day'
+        step = "month"
       end
 
-      date_range = GraphHelper.custom_axis_dates(new_step, dates)
-      type = new_step
-    else
-      date_range = GraphHelper.axis_dates(params[:period])
+      date_range = GraphHelper.axis_dates(params[:period], step)
     end
 
     result = []
     date_range.each do |date_value|
       result << {
-        date: date_value.beginning_of_hour.strftime(GraphHelper.date_to_axis_str(type)),
+        date: date_value.beginning_of_hour.strftime(GraphHelper.date_to_axis_str(step)),
         value: @company.get_my_evaluation_on_date(date_value.end_of_hour)
       }
     end
