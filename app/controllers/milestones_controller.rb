@@ -138,9 +138,9 @@ class MilestonesController < ApplicationController
     end
 
     def check_date
-      if params[:finish_date] and DateTime.parse(params[:finish_date]) < DateTime.now.to_date
-        render json: {finish_date: ["isn't valid"]}, status: :unprocessable_entity and return
-      end
+      # if params[:finish_date] and DateTime.parse(params[:finish_date]) < DateTime.now.to_date
+      #   render json: {finish_date: ["isn't valid"]}, status: :unprocessable_entity and return
+      # end
     end
 
     def check_milestone_done
