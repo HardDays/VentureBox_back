@@ -119,7 +119,7 @@ class InvestedCompaniesController < ApplicationController
     def check_investment_percents
       @investments_sum = @company.invested_companies.sum(:evaluation)
 
-      if @investments_sum + params[:evaluation].to_i >= 100
+      if @company.equality_amount + @investments_sum + params[:evaluation].to_i > 100
         render json: {evaluation: ["can't be more than 100"]}, status: :unprocessable_entity and return
       end
     end
