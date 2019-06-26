@@ -80,15 +80,15 @@ class CompaniesController < ApplicationController
     response :unauthorized
   end
   def investor_companies
-    @invested_companies = @user.invested_companies.all
-    @interested_companies = @user.interesting_companies.all
+    @invested_companies = @user.invested_companies.distinct(:company_id)
+    @interested_companies = @user.interesting_companies.distinct(:company_id)
 
     if params[:type] == "invested"
       @companies = @invested_companies
     elsif params[:type] == "interested"
       @companies = @interested_companies
     else
-      @companies = @interested_companies + @interested_companies
+      @companies = @interested_companies + @invested_companies
     end
 
     render json: @companies, investor_companies: true, status: :ok

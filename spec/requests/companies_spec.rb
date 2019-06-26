@@ -249,6 +249,10 @@ RSpec.describe "Companies", type: :request do
         expect(json[0]["is_invested"]).not_to be_present
       end
 
+      it 'returns two companies' do
+        expect(json[0]["company_id"]).not_to eq(json[1]["company_id"])
+      end
+
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
