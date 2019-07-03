@@ -23,14 +23,31 @@ RSpec.describe "InvestedCompanies", type: :request do
   let!(:invested_company4) { create(:invested_company, company_id: company.id, investor_id: investor2.id, evaluation: 20)}
   let!(:invested_company5) { create(:invested_company, company_id: company2.id, investor_id: investor2.id)}
 
-  let(:valid_attributes) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email } }
-  let(:valid_attributes_with_email_in_capital) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email.capitalize } }
-  let(:without_investment) { { evaluation: 10, contact_email: company4.contact_email } }
-  let(:without_evaluation) { { investment: 1000000, contact_email: company4.contact_email } }
-  let(:without_contact_email) { { investment: 1000000, evaluation: 10 } }
-  let(:context_email_not_match) { { investment: 1000000, evaluation: 10, contact_email: company.contact_email } }
-  let(:wrong_contact_email_format) { { investment: 1000000, evaluation: 10 , contact_email: "contactemail.com" } }
-  let(:evaluation_more_than_100) { { investment: 1000000, evaluation: 40, contact_email: company.contact_email } }
+  let(:valid_attributes) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email,
+                             date_from: DateTime.now, date_to: DateTime.now.next_year(1) } }
+  let(:valid_attributes_with_email_in_capital) { {
+    investment: 1000000, evaluation: 10, contact_email: company4.contact_email.capitalize,
+    date_from: DateTime.now, date_to: DateTime.now.next_year(1)  } }
+  let(:without_investment) { { evaluation: 10, contact_email: company4.contact_email,
+                               date_from: DateTime.now, date_to: DateTime.now.next_year(1)  } }
+  let(:without_evaluation) { { investment: 1000000, contact_email: company4.contact_email,
+                               date_from: DateTime.now, date_to: DateTime.now.next_year(1)  } }
+  let(:without_contact_email) { { investment: 1000000, evaluation: 10,
+                                  date_from: DateTime.now, date_to: DateTime.now.next_year(1)  } }
+  let(:context_email_not_match) { { investment: 1000000, evaluation: 10, contact_email: company.contact_email,
+                                    date_from: DateTime.now, date_to: DateTime.now.next_year(1) } }
+  let(:wrong_contact_email_format) { { investment: 1000000, evaluation: 10 , contact_email: "contactemail.com",
+                                       date_from: DateTime.now, date_to: DateTime.now.next_year(1)  } }
+  let(:evaluation_more_than_100) { { investment: 1000000, evaluation: 40, contact_email: company.contact_email,
+                                     date_from: DateTime.now, date_to: DateTime.now.next_year(1)  } }
+  let(:without_date_from) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email,
+                             date_to: DateTime.now.next_year(1) } }
+  let(:date_from_earlier_than_month) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email,
+                                         date_from: DateTime.now.beginning_of_month - 1.day, date_to: DateTime.now.next_year(1) } }
+  let(:without_date_to) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email,
+                             date_from: DateTime.now } }
+  let(:date_to_in_the_past) { { investment: 1000000, evaluation: 10, contact_email: company4.contact_email,
+                             date_from: DateTime.now, date_to: DateTime.now - 1.day } }
 
   # Test suite for GET /invested_companies
   describe 'GET /invested_companies' do
@@ -128,7 +145,9 @@ RSpec.describe "InvestedCompanies", type: :request do
           company_id: company.id,
           investment: 100,
           evaluation: 1,
-          contact_email: company.contact_email)
+          contact_email: company.contact_email,
+          date_from: DateTime.now,
+          date_to: DateTime.now.next_year(1))
         investment.save!
 
         get "/invested_companies", headers: { 'Authorization': token }
@@ -285,7 +304,9 @@ RSpec.describe "InvestedCompanies", type: :request do
           company_id: company.id,
           investment: 100,
           evaluation: 1,
-          contact_email: company.contact_email)
+          contact_email: company.contact_email,
+          date_from: DateTime.now,
+          date_to: DateTime.now.next_year(1))
         investment.save!
 
         get "/users/#{user.id}/companies/#{company.id}/investors", headers: { 'Authorization': token }
@@ -494,6 +515,114 @@ RSpec.describe "InvestedCompanies", type: :request do
       it 'returns a validation failure message' do
         expect(response.body)
           .to match("{\"evaluation\":[\"can't be blank\"]}")
+      end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
+    end
+
+    context 'when the request without date_from' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
+
+        post "/companies/#{company4.id}/invested_companies", params: without_date_from, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"date_from\":[\"can't be blank\"]}")
+      end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
+    end
+
+    context 'when the request date_from earlier that a month' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
+
+        post "/companies/#{company4.id}/invested_companies", params: date_from_earlier_than_month, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"date_from\":[\"should be in current month\"]}")
+      end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
+    end
+
+    context 'when the request without date_to' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
+
+        post "/companies/#{company4.id}/invested_companies", params: without_date_to, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"date_to\":[\"can't be blank\"]}")
+      end
+
+      it 'does not deletes interesting company item' do
+        exists = InterestingCompany.where(company_id: company4.id, investor_id: investor.id).exists?
+
+        expect(exists).to eq(true)
+      end
+    end
+
+    context 'when the request date_to in the past' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        interesting_company = InterestingCompany.new(company_id: company4.id, investor_id: investor.id)
+        interesting_company.save
+
+        post "/companies/#{company4.id}/invested_companies", params: date_to_in_the_past, headers: { 'Authorization': token }
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"date_to\":[\"isn't valid\"]}")
       end
 
       it 'does not deletes interesting company item' do

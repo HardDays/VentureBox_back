@@ -1367,7 +1367,9 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
           company_id: company.id,
           investment: 100,
           evaluation: 1,
-          contact_email: company.contact_email)
+          contact_email: company.contact_email,
+          date_from: DateTime.now,
+          date_to: DateTime.now.next_year(1))
         investment.save!
 
         get "/users/#{investor.id}/investor_graphics/amount_invested", params: {company_id: company.id}, headers: { 'Authorization': token }

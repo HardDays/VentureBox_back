@@ -50,7 +50,9 @@ class InvestedCompaniesController < ApplicationController
     param :path, :id, :integer, :required, "Company id"
     param :form, :investment, :integer, :required, "Investment amount"
     param :form, :evaluation, :integer, :required, "Evaluation"
-    param :form, :contact_email, :string, :optional, "Contact email"
+    param :form, :contact_email, :string, :required, "Contact email"
+    param :form, :date_from, :datetime, :required, "Investment from"
+    param :form, :date_to, :datetime, :required, "Investment to"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :created
     response :unauthorized
@@ -133,6 +135,6 @@ class InvestedCompaniesController < ApplicationController
     end
 
     def invested_company_params
-      params.permit(:contact_email, :investment, :evaluation)
+      params.permit(:contact_email, :investment, :evaluation, :date_from, :date_to)
     end
 end
