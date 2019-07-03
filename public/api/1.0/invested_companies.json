@@ -103,7 +103,21 @@
               "name": "contact_email",
               "type": "string",
               "description": "Contact email",
-              "required": false
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "date_from",
+              "type": "datetime",
+              "description": "Investment from",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "date_to",
+              "type": "datetime",
+              "description": "Investment to",
+              "required": true
             },
             {
               "paramType": "header",
