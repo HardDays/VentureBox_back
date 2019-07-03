@@ -1,7 +1,7 @@
 {
   "apiVersion": "1.0",
   "swaggerVersion": "1.2",
-  "basePath": "https://venture-box-back.herokuapp.com",
+  "basePath": "https://venture-box-back-test.herokuapp.com",
   "resourcePath": "invested_companies",
   "apis": [
     {
@@ -108,14 +108,14 @@
             {
               "paramType": "form",
               "name": "date_from",
-              "type": "datetime",
+              "type": "string",
               "description": "Investment from",
               "required": true
             },
             {
               "paramType": "form",
               "name": "date_to",
-              "type": "datetime",
+              "type": "string",
               "description": "Investment to",
               "required": true
             },

@@ -51,8 +51,8 @@ class InvestedCompaniesController < ApplicationController
     param :form, :investment, :integer, :required, "Investment amount"
     param :form, :evaluation, :integer, :required, "Evaluation"
     param :form, :contact_email, :string, :required, "Contact email"
-    param :form, :date_from, :datetime, :required, "Investment from"
-    param :form, :date_to, :datetime, :required, "Investment to"
+    param :form, :date_from, :string, :required, "Investment from"
+    param :form, :date_to, :string, :required, "Investment to"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :created
     response :unauthorized
