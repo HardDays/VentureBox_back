@@ -7,6 +7,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :tracking, only: [] do
+    collection do
+      get :startup
+      get :investor
+    end
+  end
+
   resources :interesting_companies, only: [:index]
 
   resources :invested_companies, only: [:index]

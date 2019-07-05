@@ -8,6 +8,10 @@
       "description": "Enums"
     },
     {
+      "path": "/api/1.0/tracking.{format}",
+      "description": "Tracking"
+    },
+    {
       "path": "/api/1.0/interesting_companies.{format}",
       "description": "Interesting companies"
     },
