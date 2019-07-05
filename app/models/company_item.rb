@@ -5,6 +5,8 @@ class CompanyItem < ApplicationRecord
   validates :link_to_store, http_url: true, unless: Proc.new { |a| a.link_to_store.blank? }
   validates_presence_of :company_id
 
+  enum weight_unit: [:kg, :gr]
+
   belongs_to :company
   has_one :company_item_image, dependent: :destroy
   has_many :company_item_tags, dependent: :destroy

@@ -452,6 +452,34 @@
             },
             {
               "paramType": "form",
+              "name": "is_physical",
+              "type": "boolean",
+              "description": "Is physical product",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "weight",
+              "type": "integer",
+              "description": "Weight",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "weight_unit",
+              "type": "string",
+              "description": "Weight unit",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "kg",
+                  "gr"
+                ]
+              }
+            },
+            {
+              "paramType": "form",
               "name": "tags",
               "type": "string",
               "description": "Tags array in [blockchain, coding, real_sector, product, fintech]",
