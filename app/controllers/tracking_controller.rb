@@ -28,6 +28,9 @@ class TrackingController < ApplicationController
       end
 
       investments = investor.invested_companies.where(invested_companies: {company_id: @user.company.id})
+      result[investor_full_name]["total_investment"] = investments.sum("invested_companies.investment")
+
+      total_payed = 0
       investments.each do |investment|
         months_count = get_months_count(investment.date_from, investment.date_to)
 
@@ -42,9 +45,11 @@ class TrackingController < ApplicationController
           investment_end = investment.date_to.utc.beginning_of_month
           if current_date >= investment_start and current_date <= investment_end
             result[investor_full_name][date_str] += (investment.investment / months_count)
+            total_payed += (investment.investment / months_count)
           end
         end
       end
+      result[investor_full_name]["debt"] = result[investor_full_name]["total_investment"] - total_payed
     end
 
     render json: {
@@ -76,6 +81,9 @@ class TrackingController < ApplicationController
       end
 
       investments = @user.invested_companies.where(invested_companies: {company_id: company.id})
+      result[company_full_name]["total_investment"] = investments.sum("invested_companies.investment")
+
+      total_payed = 0
       investments.each do |investment|
         months_count = get_months_count(investment.date_from, investment.date_to)
 
@@ -90,9 +98,11 @@ class TrackingController < ApplicationController
           investment_end = investment.date_to.utc.beginning_of_month
           if current_date >= investment_start and current_date <= investment_end
             result[company_full_name][date_str] += (investment.investment / months_count)
+            total_payed += (investment.investment / months_count)
           end
         end
       end
+      result[company_full_name]["debt"] = result[company_full_name]["total_investment"] - total_payed
     end
 
     render json: {
