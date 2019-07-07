@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     collection do
       get :startup
       get :investor
+      post :mark_payed
     end
   end
 

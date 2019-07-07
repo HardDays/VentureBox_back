@@ -107,6 +107,9 @@ RSpec.describe "TrackingSpec", type: :request do
         invested_company2.save!
 
         ["2019-03-11", "2019-04-11", "2019-05-11", "2019-06-11", "2019-07-11", "2019-08-11", "2019-09-11"].each do |date|
+          t = date.to_datetime
+          Timecop.freeze(t)
+
           InvestmentPayed.create!(
             invested_company: invested_company2,
             date: date,
@@ -291,7 +294,8 @@ RSpec.describe "TrackingSpec", type: :request do
             "Mar/19" => {"amount" => 1000, "payed" => false},
             "Apr/19" => {"amount" => 1000, "payed" => false},
             "May/19" => {"amount" => 1000, "payed" => false},
-            "total_investment" => 10000, "debt" => 10000
+            "total_investment" => 10000, "debt" => 10000,
+            "company_id" => invested_company.company.id
           },
           "#{company2.company_name}" => {
             "Jan/19" => {"amount" => 0, "payed" => false},
@@ -299,7 +303,8 @@ RSpec.describe "TrackingSpec", type: :request do
             "Mar/19" => {"amount" => 1000, "payed" => true},
             "Apr/19" => {"amount" => 1000, "payed" => false},
             "May/19" => {"amount" => 1000, "payed" => false},
-            "total_investment" => 10000, "debt" => 9000
+            "total_investment" => 10000, "debt" => 9000,
+            "company_id" => invested_company3.company.id
           }
         }
 
@@ -329,6 +334,9 @@ RSpec.describe "TrackingSpec", type: :request do
         invested_company3.save!
 
         ["2019-03-11", "2019-04-11", "2019-05-11", "2019-06-11", "2019-07-11", "2019-08-11", "2019-09-11"].each do |date|
+          t = date.to_datetime
+          Timecop.freeze(t)
+
           InvestmentPayed.create!(
             invested_company: invested_company3,
             date: date,
@@ -364,7 +372,8 @@ RSpec.describe "TrackingSpec", type: :request do
             "Sep/19" => {"amount" => 1000, "payed" => false},
             "Oct/19" => {"amount" => 1000, "payed" => false},
             "Nov/19" => {"amount" => 1000, "payed" => false},
-            "total_investment" => 10000, "debt" => 10000
+            "total_investment" => 10000, "debt" => 10000,
+            "company_id" => invested_company.company.id
           },
           "#{company2.company_name}" => {
             "Jul/19" => {"amount" => 1000, "payed" => true},
@@ -372,7 +381,8 @@ RSpec.describe "TrackingSpec", type: :request do
             "Sep/19" => {"amount" => 1000, "payed" => true},
             "Oct/19" => {"amount" => 1000, "payed" => false},
             "Nov/19" => {"amount" => 1000, "payed" => false},
-            "total_investment" => 10000, "debt" => 3000
+            "total_investment" => 10000, "debt" => 3000,
+            "company_id" => invested_company3.company.id
           }
         }
 
@@ -442,7 +452,8 @@ RSpec.describe "TrackingSpec", type: :request do
             "Mar/19"=> {"amount" => 1100, "payed" => true},
             "Apr/19"=> {"amount" => 1100, "payed" => false},
             "May/19"=> {"amount" => 1100, "payed" => false},
-            "total_investment" => 11000, "debt" => 9900
+            "total_investment" => 11000, "debt" => 9900,
+            "company_id" => invested_company.company.id
           },
           "#{company2.company_name}" => {
             "Jan/19"=> {"amount" => 0, "payed" => false},
@@ -450,7 +461,8 @@ RSpec.describe "TrackingSpec", type: :request do
             "Mar/19"=> {"amount" => 1000, "payed" => false},
             "Apr/19"=> {"amount" => 1000, "payed" => false},
             "May/19"=> {"amount" => 1000, "payed" => false},
-            "total_investment" => 10000, "debt" => 10000
+            "total_investment" => 10000, "debt" => 10000,
+            "company_id" => invested_company3.company.id
           }
         }
 
@@ -463,6 +475,110 @@ RSpec.describe "TrackingSpec", type: :request do
 
       after do
         Timecop.return
+      end
+    end
+  end
+
+  # Test suite for POST /tracking/mark_payed
+  describe 'POST /tracking/mark_payed' do
+    context 'when valid attributes' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        post "/tracking/mark_payed", params: {company_id: invested_company.company.id, date: DateTime.now}, headers: { 'Authorization': token }
+      end
+
+      it 'response is empty' do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+    end
+
+    context 'when date in the future month' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        post "/tracking/mark_payed", params: {company_id: invested_company.company.id, date: DateTime.now.next_month}, headers: { 'Authorization': token }
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"date\":[\"can't be in the future\"]}")
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+    end
+
+    context 'when date in the future but current month' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        post "/tracking/mark_payed", params: {company_id: invested_company.company.id, date: DateTime.now.end_of_month}, headers: { 'Authorization': token }
+      end
+
+      it 'response is empty' do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+    end
+
+    context 'when company does not exitst' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        post "/tracking/mark_payed", params: {company_id: 0, date: DateTime.now.end_of_month}, headers: { 'Authorization': token }
+      end
+
+      it 'response is empty' do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+    end
+
+    context 'when without date' do
+      before do
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        post "/tracking/mark_payed", params: {company_id: invested_company.company.id}, headers: { 'Authorization': token }
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match("{\"date\":[\"can't be blank\"]}")
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+    end
+
+    context 'when not authorized' do
+      before do
+        post "/tracking/mark_payed", params: {company_id: 0, date: DateTime.now.end_of_month}
+      end
+
+      it 'response is empty' do
+        expect(response.body).to match("")
+      end
+
+      it 'returns status code 401' do
+        expect(response).to have_http_status(401)
       end
     end
   end

@@ -303,7 +303,7 @@ RSpec.describe "Milestones", type: :request do
         post "/users/#{user.id}/companies/#{company.id}/milestones", params: valid_attributes_finish_now, headers: { 'Authorization': token }
       end
 
-      it 'creates a company item' do
+      it 'creates a milestone' do
         expect(json["id"]).to be_kind_of(Integer)
         expect(json["title"]).to eq("title")
         expect(json["finish_date"]).to be_kind_of(String)
@@ -474,7 +474,7 @@ RSpec.describe "Milestones", type: :request do
         patch "/users/#{user.id}/companies/#{company.id}/milestones/#{milestone.id}", params: valid_attributes1_finish_now, headers: { 'Authorization': token }
       end
 
-      it 'updates a company item' do
+      it 'updates a milestone' do
         expect(json['id']).to eq(milestone.id)
         expect(json['title']).to eq('title1')
         expect(json['description']).to eq('description1')
