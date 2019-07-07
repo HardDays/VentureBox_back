@@ -15,6 +15,12 @@ class CompanyItem < ApplicationRecord
       res[:has_image] = true
     end
 
+    res.delete('country_id')
+    res[:country] = ""
+    if country
+      res[:country] = country.name
+    end
+
     res[:company_name] = company.company_name
     res[:tags] = company_item_tags.pluck(:tag)
     res

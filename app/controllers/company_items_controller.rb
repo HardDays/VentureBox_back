@@ -181,9 +181,15 @@ class CompanyItemsController < ApplicationController
     if @company_item.save
       set_item_image
       set_item_tags
+      set_country
 
       if @tag and not @tag.errors.empty?
         render json: @tag.errors, status: :unprocessable_entity and return
+      end
+
+      if @country and not @country.errors.empty?
+        @company_item.destroy
+        render json: @country.errors, status: :unprocessable_entity and return
       end
 
       render json: @company_item, status: :created
@@ -221,8 +227,13 @@ class CompanyItemsController < ApplicationController
     remove_image
     set_item_image
     set_item_tags
+    set_country
     if @tag and not @tag.errors.empty?
       render json: @tag.errors, status: :unprocessable_entity and return
+    end
+
+    if @country and not @country.errors.empty?
+      render json: @country.errors, status: :unprocessable_entity and return
     end
 
     if @company_item.update(company_item_params)
@@ -335,6 +346,23 @@ class CompanyItemsController < ApplicationController
             else
               raise ActiveRecord::Rollback
             end
+          end
+        end
+      end
+    end
+
+    def set_country
+      if params[:country_id]
+        ActiveRecord::Base.transaction do
+          begin
+            @country = Country.find(params[:country_id])
+
+            @company_item.country_id = @country.id
+            @company_item.save
+          rescue
+            @country = Country.new
+            @country.errors.add(:country_name, "isn't valid")
+            raise ActiveRecord::Rollback
           end
         end
       end
