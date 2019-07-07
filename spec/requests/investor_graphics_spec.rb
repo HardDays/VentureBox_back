@@ -220,6 +220,128 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
       end
     end
 
+    context 'when get without params and get company and double invested' do
+      before do
+        t = "22 June 2019".to_datetime
+        Timecop.freeze(t)
+
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        invested_company1.update_column(:created_at, "20 June 2019")
+        invested_company2.update_column(:created_at, "20 June 2019")
+
+        InvestedCompany.create!(
+          company_id: company2.id,
+          investor_id: investor.id,
+          contact_email: company2.contact_email,
+          investment: 3000,
+          evaluation: 10,
+          date_from: "22 June 2019".to_datetime,
+          date_to: "22 June 2020".to_datetime
+        )
+
+        get "/users/#{investor.id}/investor_graphics/total_current_value", params: {company_id: company2.id}, headers: { 'Authorization': token }
+      end
+
+      it "returns axis and total_current_value" do
+        expect(json['axis']).to be_present
+        expect(json['total_current_values']).to be_present
+      end
+
+      it "returns month axis" do
+        axis_dates = ["22/May", "23/May", "24/May", "25/May", "26/May", "27/May", "28/May", "29/May", "30/May",
+                      "31/May", " 1/Jun", " 2/Jun", " 3/Jun", " 4/Jun", " 5/Jun", " 6/Jun", " 7/Jun", " 8/Jun",
+                      " 9/Jun", "10/Jun", "11/Jun", "12/Jun", "13/Jun", "14/Jun", "15/Jun", "16/Jun", "17/Jun",
+                      "18/Jun", "19/Jun", "20/Jun", "21/Jun", "22/Jun"]
+
+        expect(json['axis']).to eq(axis_dates)
+      end
+
+      it "returns month investment data" do
+        total_current_values = {
+          "22/May" => 0, "23/May" => 0, "24/May" => 0, "25/May" => 0, "26/May" => 0,
+          "27/May" => 0, "28/May" => 0, "29/May" => 0, "30/May" => 0, "31/May" => 0,
+          " 1/Jun" => 0, " 2/Jun" => 0, " 3/Jun" => 0, " 4/Jun" => 0, " 5/Jun" => 0,
+          " 6/Jun" => 0, " 7/Jun" => 0, " 8/Jun" => 0, " 9/Jun" => 0, "10/Jun" => 0,
+          "11/Jun" => 0, "12/Jun" => 0, "13/Jun" => 0, "14/Jun" => 0, "15/Jun" => 0,
+          "16/Jun" => 0, "17/Jun" => 0, "18/Jun" => 0, "19/Jun" => 0, "20/Jun" => 1000,
+          "21/Jun" => 1000, "22/Jun" => 30000
+        }
+
+        expect(json['total_current_values']).to eq(total_current_values)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      after do
+        Timecop.return
+      end
+    end
+
+    context 'when get without params and get company and invested bey another investor' do
+      before do
+        t = "22 June 2019".to_datetime
+        Timecop.freeze(t)
+
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        invested_company1.update_column(:created_at, "20 June 2019")
+        invested_company2.update_column(:created_at, "20 June 2019")
+
+        InvestedCompany.create!(
+          company_id: company2.id,
+          investor_id: investor_without_investments.id,
+          contact_email: company2.contact_email,
+          investment: 3000,
+          evaluation: 10,
+          date_from: "22 June 2019".to_datetime,
+          date_to: "22 June 2020".to_datetime
+        )
+
+        get "/users/#{investor.id}/investor_graphics/total_current_value", params: {company_id: company2.id}, headers: { 'Authorization': token }
+      end
+
+      it "returns axis and total_current_value" do
+        expect(json['axis']).to be_present
+        expect(json['total_current_values']).to be_present
+      end
+
+      it "returns month axis" do
+        axis_dates = ["22/May", "23/May", "24/May", "25/May", "26/May", "27/May", "28/May", "29/May", "30/May",
+                      "31/May", " 1/Jun", " 2/Jun", " 3/Jun", " 4/Jun", " 5/Jun", " 6/Jun", " 7/Jun", " 8/Jun",
+                      " 9/Jun", "10/Jun", "11/Jun", "12/Jun", "13/Jun", "14/Jun", "15/Jun", "16/Jun", "17/Jun",
+                      "18/Jun", "19/Jun", "20/Jun", "21/Jun", "22/Jun"]
+
+        expect(json['axis']).to eq(axis_dates)
+      end
+
+      it "returns month investment data" do
+        total_current_values = {
+          "22/May" => 0, "23/May" => 0, "24/May" => 0, "25/May" => 0, "26/May" => 0,
+          "27/May" => 0, "28/May" => 0, "29/May" => 0, "30/May" => 0, "31/May" => 0,
+          " 1/Jun" => 0, " 2/Jun" => 0, " 3/Jun" => 0, " 4/Jun" => 0, " 5/Jun" => 0,
+          " 6/Jun" => 0, " 7/Jun" => 0, " 8/Jun" => 0, " 9/Jun" => 0, "10/Jun" => 0,
+          "11/Jun" => 0, "12/Jun" => 0, "13/Jun" => 0, "14/Jun" => 0, "15/Jun" => 0,
+          "16/Jun" => 0, "17/Jun" => 0, "18/Jun" => 0, "19/Jun" => 0, "20/Jun" => 1000,
+          "21/Jun" => 1000, "22/Jun" => 30000
+        }
+
+        expect(json['total_current_values']).to eq(total_current_values)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      after do
+        Timecop.return
+      end
+    end
+
     context 'when get by month when registered' do
       before do
         t = "2019-02-01T18:23:51".to_datetime
@@ -417,6 +539,128 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
       end
     end
 
+    context 'when get by month and company and double invested' do
+      before do
+        t = "22 June 2019".to_datetime
+        Timecop.freeze(t)
+
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        invested_company1.update_column(:created_at, "20 June 2019")
+        invested_company2.update_column(:created_at, "20 June 2019")
+
+        InvestedCompany.create!(
+          company_id: company2.id,
+          investor_id: investor.id,
+          contact_email: company2.contact_email,
+          investment: 3000,
+          evaluation: 10,
+          date_from: "22 June 2019".to_datetime,
+          date_to: "22 June 2020".to_datetime
+        )
+
+        get "/users/#{investor.id}/investor_graphics/total_current_value", params: {period: "month", company_id: company2.id}, headers: { 'Authorization': token }
+      end
+
+      it "returns axis and total_current_value" do
+        expect(json['axis']).to be_present
+        expect(json['total_current_values']).to be_present
+      end
+
+      it "returns month axis" do
+        axis_dates = ["22/May", "23/May", "24/May", "25/May", "26/May", "27/May", "28/May", "29/May", "30/May",
+                      "31/May", " 1/Jun", " 2/Jun", " 3/Jun", " 4/Jun", " 5/Jun", " 6/Jun", " 7/Jun", " 8/Jun",
+                      " 9/Jun", "10/Jun", "11/Jun", "12/Jun", "13/Jun", "14/Jun", "15/Jun", "16/Jun", "17/Jun",
+                      "18/Jun", "19/Jun", "20/Jun", "21/Jun", "22/Jun"]
+
+        expect(json['axis']).to eq(axis_dates)
+      end
+
+      it "returns month investment data" do
+        total_current_values = {
+          "22/May" => 0, "23/May" => 0, "24/May" => 0, "25/May" => 0, "26/May" => 0,
+          "27/May" => 0, "28/May" => 0, "29/May" => 0, "30/May" => 0, "31/May" => 0,
+          " 1/Jun" => 0, " 2/Jun" => 0, " 3/Jun" => 0, " 4/Jun" => 0, " 5/Jun" => 0,
+          " 6/Jun" => 0, " 7/Jun" => 0, " 8/Jun" => 0, " 9/Jun" => 0, "10/Jun" => 0,
+          "11/Jun" => 0, "12/Jun" => 0, "13/Jun" => 0, "14/Jun" => 0, "15/Jun" => 0,
+          "16/Jun" => 0, "17/Jun" => 0, "18/Jun" => 0, "19/Jun" => 0, "20/Jun" => 1000,
+          "21/Jun" => 1000, "22/Jun" => 30000
+        }
+
+        expect(json['total_current_values']).to eq(total_current_values)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      after do
+        Timecop.return
+      end
+    end
+
+    context 'when get by month and company and doutble invested be another investor' do
+      before do
+        t = "22 June 2019".to_datetime
+        Timecop.freeze(t)
+
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        invested_company1.update_column(:created_at, "20 June 2019")
+        invested_company2.update_column(:created_at, "20 June 2019")
+
+        InvestedCompany.create!(
+          company_id: company2.id,
+          investor_id: investor_without_investments.id,
+          contact_email: company2.contact_email,
+          investment: 3000,
+          evaluation: 10,
+          date_from: "22 June 2019".to_datetime,
+          date_to: "22 June 2020".to_datetime
+        )
+
+        get "/users/#{investor.id}/investor_graphics/total_current_value", params: {period: "month", company_id: company2.id}, headers: { 'Authorization': token }
+      end
+
+      it "returns axis and total_current_value" do
+        expect(json['axis']).to be_present
+        expect(json['total_current_values']).to be_present
+      end
+
+      it "returns month axis" do
+        axis_dates = ["22/May", "23/May", "24/May", "25/May", "26/May", "27/May", "28/May", "29/May", "30/May",
+                      "31/May", " 1/Jun", " 2/Jun", " 3/Jun", " 4/Jun", " 5/Jun", " 6/Jun", " 7/Jun", " 8/Jun",
+                      " 9/Jun", "10/Jun", "11/Jun", "12/Jun", "13/Jun", "14/Jun", "15/Jun", "16/Jun", "17/Jun",
+                      "18/Jun", "19/Jun", "20/Jun", "21/Jun", "22/Jun"]
+
+        expect(json['axis']).to eq(axis_dates)
+      end
+
+      it "returns month investment data" do
+        total_current_values = {
+          "22/May" => 0, "23/May" => 0, "24/May" => 0, "25/May" => 0, "26/May" => 0,
+          "27/May" => 0, "28/May" => 0, "29/May" => 0, "30/May" => 0, "31/May" => 0,
+          " 1/Jun" => 0, " 2/Jun" => 0, " 3/Jun" => 0, " 4/Jun" => 0, " 5/Jun" => 0,
+          " 6/Jun" => 0, " 7/Jun" => 0, " 8/Jun" => 0, " 9/Jun" => 0, "10/Jun" => 0,
+          "11/Jun" => 0, "12/Jun" => 0, "13/Jun" => 0, "14/Jun" => 0, "15/Jun" => 0,
+          "16/Jun" => 0, "17/Jun" => 0, "18/Jun" => 0, "19/Jun" => 0, "20/Jun" => 1000,
+          "21/Jun" => 1000, "22/Jun" => 30000
+        }
+
+        expect(json['total_current_values']).to eq(total_current_values)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      after do
+        Timecop.return
+      end
+    end
+
     context 'when get by year when registered' do
       before do
         t = "2019-02-01T18:23:51".to_datetime
@@ -577,6 +821,116 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
           "Jun/19" => 0, "Jul/19" => 0, "Aug/19" => 0, "Sep/19" => 0, "Oct/19" => 0,
           "Nov/19" => 0, "Dec/19" => 0, "Jan/20" => 0, "Feb/20" => 1000, "Mar/20" => 1000,
           "Apr/20" => 1000, "May/20" => 1000, "Jun/20" => 1000
+        }
+
+        expect(json['total_current_values']).to eq(total_current_values)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      after do
+        Timecop.return
+      end
+    end
+
+    context 'when get by year and company and double invested' do
+      before do
+        t = "22 June 2020".to_datetime
+        Timecop.freeze(t)
+
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        invested_company1.update_column(:created_at, "20 July 2019")
+        invested_company2.update_column(:created_at, "20 Feb 2020")
+
+        InvestedCompany.create!(
+          company_id: company2.id,
+          investor_id: investor.id,
+          contact_email: company2.contact_email,
+          investment: 3000,
+          evaluation: 10,
+          date_from: "22 June 2020".to_datetime,
+          date_to: "22 June 2021".to_datetime
+        )
+
+        get "/users/#{investor.id}/investor_graphics/total_current_value", params: {period: "year", company_id: company2.id}, headers: { 'Authorization': token }
+      end
+
+      it "returns axis and total_current_value" do
+        expect(json['axis']).to be_present
+        expect(json['total_current_values']).to be_present
+      end
+
+      it "returns month axis" do
+        axis_dates = ["Jun/19", "Jul/19", "Aug/19", "Sep/19", "Oct/19", "Nov/19", "Dec/19", "Jan/20", "Feb/20",
+                      "Mar/20", "Apr/20", "May/20", "Jun/20"]
+
+        expect(json['axis']).to eq(axis_dates)
+      end
+
+      it "returns month investment data" do
+        total_current_values = {
+          "Jun/19" => 0, "Jul/19" => 0, "Aug/19" => 0, "Sep/19" => 0, "Oct/19" => 0,
+          "Nov/19" => 0, "Dec/19" => 0, "Jan/20" => 0, "Feb/20" => 1000, "Mar/20" => 1000,
+          "Apr/20" => 1000, "May/20" => 1000, "Jun/20" => 30000
+        }
+
+        expect(json['total_current_values']).to eq(total_current_values)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      after do
+        Timecop.return
+      end
+    end
+
+    context 'when get by year and company and double invested by another investor' do
+      before do
+        t = "22 June 2020".to_datetime
+        Timecop.freeze(t)
+
+        post "/auth/login", params: { email: investor.email, password: password}
+        token = json['token']
+
+        invested_company1.update_column(:created_at, "20 July 2019")
+        invested_company2.update_column(:created_at, "22 Feb 2020")
+
+        InvestedCompany.create!(
+          company_id: company2.id,
+          investor_id: investor_without_investments.id,
+          contact_email: company2.contact_email,
+          investment: 2000,
+          evaluation: 10,
+          date_from: "22 June 2020".to_datetime,
+          date_to: "22 June 2021".to_datetime
+        )
+
+        get "/users/#{investor.id}/investor_graphics/total_current_value", params: {period: "year", company_id: company2.id}, headers: { 'Authorization': token }
+      end
+
+      it "returns axis and total_current_value" do
+        expect(json['axis']).to be_present
+        expect(json['total_current_values']).to be_present
+      end
+
+      it "returns month axis" do
+        axis_dates = ["Jun/19", "Jul/19", "Aug/19", "Sep/19", "Oct/19", "Nov/19", "Dec/19", "Jan/20", "Feb/20",
+                      "Mar/20", "Apr/20", "May/20", "Jun/20"]
+
+        expect(json['axis']).to eq(axis_dates)
+      end
+
+      it "returns month investment data" do
+        total_current_values = {
+          "Jun/19" => 0, "Jul/19" => 0, "Aug/19" => 0, "Sep/19" => 0, "Oct/19" => 0,
+          "Nov/19" => 0, "Dec/19" => 0, "Jan/20" => 0, "Feb/20" => 1000, "Mar/20" => 1000,
+          "Apr/20" => 1000, "May/20" => 1000, "Jun/20" => 20000
         }
 
         expect(json['total_current_values']).to eq(total_current_values)

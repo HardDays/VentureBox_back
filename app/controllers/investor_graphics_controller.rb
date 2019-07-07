@@ -32,10 +32,11 @@ class InvestorGraphicsController < ApplicationController
       date_range = GraphHelper.axis_dates(params[:period], step)
     end
 
-    @invested_companies = @user.invested_companies
+    @invested_companies = Company.joins(:invested_companies).where(invested_companies: {investor_id: @user.id})
     if params[:company_id]
-      @invested_companies = @invested_companies.where(company_id: params[:company_id])
+      @invested_companies = @invested_companies.where(invested_companies: {company_id: params[:company_id]})
     end
+    @invested_companies = @invested_companies.distinct
 
     result = {}
     date_range.each do |date_value|
@@ -43,7 +44,7 @@ class InvestorGraphicsController < ApplicationController
 
       result[date_str] = 0
       @invested_companies.each do |investment|
-        result[date_str] += investment.company.get_evaluation_on_date(
+        result[date_str] += investment.get_evaluation_on_date(
           investment.created_at, date_value.end_of_hour)
       end
     end
