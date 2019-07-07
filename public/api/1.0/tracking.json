@@ -19,11 +19,6 @@
               "code": 401,
               "responseModel": null,
               "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
             }
           ],
           "parameters": [
@@ -55,11 +50,6 @@
               "code": 401,
               "responseModel": null,
               "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
             }
           ],
           "parameters": [
@@ -73,6 +63,61 @@
           ],
           "nickname": "Tracking#investor",
           "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/tracking/mark_payed.json",
+      "operations": [
+        {
+          "summary": "Mark month payed",
+          "responseMessages": [
+            {
+              "code": 201,
+              "responseModel": null,
+              "message": "Created"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "form",
+              "name": "date",
+              "type": "string",
+              "description": "Month datetime",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "company_id",
+              "type": "integer",
+              "description": "Investment id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "nickname": "Tracking#mark_payed",
+          "method": "post"
         }
       ]
     }
