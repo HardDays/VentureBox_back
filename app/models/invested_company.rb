@@ -4,6 +4,7 @@ class InvestedCompany < ApplicationRecord
 
   belongs_to :user, foreign_key: :investor_id
   belongs_to :company
+  has_many :investment_payeds, dependent: :destroy
 
   default_scope { order(created_at: :desc) }
 

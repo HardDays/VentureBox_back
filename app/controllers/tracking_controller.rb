@@ -37,19 +37,26 @@ class TrackingController < ApplicationController
         date_range.each do |date|
           date_str = date.strftime(GraphHelper.date_to_axis_str(@@step))
           unless date_str.in? result[investor_full_name]
-            result[investor_full_name][date_str] = 0
+            result[investor_full_name][date_str] = {
+              amount: 0,
+              payed: false
+            }
           end
 
           current_date = date.utc.beginning_of_month
           investment_start = investment.date_from.utc.beginning_of_month
           investment_end = investment.date_to.utc.beginning_of_month
           if current_date >= investment_start and current_date <= investment_end
-            result[investor_full_name][date_str] += (investment.investment / months_count)
-            total_payed += (investment.investment / months_count)
+            result[investor_full_name][date_str][:amount] += (investment.investment / months_count)
+          end
+
+          if investment.investment_payeds.where(date: date.utc.beginning_of_month).exists?
+            result[investor_full_name][date_str][:payed] = true
           end
         end
       end
-      result[investor_full_name]["debt"] = result[investor_full_name]["total_investment"] - total_payed
+      result[investor_full_name]["debt"] = (result[investor_full_name]["total_investment"] -
+        InvestmentPayed.where(invested_company: investments).sum('amount'))
     end
 
     render json: {
@@ -90,19 +97,26 @@ class TrackingController < ApplicationController
         date_range.each do |date|
           date_str = date.strftime(GraphHelper.date_to_axis_str(@@step))
           unless date_str.in? result[company_full_name]
-            result[company_full_name][date_str] = 0
+            result[company_full_name][date_str] = {
+              amount: 0,
+              payed: false
+            }
           end
 
           current_date = date.utc.beginning_of_month
           investment_start = investment.date_from.utc.beginning_of_month
           investment_end = investment.date_to.utc.beginning_of_month
           if current_date >= investment_start and current_date <= investment_end
-            result[company_full_name][date_str] += (investment.investment / months_count)
-            total_payed += (investment.investment / months_count)
+            result[company_full_name][date_str][:amount] += (investment.investment / months_count)
+          end
+
+          if investment.investment_payeds.where(date: date.utc.beginning_of_month).exists?
+            result[company_full_name][date_str][:payed] = true
           end
         end
       end
-      result[company_full_name]["debt"] = result[company_full_name]["total_investment"] - total_payed
+      result[company_full_name]["debt"] = (result[company_full_name]["total_investment"] -
+        InvestmentPayed.where(invested_company: investments).sum('amount'))
     end
 
     render json: {
@@ -131,6 +145,10 @@ class TrackingController < ApplicationController
   def get_months_count(date_start, date_end)
     diff = Time.diff(date_start, date_end)
 
-    diff[:month]
+    if diff[:day] > 0
+      diff[:month] + 1
+    else
+      diff[:month]
+    end
   end
 end

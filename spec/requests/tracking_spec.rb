@@ -31,12 +31,18 @@ RSpec.describe "TrackingSpec", type: :request do
         Timecop.freeze(t)
 
         invested_company.date_from = "2019-03-11"
-        invested_company.date_to = "2020-01-11"
+        invested_company.date_to = "2019-12-11"
         invested_company.save!
 
         invested_company2.date_from = "2019-03-11"
-        invested_company2.date_to = "2020-01-11"
+        invested_company2.date_to = "2019-12-11"
         invested_company2.save!
+
+        InvestmentPayed.create!(
+          invested_company: invested_company2,
+          date: "2019-03-11",
+          amount: 1000
+        )
 
         post "/auth/login", params: { email: user.email, password: password}
         token = json['token']
@@ -58,11 +64,19 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{investor.name} #{investor.surname}" => {
-            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000,
-            "total_investment" => 10000, "debt" => 9000
+            "Jan/19" => {"amount" => 0, "payed" => false},
+            "Feb/19" => {"amount" => 0, "payed" => false},
+            "Mar/19" => {"amount" => 1000, "payed" => false},
+            "Apr/19" => {"amount" => 1000, "payed" => false},
+            "May/19" => {"amount" => 1000, "payed" => false},
+            "total_investment" => 10000, "debt" => 10000
           },
           "#{investor2.name} #{investor2.surname}" => {
-            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000,
+            "Jan/19" => {"amount" => 0, "payed" => false},
+            "Feb/19" => {"amount" => 0, "payed" => false},
+            "Mar/19" => {"amount" => 1000, "payed" => true},
+            "Apr/19" => {"amount" => 1000, "payed" => false},
+            "May/19" => {"amount" => 1000, "payed" => false},
             "total_investment" => 10000, "debt" => 9000
           }
         }
@@ -85,12 +99,20 @@ RSpec.describe "TrackingSpec", type: :request do
         Timecop.freeze(t)
 
         invested_company.date_from = "2019-03-11"
-        invested_company.date_to = "2020-01-11"
+        invested_company.date_to = "2019-12-11"
         invested_company.save!
 
         invested_company2.date_from = "2019-03-11"
-        invested_company2.date_to = "2020-01-11"
+        invested_company2.date_to = "2019-12-11"
         invested_company2.save!
+
+        ["2019-03-11", "2019-04-11", "2019-05-11", "2019-06-11", "2019-07-11", "2019-08-11", "2019-09-11"].each do |date|
+          InvestmentPayed.create!(
+            invested_company: invested_company2,
+            date: date,
+            amount: 1000
+          )
+        end
 
         t = "2019-09-10T06:23:51.04+03:00".to_datetime
         Timecop.freeze(t)
@@ -115,12 +137,20 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{investor.name} #{investor.surname}" => {
-            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000,
-            "total_investment" => 10000, "debt" => 4000
+            "Jul/19" => {"amount" => 1000, "payed" => false},
+            "Aug/19" => {"amount" => 1000, "payed" => false},
+            "Sep/19" => {"amount" => 1000, "payed" => false},
+            "Oct/19" => {"amount" => 1000, "payed" => false},
+            "Nov/19" => {"amount" => 1000, "payed" => false},
+            "total_investment" => 10000, "debt" => 10000
           },
           "#{investor2.name} #{investor2.surname}" => {
-            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000,
-            "total_investment" => 10000, "debt" => 4000
+            "Jul/19" => {"amount" => 1000, "payed" => true},
+            "Aug/19" => {"amount" => 1000, "payed" => true},
+            "Sep/19" => {"amount" => 1000, "payed" => true},
+            "Oct/19" => {"amount" => 1000, "payed" => false},
+            "Nov/19" => {"amount" => 1000, "payed" => false},
+            "total_investment" => 10000, "debt" => 3000
           }
         }
 
@@ -142,11 +172,11 @@ RSpec.describe "TrackingSpec", type: :request do
         Timecop.freeze(t)
 
         invested_company.date_from = "2019-03-11"
-        invested_company.date_to = "2020-01-11"
+        invested_company.date_to = "2019-12-11"
         invested_company.save!
 
         invested_company2.date_from = "2019-03-11"
-        invested_company2.date_to = "2020-01-11"
+        invested_company2.date_to = "2019-12-11"
         invested_company2.save!
 
         InvestedCompany.create!(
@@ -156,7 +186,13 @@ RSpec.describe "TrackingSpec", type: :request do
           investment: 1000,
           evaluation: 10,
           date_from: "2019-03-13",
-          date_to: "2020-01-13"
+          date_to: "2019-12-13"
+        )
+
+        InvestmentPayed.create!(
+          invested_company: invested_company,
+          date: "2019-03-13",
+          amount: 1100
         )
 
         post "/auth/login", params: { email: user.email, password: password}
@@ -179,12 +215,20 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{investor.name} #{investor.surname}" => {
-            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1100, "Apr/19"=>1100, "May/19"=>1100,
-            "total_investment" => 10000, "debt" => 7000
+            "Jan/19"=> {"amount" => 0, "payed" => false},
+            "Feb/19"=> {"amount" => 0, "payed" => false},
+            "Mar/19"=> {"amount" => 1100, "payed" => true},
+            "Apr/19"=> {"amount" => 1100, "payed" => false},
+            "May/19"=> {"amount" => 1100, "payed" => false},
+            "total_investment" => 11000, "debt" => 9900
           },
           "#{investor2.name} #{investor2.surname}" => {
-            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1000, "Apr/19"=>1000, "May/19"=>1000,
-            "total_investment" => 10000, "debt" => 7000
+            "Jan/19"=> {"amount" => 0, "payed" => false},
+            "Feb/19"=> {"amount" => 0, "payed" => false},
+            "Mar/19"=> {"amount" => 1000, "payed" => false},
+            "Apr/19"=> {"amount" => 1000, "payed" => false},
+            "May/19"=> {"amount" => 1000, "payed" => false},
+            "total_investment" => 10000, "debt" => 10000
           }
         }
 
@@ -209,12 +253,18 @@ RSpec.describe "TrackingSpec", type: :request do
         Timecop.freeze(t)
 
         invested_company.date_from = "2019-03-11"
-        invested_company.date_to = "2020-01-11"
+        invested_company.date_to = "2019-12-11"
         invested_company.save!
 
         invested_company3.date_from = "2019-03-11"
-        invested_company3.date_to = "2020-01-11"
+        invested_company3.date_to = "2019-12-11"
         invested_company3.save!
+
+        InvestmentPayed.create!(
+          invested_company: invested_company3,
+          date: "2019-03-13",
+          amount: 1000
+        )
 
         post "/auth/login", params: { email: investor.email, password: password}
         token = json['token']
@@ -236,12 +286,20 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{company.company_name}" => {
-            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000,
-            "total_investment" => 10000, "debt" => 7000
+            "Jan/19" => {"amount" => 0, "payed" => false},
+            "Feb/19" => {"amount" => 0, "payed" => false},
+            "Mar/19" => {"amount" => 1000, "payed" => false},
+            "Apr/19" => {"amount" => 1000, "payed" => false},
+            "May/19" => {"amount" => 1000, "payed" => false},
+            "total_investment" => 10000, "debt" => 10000
           },
           "#{company2.company_name}" => {
-            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000,
-            "total_investment" => 10000, "debt" => 7000
+            "Jan/19" => {"amount" => 0, "payed" => false},
+            "Feb/19" => {"amount" => 0, "payed" => false},
+            "Mar/19" => {"amount" => 1000, "payed" => true},
+            "Apr/19" => {"amount" => 1000, "payed" => false},
+            "May/19" => {"amount" => 1000, "payed" => false},
+            "total_investment" => 10000, "debt" => 9000
           }
         }
 
@@ -263,12 +321,20 @@ RSpec.describe "TrackingSpec", type: :request do
         Timecop.freeze(t)
 
         invested_company.date_from = "2019-03-11"
-        invested_company.date_to = "2020-01-11"
+        invested_company.date_to = "2019-12-11"
         invested_company.save!
 
         invested_company3.date_from = "2019-03-11"
-        invested_company3.date_to = "2020-01-11"
+        invested_company3.date_to = "2019-12-11"
         invested_company3.save!
+
+        ["2019-03-11", "2019-04-11", "2019-05-11", "2019-06-11", "2019-07-11", "2019-08-11", "2019-09-11"].each do |date|
+          InvestmentPayed.create!(
+            invested_company: invested_company3,
+            date: date,
+            amount: 1000
+          )
+        end
 
         t = "2019-09-10T06:23:51.04+03:00".to_datetime
         Timecop.freeze(t)
@@ -293,12 +359,20 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{company.company_name}" => {
-            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000,
-            "total_investment" => 10000, "debt" => 7000
+            "Jul/19" => {"amount" => 1000, "payed" => false},
+            "Aug/19" => {"amount" => 1000, "payed" => false},
+            "Sep/19" => {"amount" => 1000, "payed" => false},
+            "Oct/19" => {"amount" => 1000, "payed" => false},
+            "Nov/19" => {"amount" => 1000, "payed" => false},
+            "total_investment" => 10000, "debt" => 10000
           },
           "#{company2.company_name}" => {
-            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000,
-            "total_investment" => 10000, "debt" => 7000
+            "Jul/19" => {"amount" => 1000, "payed" => true},
+            "Aug/19" => {"amount" => 1000, "payed" => true},
+            "Sep/19" => {"amount" => 1000, "payed" => true},
+            "Oct/19" => {"amount" => 1000, "payed" => false},
+            "Nov/19" => {"amount" => 1000, "payed" => false},
+            "total_investment" => 10000, "debt" => 3000
           }
         }
 
@@ -320,11 +394,11 @@ RSpec.describe "TrackingSpec", type: :request do
         Timecop.freeze(t)
 
         invested_company.date_from = "2019-03-11"
-        invested_company.date_to = "2020-01-11"
+        invested_company.date_to = "2019-12-11"
         invested_company.save!
 
         invested_company3.date_from = "2019-03-11"
-        invested_company3.date_to = "2020-01-11"
+        invested_company3.date_to = "2019-12-11"
         invested_company3.save!
 
         InvestedCompany.create!(
@@ -334,7 +408,13 @@ RSpec.describe "TrackingSpec", type: :request do
           investment: 1000,
           evaluation: 10,
           date_from: "2019-03-13",
-          date_to: "2020-01-13"
+          date_to: "2019-12-13"
+        )
+
+        InvestmentPayed.create!(
+          invested_company: invested_company,
+          date: "2019-03-13",
+          amount: 1100
         )
 
         post "/auth/login", params: { email: investor.email, password: password}
@@ -357,12 +437,20 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{company.company_name}" => {
-            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1100, "Apr/19"=>1100, "May/19"=>1100,
-            "total_investment" => 10000, "debt" => 7000
+            "Jan/19"=> {"amount" => 0, "payed" => false},
+            "Feb/19"=> {"amount" => 0, "payed" => false},
+            "Mar/19"=> {"amount" => 1100, "payed" => true},
+            "Apr/19"=> {"amount" => 1100, "payed" => false},
+            "May/19"=> {"amount" => 1100, "payed" => false},
+            "total_investment" => 11000, "debt" => 9900
           },
           "#{company2.company_name}" => {
-            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1000, "Apr/19"=>1000, "May/19"=>1000,
-            "total_investment" => 10000, "debt" => 7000
+            "Jan/19"=> {"amount" => 0, "payed" => false},
+            "Feb/19"=> {"amount" => 0, "payed" => false},
+            "Mar/19"=> {"amount" => 1000, "payed" => false},
+            "Apr/19"=> {"amount" => 1000, "payed" => false},
+            "May/19"=> {"amount" => 1000, "payed" => false},
+            "total_investment" => 10000, "debt" => 10000
           }
         }
 
