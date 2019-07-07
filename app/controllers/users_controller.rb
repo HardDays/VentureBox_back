@@ -76,6 +76,11 @@ class UsersController < ApplicationController
           end
         end
 
+        begin
+          WelcomeEmailMailer.welcome_email(@user[:email], "#{@user.name} #{@user.surname}").deliver
+        rescue => ex
+          print(ex)
+        end
         token = AuthenticationHelper.process_token(request, @user)
 
         user = @user.as_json
