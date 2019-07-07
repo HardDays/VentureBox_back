@@ -54,6 +54,23 @@
           "method": "get"
         }
       ]
+    },
+    {
+      "path": "/enums/countries.json",
+      "operations": [
+        {
+          "summary": "Countries enum",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Ok"
+            }
+          ],
+          "nickname": "Enums#countries",
+          "method": "get"
+        }
+      ]
     }
   ],
   "authorizations": null

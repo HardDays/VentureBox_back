@@ -438,9 +438,9 @@
             },
             {
               "paramType": "form",
-              "name": "link_to_store",
+              "name": "product_type",
               "type": "string",
-              "description": "Link to store",
+              "description": "Product type",
               "required": true
             },
             {
@@ -452,31 +452,10 @@
             },
             {
               "paramType": "form",
-              "name": "is_physical",
-              "type": "boolean",
-              "description": "Is physical product",
-              "required": false
-            },
-            {
-              "paramType": "form",
-              "name": "weight",
+              "name": "country_id",
               "type": "integer",
-              "description": "Weight",
+              "description": "Country id",
               "required": false
-            },
-            {
-              "paramType": "form",
-              "name": "weight_unit",
-              "type": "string",
-              "description": "Weight unit",
-              "required": false,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "kg",
-                  "gr"
-                ]
-              }
             },
             {
               "paramType": "form",
@@ -570,9 +549,9 @@
             },
             {
               "paramType": "form",
-              "name": "link_to_store",
+              "name": "product_type",
               "type": "string",
-              "description": "Link to store",
+              "description": "Product type",
               "required": true
             },
             {
@@ -580,6 +559,13 @@
               "name": "description",
               "type": "string",
               "description": "Item about",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "country_id",
+              "type": "integer",
+              "description": "Country id",
               "required": false
             },
             {

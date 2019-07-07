@@ -27,4 +27,13 @@ class EnumsController < ApplicationController
   def tags
     render json: EnumsHelper.company_item_tag_readable_json, status: :ok
   end
+
+  # GET /enums/countries
+  swagger_api :countries do
+    summary "Countries enum"
+    response :ok
+  end
+  def countries
+    render json: Country.all, only: [:id, :name], status: :ok
+  end
 end

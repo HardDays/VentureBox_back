@@ -14,6 +14,10 @@ RSpec.describe EnumsController, type: :routing do
       expect(:get => "/enums/tags").to route_to("enums#tags")
     end
 
+    it "routes to #countries" do
+      expect(:get => "/enums/countries").to route_to("enums#countries")
+    end
+
 
     it "routes to #index" do
       expect(:get => "/enums").not_to be_routable

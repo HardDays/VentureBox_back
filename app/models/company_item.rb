@@ -1,13 +1,8 @@
 class CompanyItem < ApplicationRecord
-  validates_presence_of :name
-  validates_presence_of :link_to_store
-  validates :link_to_store, url: true, unless: Proc.new { |a| a.link_to_store.blank? }
-  validates :link_to_store, http_url: true, unless: Proc.new { |a| a.link_to_store.blank? }
-  validates_presence_of :company_id
-
-  enum weight_unit: [:kg, :gr]
+  validates_presence_of :name, :company_id, :product_type, :price
 
   belongs_to :company
+  belongs_to :country, optional: true
   has_one :company_item_image, dependent: :destroy
   has_many :company_item_tags, dependent: :destroy
 

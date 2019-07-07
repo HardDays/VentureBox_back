@@ -1,5 +1,5 @@
 namespace :companies do
-  desc "TODO"
+  desc "Delete companies without image"
   task delete_invalid_companies: :environment do
     companies = Company.all
     print(companies.count)

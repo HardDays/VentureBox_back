@@ -58,10 +58,12 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{investor.name} #{investor.surname}" => {
-            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000
+            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000,
+            "total_investment" => 10000, "debt" => 9000
           },
           "#{investor2.name} #{investor2.surname}" => {
-            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000
+            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000,
+            "total_investment" => 10000, "debt" => 9000
           }
         }
 
@@ -113,10 +115,12 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{investor.name} #{investor.surname}" => {
-            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000
+            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000,
+            "total_investment" => 10000, "debt" => 4000
           },
           "#{investor2.name} #{investor2.surname}" => {
-            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000
+            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000,
+            "total_investment" => 10000, "debt" => 4000
           }
         }
 
@@ -175,10 +179,12 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{investor.name} #{investor.surname}" => {
-            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1100, "Apr/19"=>1100, "May/19"=>1100
+            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1100, "Apr/19"=>1100, "May/19"=>1100,
+            "total_investment" => 10000, "debt" => 7000
           },
           "#{investor2.name} #{investor2.surname}" => {
-            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1000, "Apr/19"=>1000, "May/19"=>1000
+            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1000, "Apr/19"=>1000, "May/19"=>1000,
+            "total_investment" => 10000, "debt" => 7000
           }
         }
 
@@ -230,10 +236,12 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{company.company_name}" => {
-            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000
+            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000,
+            "total_investment" => 10000, "debt" => 7000
           },
           "#{company2.company_name}" => {
-            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000
+            "Jan/19" => 0, "Feb/19" => 0, "Mar/19" => 1000, "Apr/19" => 1000, "May/19" => 1000,
+            "total_investment" => 10000, "debt" => 7000
           }
         }
 
@@ -285,10 +293,12 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{company.company_name}" => {
-            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000
+            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000,
+            "total_investment" => 10000, "debt" => 7000
           },
           "#{company2.company_name}" => {
-            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000
+            "Jul/19" => 1000, "Aug/19" => 1000, "Sep/19" => 1000, "Oct/19" => 1000, "Nov/19" => 1000,
+            "total_investment" => 10000, "debt" => 7000
           }
         }
 
@@ -347,10 +357,12 @@ RSpec.describe "TrackingSpec", type: :request do
       it "returns year investment data" do
         data = {
           "#{company.company_name}" => {
-            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1100, "Apr/19"=>1100, "May/19"=>1100
+            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1100, "Apr/19"=>1100, "May/19"=>1100,
+            "total_investment" => 10000, "debt" => 7000
           },
           "#{company2.company_name}" => {
-            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1000, "Apr/19"=>1000, "May/19"=>1000
+            "Jan/19"=>0, "Feb/19"=>0, "Mar/19"=>1000, "Apr/19"=>1000, "May/19"=>1000,
+            "total_investment" => 10000, "debt" => 7000
           }
         }
 

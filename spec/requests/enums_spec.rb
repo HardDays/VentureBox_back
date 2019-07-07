@@ -40,4 +40,20 @@ RSpec.describe "Enums", type: :request do
       end
     end
   end
+
+  # Test suite for GET /enums/countries
+  describe 'GET /enums/countries' do
+    context 'when simply get' do
+      before do
+        Rails.application.load_tasks
+        Rake::Task['countries:fullfill_countries'].invoke
+
+        get "/enums/countries"
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
 end

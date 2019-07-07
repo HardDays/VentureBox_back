@@ -159,11 +159,9 @@ class CompanyItemsController < ApplicationController
     param :form, :image, :string, :optional, "Image base64"
     param :form, :name, :string, :required, "Item name"
     param :form, :price, :integer, :optional, "Item price"
-    param :form, :link_to_store, :string, :required, "Link to store"
+    param :form, :product_type, :string, :required, "Product type"
     param :form, :description, :string, :optional, "Item about"
-    param :form, :is_physical, :boolean, :optional, "Is physical product"
-    param :form, :weight, :integer, :optional, "Weight"
-    param_list :form, :weight_unit, :string, :optional, "Weight unit", ["kg", "gr"]
+    param :form, :country_id, :integer, :optional, "Country id"
     param :form, :tags, :string, :optional, "Tags array in [blockchain, coding, real_sector, product, fintech]"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :created
@@ -203,8 +201,9 @@ class CompanyItemsController < ApplicationController
     param :form, :image, :string, :optional, "Image base64"
     param :form, :name, :string, :required, "Item name"
     param :form, :price, :integer, :optional, "Item price"
-    param :form, :link_to_store, :string, :required, "Link to store"
+    param :form, :product_type, :string, :required, "Product type"
     param :form, :description, :string, :optional, "Item about"
+    param :form, :country_id, :integer, :optional, "Country id"
     param :form, :tags, :string, :optional, "Tags array in [blockchain, coding, real_sector, product, fintech]"
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
@@ -355,6 +354,6 @@ class CompanyItemsController < ApplicationController
     end
 
     def company_item_params
-      params.permit(:company_id, :name, :price, :link_to_store, :description, :is_physical, :weight, :weight_unit)
+      params.permit(:company_id, :name, :price, :description, :product_type)
     end
 end

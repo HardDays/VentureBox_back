@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       get :c_level
       get :stage_of_funding
       get :tags
+      get :countries
     end
   end
 
