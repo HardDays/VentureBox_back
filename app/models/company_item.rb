@@ -15,6 +15,8 @@ class CompanyItem < ApplicationRecord
       res[:has_image] = true
     end
 
+    res.delete('shopify_id')
+
     res.delete('country_id')
     res[:country] = ""
     if country

@@ -192,6 +192,16 @@ class CompanyItemsController < ApplicationController
         render json: @country.errors, status: :unprocessable_entity and return
       end
 
+      shopify_product = ShopifyExchange.create_product(@company_item)
+      if shopify_product
+        @company_item.shopify_id = shopify_product.id
+        @company_item.link_to_store = "https://#{ENV['SHOPIFY_SHOP_NAME']}.myshopify.com/products/#{shopify_product.handle}"
+        @company_item.save
+      else
+        @company_item.destroy
+        render json: {"shopify": ["can't create product"]}, status: :unprocessable_entity and return
+      end
+
       render json: @company_item, status: :created
     else
       render json: @company_item.errors, status: :unprocessable_entity
@@ -237,6 +247,16 @@ class CompanyItemsController < ApplicationController
     end
 
     if @company_item.update(company_item_params)
+      shopify_product = ShopifyExchange.update_product(@company_item)
+      if shopify_product
+        @company_item.shopify_id = shopify_product.id
+        @company_item.link_to_store = "https://#{ENV['SHOPIFY_SHOP_NAME']}.myshopify.com/products/#{shopify_product.handle}"
+        @company_item.save
+      else
+        @company_item.destroy
+        render json: {"shopify": ["can't update product"]}, status: :unprocessable_entity and return
+      end
+
       render json: @company_item, status: :ok
     else
       render json: @company_item.errors, status: :unprocessable_entity

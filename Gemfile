@@ -47,3 +47,5 @@ gem 'mini_magick'
 gem 'httparty'
 
 gem 'time_diff'
+
+gem 'shopify_api'
