@@ -2,6 +2,7 @@ class WelcomeEmailMailer < ApplicationMailer
   layout 'mailer'
 
   def welcome_email(email, name)
-    mail(from:'ventureboxreminder@gmail.com', to: email, subject: "Welcome to VentureBox", name: name)
+    @name = name
+    mail(from:'ventureboxreminder@gmail.com', to: email, subject: "Welcome to VentureBox")
   end
 end
