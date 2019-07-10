@@ -43,6 +43,7 @@ class AuthenticationController < ApplicationController
       @user.save(validate: false)
       render status: :ok
     rescue => ex
+      print ex
       render status: :bad_request
     end
   end

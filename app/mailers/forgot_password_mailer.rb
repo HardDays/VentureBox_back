@@ -3,6 +3,6 @@ class ForgotPasswordMailer < ApplicationMailer
 
   def forgot_password_email(email, password)
     @password = password
-    mail(from:'venturebox@gmail.com', to: email, subject: "VentureBox password change")
+    mail(from:'ventureboxreminder@gmail.com', to: email, subject: "VentureBox password change")
   end
 end
