@@ -183,6 +183,75 @@ RSpec.describe "TrackingSpec", type: :request do
       end
     end
 
+    context 'when in the end of period' do
+      before do
+        t = "2019-03-10T06:23:51.04+03:00".to_datetime
+        Timecop.freeze(t)
+
+        invested_company.date_from = "2019-03-11"
+        invested_company.date_to = "2019-12-11"
+        invested_company.save!
+
+        invested_company2.date_from = "2019-03-11"
+        invested_company2.date_to = "2019-12-11"
+        invested_company2.save!
+
+        t = "2019-11-10T06:23:51.04+03:00".to_datetime
+        Timecop.freeze(t)
+
+        post "/auth/login", params: {email: user.email, password: password}
+        token = json['token']
+
+        get "/tracking/startup", headers: {'Authorization': token}
+      end
+
+      it "returns axis and data" do
+        expect(json['axis']).to be_present
+        expect(json['investors']).to be_present
+      end
+
+      it "returns axis from registration date to now" do
+        axis_dates = ["Sep/19", "Oct/19", "Nov/19", "Dec/19", "Jan/20"]
+
+        expect(json['axis']).to eq(axis_dates)
+      end
+
+      it "returns year investment data" do
+        data = [
+          {
+            "#{investor.name} #{investor.surname}" => {
+              "Sep/19" => {"amount" => 1000, "payed" => false},
+              "Oct/19" => {"amount" => 1000, "payed" => false},
+              "Nov/19" => {"amount" => 1000, "payed" => false},
+              "Dec/19" => {"amount" => 1000, "payed" => false},
+              "Jan/20" => {"amount" => 0, "payed" => false},
+              "total_investment" => 10000, "debt" => 10000
+            }
+          },
+          {
+            "#{investor2.name} #{investor2.surname}" => {
+              "Sep/19" => {"amount" => 1000, "payed" => false},
+              "Oct/19" => {"amount" => 1000, "payed" => false},
+              "Nov/19" => {"amount" => 1000, "payed" => false},
+              "Dec/19" => {"amount" => 1000, "payed" => false},
+              "Jan/20" => {"amount" => 0, "payed" => false},
+              "total_investment" => 10000, "debt" => 10000
+            }
+          }
+        ]
+
+        expect(json['investors']).to eq(data)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      after do
+        Timecop.return
+      end
+    end
+
     context 'when  double invested' do
       before do
         t = "2019-02-10T06:23:51.04+03:00".to_datetime
@@ -330,7 +399,7 @@ RSpec.describe "TrackingSpec", type: :request do
               "Apr/19" => {"amount" => 1000, "payed" => false},
               "May/19" => {"amount" => 1000, "payed" => false},
               "total_investment" => 10000, "debt" => 10000,
-              "company_id" => invested_company.company.id
+              "company_id" => invested_company.id
             }
           },
           {
@@ -341,7 +410,7 @@ RSpec.describe "TrackingSpec", type: :request do
               "Apr/19" => {"amount" => 1000, "payed" => false},
               "May/19" => {"amount" => 1000, "payed" => false},
               "total_investment" => 10000, "debt" => 9000,
-              "company_id" => invested_company3.company.id
+              "company_id" => invested_company3.id
             }
           }
         ]
@@ -415,7 +484,7 @@ RSpec.describe "TrackingSpec", type: :request do
               "Oct/19" => {"amount" => 1000, "payed" => false},
               "Nov/19" => {"amount" => 1000, "payed" => false},
               "total_investment" => 10000, "debt" => 10000,
-              "company_id" => invested_company.company.id
+              "company_id" => invested_company.id
             }
           },
           {
@@ -426,7 +495,78 @@ RSpec.describe "TrackingSpec", type: :request do
               "Oct/19" => {"amount" => 1000, "payed" => false},
               "Nov/19" => {"amount" => 1000, "payed" => false},
               "total_investment" => 10000, "debt" => 3000,
-              "company_id" => invested_company3.company.id
+              "company_id" => invested_company3.id
+            }
+          }
+        ]
+
+        expect(json['companies']).to eq(data)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      after do
+        Timecop.return
+      end
+    end
+
+    context 'when in the middle of period' do
+      before do
+        t = "2019-03-10T06:23:51.04+03:00".to_datetime
+        Timecop.freeze(t)
+
+        invested_company.date_from = "2019-03-11"
+        invested_company.date_to = "2019-12-11"
+        invested_company.save!
+
+        invested_company3.date_from = "2019-03-11"
+        invested_company3.date_to = "2019-12-11"
+        invested_company3.save!
+
+        t = "2019-11-10T06:23:51.04+03:00".to_datetime
+        Timecop.freeze(t)
+
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        get "/tracking/investor", headers: {'Authorization': token}
+      end
+
+      it "returns axis and data" do
+        expect(json['axis']).to be_present
+        expect(json['companies']).to be_present
+      end
+
+      it "returns axis from registration date to now" do
+        axis_dates = ["Sep/19", "Oct/19", "Nov/19", "Dec/19", "Jan/20"]
+
+        expect(json['axis']).to eq(axis_dates)
+      end
+
+      it "returns year investment data" do
+        data = [
+          {
+            "#{company.company_name}" => {
+              "Sep/19" => {"amount" => 1000, "payed" => false},
+              "Oct/19" => {"amount" => 1000, "payed" => false},
+              "Nov/19" => {"amount" => 1000, "payed" => false},
+              "Dec/19" => {"amount" => 1000, "payed" => false},
+              "Jan/20" => {"amount" => 0, "payed" => false},
+              "total_investment" => 10000, "debt" => 10000,
+              "company_id" => invested_company.id
+            }
+          },
+          {
+            "#{company2.company_name}" => {
+              "Sep/19" => {"amount" => 1000, "payed" => false},
+              "Oct/19" => {"amount" => 1000, "payed" => false},
+              "Nov/19" => {"amount" => 1000, "payed" => false},
+              "Dec/19" => {"amount" => 1000, "payed" => false},
+              "Jan/20" => {"amount" => 0, "payed" => false},
+              "total_investment" => 10000, "debt" => 10000,
+              "company_id" => invested_company3.id
             }
           }
         ]
