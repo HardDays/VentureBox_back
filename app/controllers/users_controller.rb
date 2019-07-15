@@ -80,7 +80,11 @@ class UsersController < ApplicationController
 
         user = @user.as_json
         user["token"] = token.token
-        render json: user, status: :created
+        if EspoHelper.create_user(params[:email], params[:password], params[:name], parmas[:surname])
+          render json: user, status: :created
+        else
+          json: {errors: :CRM_ERROR}, status: :unprocessable_entity
+        end
       else
         render json: @user.errors, status: :unprocessable_entity
       end
