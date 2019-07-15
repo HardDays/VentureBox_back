@@ -83,7 +83,7 @@ class UsersController < ApplicationController
         if EspoHelper.create_user(params[:email], params[:password], params[:name], parmas[:surname])
           render json: user, status: :created
         else
-          json: {errors: :CRM_ERROR}, status: :unprocessable_entity
+          render json: {errors: :CRM_ERROR}, status: :unprocessable_entity
         end
       else
         render json: @user.errors, status: :unprocessable_entity
