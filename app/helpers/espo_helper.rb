@@ -18,7 +18,7 @@ class EspoHelper
                 'lastName': last_name,
                 'password': password,
                 'passwordConfirm': password
-            }.to_json
+            }.to_json   
         )
         return reponse.code == 200
     end
