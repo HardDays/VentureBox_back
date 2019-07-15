@@ -30,6 +30,7 @@ class ShopifyExchange
 
       new_product
     rescue => ex
+      print(ex)
       nil
     end
   end
