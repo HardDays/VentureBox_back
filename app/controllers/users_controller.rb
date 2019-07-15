@@ -89,8 +89,8 @@ class UsersController < ApplicationController
         render json: @user.errors, status: :unprocessable_entity
       end
     end
-  #rescue
-    #render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
+  rescue
+    render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
   end
 
   # PATCH/PUT /users/1/change_password

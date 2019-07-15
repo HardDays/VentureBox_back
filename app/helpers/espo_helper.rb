@@ -20,7 +20,7 @@ class EspoHelper
                 'passwordConfirm': password
             }.to_json   
         )
-        return reponse.code == 200
+        return response.code == 200
     end
 
 end
