@@ -701,6 +701,48 @@ RSpec.describe "TrackingSpec", type: :request do
       end
     end
 
+    context 'when dublicates' do
+      before do
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        InvestmentPayed.create!(
+          invested_company: invested_company,
+          date: DateTime.now,
+          amount: invested_company.investment / 10
+        )
+
+        post "/tracking/mark_payed", params: {company_id: invested_company.id, date: DateTime.now}, headers: {'Authorization': token}
+      end
+
+      it 'response with error' do
+        expect(response.body)
+          .to match("{\"errors\":\"ALREADY_PAYED\"}")
+      end
+
+      it 'returns status code 403' do
+        expect(response).to have_http_status(403)
+      end
+    end
+
+    context 'when date out of period' do
+      before do
+        post "/auth/login", params: {email: investor.email, password: password}
+        token = json['token']
+
+        post "/tracking/mark_payed", params: {company_id: invested_company.id, date: DateTime.now.last_month}, headers: {'Authorization': token}
+      end
+
+      it 'response with error' do
+        expect(response.body)
+          .to match("{\"errors\":\"INVALID_DATE\"}")
+      end
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+    end
+
     context 'when date in the future month' do
       before do
         post "/auth/login", params: {email: investor.email, password: password}

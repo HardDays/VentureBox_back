@@ -171,6 +171,20 @@ class TrackingController < ApplicationController
     rescue
       render status: :not_found and return
     end
+
+    if params[:date]
+      date = DateTime.parse(params[:date]).utc.beginning_of_month
+      unless date.in? @invested_company.date_from..@invested_company.date_to
+        render json: {errors: :INVALID_DATE}, status: :unprocessable_entity and return
+      end
+
+      @payments = InvestmentPayed.where(
+        date: DateTime.parse(params[:date]).utc.beginning_of_month,
+        invested_company: @invested_company)
+      if @payments.exists?
+        render json: {errors: :ALREADY_PAYED}, status: :forbidden and return
+      end
+    end
   end
 
   def get_months_count(date_start, date_end)
