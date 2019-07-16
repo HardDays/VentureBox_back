@@ -689,7 +689,7 @@ RSpec.describe "TrackingSpec", type: :request do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
 
-        post "/tracking/mark_payed", params: {company_id: invested_company.company.id, date: DateTime.now}, headers: {'Authorization': token}
+        post "/tracking/mark_payed", params: {company_id: invested_company.id, date: DateTime.now}, headers: {'Authorization': token}
       end
 
       it 'response is empty' do
@@ -706,7 +706,7 @@ RSpec.describe "TrackingSpec", type: :request do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
 
-        post "/tracking/mark_payed", params: {company_id: invested_company.company.id, date: DateTime.now.next_month}, headers: {'Authorization': token}
+        post "/tracking/mark_payed", params: {company_id: invested_company.id, date: DateTime.now.next_month}, headers: {'Authorization': token}
       end
 
       it 'returns a validation failure message' do
@@ -724,7 +724,7 @@ RSpec.describe "TrackingSpec", type: :request do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
 
-        post "/tracking/mark_payed", params: {company_id: invested_company.company.id, date: DateTime.now.end_of_month}, headers: {'Authorization': token}
+        post "/tracking/mark_payed", params: {company_id: invested_company.id, date: DateTime.now.end_of_month}, headers: {'Authorization': token}
       end
 
       it 'response is empty' do
@@ -758,7 +758,7 @@ RSpec.describe "TrackingSpec", type: :request do
         post "/auth/login", params: {email: investor.email, password: password}
         token = json['token']
 
-        post "/tracking/mark_payed", params: {company_id: invested_company.company.id}, headers: {'Authorization': token}
+        post "/tracking/mark_payed", params: {company_id: invested_company.id}, headers: {'Authorization': token}
       end
 
       it 'returns a validation failure message' do

@@ -135,26 +135,17 @@ class TrackingController < ApplicationController
     response :unprocessable_entity
   end
   def mark_payed
-    payments = []
-    @invested_companies.each do |company|
-      months_count = get_months_count(company.date_from, company.date_to)
+    months_count = get_months_count(@invested_company.date_from, @invested_company.date_to)
 
-      @investment_payed = InvestmentPayed.new(investment_payed_params)
-      @investment_payed.invested_company_id = company.id
-      @investment_payed.amount = (company.investment / months_count)
+    @investment_payed = InvestmentPayed.new(investment_payed_params)
+    @investment_payed.invested_company_id = @invested_company.id
+    @investment_payed.amount = (@invested_company.investment / months_count)
 
-      if @investment_payed.save
-        payments << @investment_payed
-      else
-        payments.each do |payment|
-          payment.destroy
-        end
-
-        render json: @investment_payed.errors, status: :unprocessable_entity and return
-      end
+    if @investment_payed.save
+      render status: :created
+    else
+      render json: @investment_payed.errors, status: :unprocessable_entity and return
     end
-
-    render status: :created
   end
 
   private
@@ -175,9 +166,9 @@ class TrackingController < ApplicationController
   end
 
   def set_investment
-    @invested_companies = InvestedCompany.where(company_id: params[:company_id])
-
-    unless @invested_companies.exists?
+    begin
+      @invested_company = InvestedCompany.find(params[:company_id])
+    rescue
       render status: :not_found and return
     end
   end
