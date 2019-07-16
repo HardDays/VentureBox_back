@@ -174,7 +174,7 @@ class TrackingController < ApplicationController
 
     if params[:date]
       date = DateTime.parse(params[:date]).utc.beginning_of_month
-      unless date.in? @invested_company.date_from..@invested_company.date_to
+      unless date.in? @invested_company.date_from.utc.beginning_of_month..@invested_company.date_to.utc.beginning_of_month
         render json: {errors: :INVALID_DATE}, status: :unprocessable_entity and return
       end
 
