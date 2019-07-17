@@ -10,4 +10,5 @@ RSpec.describe CompanyItem, type: :model do
   it { should belong_to(:country) }
   it { should have_one(:company_item_image).dependent(:destroy) }
   it { should have_many(:company_item_tags).dependent(:destroy) }
+  it { should have_many(:shopify_orders_counts).dependent(:destroy) }
 end

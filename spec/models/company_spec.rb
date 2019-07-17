@@ -15,4 +15,5 @@ RSpec.describe Company, type: :model do
   it { should have_many(:interesting_companies).dependent(:destroy) }
   it { should have_many(:company_team_members).dependent(:destroy) }
   it { should have_many(:milestones).dependent(:destroy) }
+  it { should have_many(:shopify_orders_summs).dependent(:destroy) }
 end

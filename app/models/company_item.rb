@@ -5,6 +5,7 @@ class CompanyItem < ApplicationRecord
   belongs_to :country, optional: true
   has_one :company_item_image, dependent: :destroy
   has_many :company_item_tags, dependent: :destroy
+  has_many :shopify_orders_counts, dependent: :destroy
 
   def as_json(options={})
     res = super(options)

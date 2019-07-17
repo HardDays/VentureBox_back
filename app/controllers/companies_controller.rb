@@ -178,7 +178,7 @@ class CompaniesController < ApplicationController
       render json: @team_member.errors, status: :unprocessable_entity and return
     end
 
-    if @company.update(company_params)
+    if @company.update(update_company_params)
       render json: @company, my: true, status: :ok
     else
       render json: @company.errors, status: :unprocessable_entity
@@ -261,5 +261,9 @@ class CompaniesController < ApplicationController
 
     def company_params
       params.permit(:company_name, :website, :description, :contact_email, :stage_of_funding, :investment_amount, :equality_amount)
+    end
+
+    def update_company_params
+      params.permit(:website, :description, :contact_email, :stage_of_funding, :investment_amount, :equality_amount)
     end
 end
