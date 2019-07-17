@@ -27,7 +27,8 @@ class ShopifyHooksController < ApplicationController
       render status: :forbidden and return
     end
 
-    data = JSON.parse request.raw_post
+    data = JSON.parse data
+    print data 
     unless "line_items".in? data
       print data
       render status: :unprocessable_entity and return
@@ -56,8 +57,7 @@ class ShopifyHooksController < ApplicationController
 
       begin
         @shopify_orders_count = ShopifyOrdersCount.find_by(
-          company_item: @company_item,
-          date: DateTime.now.utc.beginning_of_day
+          company_item: @company_item
         )
 
         @shopify_orders_count.update(count: @shopify_orders_count + 1)
