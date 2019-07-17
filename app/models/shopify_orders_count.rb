@@ -1,5 +1,6 @@
 class ShopifyOrdersCount < ApplicationRecord
   validates_presence_of :company_item_id, :count, :date
+  validates_uniqueness_of :company_item_id, scope: :date
 
   belongs_to :company_item
 

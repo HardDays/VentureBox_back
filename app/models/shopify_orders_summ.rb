@@ -1,5 +1,6 @@
 class ShopifyOrdersSumm < ApplicationRecord
   validates_presence_of :company_id, :price, :date
+  validates_uniqueness_of :company_id, scope: :date
 
   belongs_to :company
 
