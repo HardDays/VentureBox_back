@@ -20,7 +20,9 @@ class ShopifyHooksController < ApplicationController
   #   <...>
   # }
   def order_create
-    unless request.headers["X-Shopify-Hmac-Sha256"] == ENV['SHOPIFY_WEBHOOK']
+    data = request.body.read
+
+    unless verify_webhook(data, request.headers["X-Shopify-Hmac-Sha256"])
       print request.headers["X-Shopify-Hmac-Sha256"]
       render status: :forbidden and return
     end
@@ -73,5 +75,11 @@ class ShopifyHooksController < ApplicationController
 
   def order_refund
 
+  end
+
+  private
+  def verify_webhook(data, hmac_header)
+    calculated_hmac = Base64.strict_encode64(OpenSSL::HMAC.digest('sha256', ENV['SHOPIFY_WEBHOOK'], data))
+    ActiveSupport::SecurityUtils.secure_compare(calculated_hmac, hmac_header)
   end
 end
