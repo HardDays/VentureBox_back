@@ -21,6 +21,8 @@ class EspoExchange
         'passwordConfirm': password
       }.to_json
     )
+
+    print response.body
     return response.code == 200
   end
 
