@@ -56,7 +56,14 @@ class UsersController < ApplicationController
     end
 
     User.transaction do
+      espo_exchange = EspoExchange.new
+      espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
+      # espo_user_id = espo_exchange.create_order(params[:email], params[:password], params[:name], params[:surname])
+      unless espo_user_id
+        render json: {errors: :CRM_ERROR}, status: :unprocessable_entity
+      end
       @user = User.new(user_params)
+      @user.espo_user_id = espo_user_id
 
       if @user.save
         if @user.role == "startup"
@@ -76,28 +83,17 @@ class UsersController < ApplicationController
           end
         end
 
-        espo_exchange = EspoExchange.new
-        espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
-        # espo_user_id = espo_exchange.create_order(params[:email], params[:password], params[:name], params[:surname])
-        if espo_user_id
-          print espo_user_id
-          @user.espo_user_id = espo_user_id
-          @user.save!
-
-          begin
-            WelcomeEmailMailer.welcome_email(@user[:email], "#{@user.name} #{@user.surname}").deliver
-          rescue => ex
-            print(ex)
-          end
-          token = AuthenticationHelper.process_token(request, @user)
-
-          user = @user.as_json
-          user["token"] = token.token
-
-          render json: user, status: :created
-        else
-          render json: {errors: :CRM_ERROR}, status: :unprocessable_entity
+        begin
+          WelcomeEmailMailer.welcome_email(@user[:email], "#{@user.name} #{@user.surname}").deliver
+        rescue => ex
+          print(ex)
         end
+        token = AuthenticationHelper.process_token(request, @user)
+
+        user = @user.as_json
+        user["token"] = token.token
+
+        render json: user, status: :created
       else
         render json: @user.errors, status: :unprocessable_entity
       end
