@@ -49,8 +49,8 @@ class StartupGraphicsController < ApplicationController
     response :unauthorized
   end
   def total_earn
-    total_earn = ShopifyOrdersSumm.where(company: @company).sum(:price).to_f / 100
-    
+    total_earn = ShopifyOrdersSumm.where(company: @company).order(date: :desc).first.to_f / 100
+
     render json: {total_earn: total_earn}, status: :ok
   end
 
