@@ -70,7 +70,7 @@ class EspoExchange
         "amount": price,
         "stage": "Closed Won",
         "probability": 100,
-        "closeDate": creation_date,
+        "closeDate": creation_date.strftime("%Y-%m-%d"),
         "assignedUserId": user_id,
       }.to_json
     )
