@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+# HERE 
 ruby '2.4.4'
 
 gem 'rails', '~> 5.2.3'
@@ -9,6 +10,7 @@ gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.11'
 
 # Reduces boot times through caching; required in config/boot.rb
+# HERE
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
@@ -38,6 +40,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'swagger-docs'
 
 gem 'rails_admin', '~> 1.3'
+#HERE
 gem 'therubyracer'
 
 gem 'valid_url'
