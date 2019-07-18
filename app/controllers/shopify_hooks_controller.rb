@@ -38,19 +38,20 @@ class ShopifyHooksController < ApplicationController
       @company_item = CompanyItem.find_by(shopify_id: line_item["product_id"])
 
       orders_sum_price = ShopifyOrdersSumm.where(company: @company_item.company).sum(:price)
+      line_item_price = (line_item["price"].to_f * 100).to_i
       begin
         @shopify_orders_summ = ShopifyOrdersSumm.find_by(
           company: @company_item.company,
           date: DateTime.parse(order_date).utc.beginning_of_day
         )
 
-        price = @shopify_orders_summ.price.to_f + line_item["price"].to_f
+        price = @shopify_orders_summ.price + line_item_price
         @shopify_orders_summ.update(price: price + orders_sum_price)
       rescue
         ShopifyOrdersSumm.create!(
           company: @company_item.company,
           date: DateTime.parse(order_date),
-          price: line_item["price"].to_f + orders_sum_price
+          price: line_item_price + orders_sum_price
         )
       end
 

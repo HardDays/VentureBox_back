@@ -917,7 +917,7 @@ RSpec.describe "Companies", type: :request do
       end
 
       it 'updates a company' do
-        expect(json['company_name']).to eq('name1')
+        expect(json['company_name']).to eq(company.company_name)
         expect(json['description']).to eq('description1')
         expect(json['website']).to eq('http://domain1.com')
         expect(json["contact_email"]).to eq('contact@email.com')
@@ -958,7 +958,7 @@ RSpec.describe "Companies", type: :request do
       end
 
       it 'updates a company' do
-        expect(json['company_name']).to eq('name1')
+        expect(json['company_name']).to eq(company.company_name)
         expect(json['description']).to eq('description1')
         expect(json['website']).to eq('http://domain1.com')
         expect(json["contact_email"]).to eq('contact@email.com')

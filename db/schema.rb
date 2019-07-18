@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_17_135541) do
+ActiveRecord::Schema.define(version: 2019_07_18_070115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -150,7 +150,7 @@ ActiveRecord::Schema.define(version: 2019_07_17_135541) do
 
   create_table "shopify_orders_summs", force: :cascade do |t|
     t.integer "company_id"
-    t.string "price"
+    t.integer "price"
     t.datetime "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
