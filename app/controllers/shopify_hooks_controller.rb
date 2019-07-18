@@ -78,13 +78,16 @@ class ShopifyHooksController < ApplicationController
         )
       end
 
-      espo_exchange = EspoExchange.new
-      espo_exchange.create_order(
-        @company_item.name,
-        @company_item.price,
-        order_date,
-        @company_item.company.user.espo_user_id
-      )
+      espo_user_id = @company_item.company.user.espo_user_id
+      if espo_user_id
+        espo_exchange = EspoExchange.new
+        espo_exchange.create_order(
+          @company_item.name,
+          @company_item.price,
+          order_date,
+          @company_item.company.user.espo_user_id
+        )
+      end
     end
 
     render status: :ok
