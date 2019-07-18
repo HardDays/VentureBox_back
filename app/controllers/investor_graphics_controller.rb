@@ -109,14 +109,22 @@ class InvestorGraphicsController < ApplicationController
       @invested_companies = @invested_companies.where(company_id: params[:company_id])
     end
 
-    # TODO: надо делить то, что заработали на эту дату после вычета всех налогов на колличество инвестиций
+    products_sales_objs = ShopifyOrdersSumm.where(
+      company: @invested_companies.pluck(:company_id),
+      date: date_range[0].utc.beginning_of_day..date_range.last
+    )
+    products_sales = {}
+    products_sales_objs.each do |products_sale|
+      products_sales[products_sale.date] = products_sale.price
+    end
+
     result = {}
     date_range.each do |date_value|
       date_str = date_value.beginning_of_hour.strftime(GraphHelper.date_to_axis_str(step))
 
       result[date_str] = 0
       @invested_companies.each do |investment|
-        result[date_str] = Random.rand(100)
+        result[date_str] = products_sales[date_value.utc.beginning_of_day] / investment.investment
       end
     end
 
