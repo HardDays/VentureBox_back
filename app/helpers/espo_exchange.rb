@@ -54,7 +54,7 @@ class EspoExchange
     end
   end
 
-  def create_order(name, price, creation_date, test)
+  def create_order(name, price, creation_date, user_id)
     response = self.class.post(
       '/Opportunity',
       headers: {
@@ -65,14 +65,14 @@ class EspoExchange
         username: Rails.configuration.crm_login,
         password: Rails.configuration.crm_password
       },
-    body: {
-      'name': name,
-      'amount': 100, #price,
-      'closeDate': creation_date,
-      'probability': "100",
-      'stage': 'Closed Won',
-      'assignedUserId': user_id,
-    }.to_json
+      body: {
+        "name": name,
+        "amount": price,
+        "stage": "Closed Won",
+        "probability": 100,
+        "closeDate": creation_date,
+        "assignedUserId": user_id,
+      }.to_json
     )
 
       response.code == 200

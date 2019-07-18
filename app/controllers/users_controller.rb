@@ -57,8 +57,8 @@ class UsersController < ApplicationController
 
     User.transaction do
       espo_exchange = EspoExchange.new
-      espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
-      # espo_user_id = espo_exchange.create_order(params[:email], params[:password], params[:name], params[:surname])
+      # espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
+      espo_user_id = espo_exchange.create_order(params[:email], params[:password], params[:name], params[:surname])
       unless espo_user_id
         render json: {errors: :CRM_ERROR}, status: :unprocessable_entity
       end
@@ -98,8 +98,8 @@ class UsersController < ApplicationController
         render json: @user.errors, status: :unprocessable_entity
       end
     end
-  # rescue => ex
-  #   render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
+  rescue => ex
+    render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
   end
 
   # PATCH/PUT /users/1/change_password
