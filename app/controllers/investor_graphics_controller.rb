@@ -115,7 +115,7 @@ class InvestorGraphicsController < ApplicationController
     )
     products_sales = {}
     products_sales_objs.each do |products_sale|
-      products_sales[products_sale.date] = products_sale.price
+      products_sales[products_sale.date] = products_sale.price.to_f / 100
     end
 
     result = {}
@@ -128,7 +128,7 @@ class InvestorGraphicsController < ApplicationController
           result[date_str] = products_sales[date_value.utc.beginning_of_day] / investment.investment
         else
           result[date_str] = 0
-        end 
+        end
       end
     end
 
