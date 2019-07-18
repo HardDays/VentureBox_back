@@ -75,6 +75,9 @@ class EspoExchange
       }.to_json
     )
 
+    print response.code
+    print response.body
+
       response.code == 200
   end
 
