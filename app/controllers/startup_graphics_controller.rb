@@ -29,7 +29,7 @@ class StartupGraphicsController < ApplicationController
             id: products_sold.company_item_id,
             name: products_sold.company_item.name,
             # value: 1000 + Random.rand(100),
-            percent: (products_sold.count / total_sales).round(1)
+            percent: (products_sold.count / total_sales * 100).round(1)
           })
       end
 
