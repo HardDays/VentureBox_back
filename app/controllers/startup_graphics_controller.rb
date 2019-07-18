@@ -28,7 +28,6 @@ class StartupGraphicsController < ApplicationController
           {
             id: products_sold.company_item_id,
             name: products_sold.company_item.name,
-            # value: 1000 + Random.rand(100),
             percent: (products_sold.count / total_sales * 100).round(1)
           })
       end
@@ -50,7 +49,9 @@ class StartupGraphicsController < ApplicationController
     response :unauthorized
   end
   def total_earn
-    render json: {total_earn: 1000000}, status: :ok
+    total_earn = ShopifyOrdersSumm.where(company: @company).sum(:price).to_f / 100
+    
+    render json: {total_earn: total_earn}, status: :ok
   end
 
   swagger_api :total_investment do
