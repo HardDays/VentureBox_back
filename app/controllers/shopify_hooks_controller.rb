@@ -28,17 +28,15 @@ class ShopifyHooksController < ApplicationController
     end
 
     data = JSON.parse data
-    print data 
     unless "line_items".in? data
       print data
       render status: :unprocessable_entity and return
     end
 
     data["line_items"].each do |line_item|
-      print line_item
-
       @company_item = CompanyItem.find_by(shopify_id: line_item["product_id"])
 
+      orders_sum_price = ShopifyOrdersSumm.where(company: @company_item.company).sum(:price)
       begin
         @shopify_orders_summ = ShopifyOrdersSumm.find_by(
           company: @company_item.company,
@@ -46,12 +44,12 @@ class ShopifyHooksController < ApplicationController
         )
 
         price = @shopify_orders_summ.price.to_f + line_item["price"].to_f
-        @shopify_orders_summ.update(price: price)
+        @shopify_orders_summ.update(price: price + orders_sum_price)
       rescue
         ShopifyOrdersSumm.create!(
           company: @company_item.company,
           date: DateTime.now,
-          price: line_item["price"]
+          price: line_item["price"].to_f + orders_sum_price
         )
       end
 
