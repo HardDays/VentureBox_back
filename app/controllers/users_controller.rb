@@ -59,8 +59,9 @@ class UsersController < ApplicationController
       espo_exchange = EspoExchange.new
       espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
       unless espo_user_id
-        render json: {errors: :CRM_ERROR}, status: :unprocessable_entity
+        render json: {errors: :CRM_ERROR}, status: :unprocessable_entity and return
       end
+
       @user = User.new(user_params)
       @user.espo_user_id = espo_user_id
 
