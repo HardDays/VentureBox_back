@@ -15,19 +15,21 @@ class StartupGraphicsController < ApplicationController
     response :unauthorized
   end
   def sales
-    # TODO: get TOP 3 by sales
-    @products = @company.company_items.limit(3)
+    @product_sales = ShopifyOrdersCount.where(
+      company_item_id: @company.company_items.pluck(:id)
+    ).order(count: :desc)
 
-    if @products.count > 0
-      percent = (100.0 / @products.count).round(1)
+    if @product_sales.count > 0
+      total_sales = @product_sales.sum(:count)
+
       result = []
-      @products.each do |product|
+      @product_sales.limit(3).each do |products_sold|
         result.append(
           {
-            id: product.id,
-            name: product.name,
-            value: 1000 + Random.rand(100),
-            percent: percent
+            id: products_sold.company_item_id,
+            name: products_sold.company_item.name,
+            # value: 1000 + Random.rand(100),
+            percent: (products_sold.count / total_sales).round(1)
           })
       end
 

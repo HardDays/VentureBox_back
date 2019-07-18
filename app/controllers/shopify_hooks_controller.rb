@@ -37,7 +37,6 @@ class ShopifyHooksController < ApplicationController
     data["line_items"].each do |line_item|
       @company_item = CompanyItem.find_by(shopify_id: line_item["product_id"])
 
-      orders_sum_price = ShopifyOrdersSumm.where(company: @company_item.company).sum(:price)
       line_item_price = (line_item["price"].to_f * 100).to_i
       begin
         @shopify_orders_summ = ShopifyOrdersSumm.find_by(
@@ -48,6 +47,7 @@ class ShopifyHooksController < ApplicationController
         price = @shopify_orders_summ.price + line_item_price
         @shopify_orders_summ.update(price: price)
       rescue
+        orders_sum_price = ShopifyOrdersSumm.where(company: @company_item.company).sum(:price)
         ShopifyOrdersSumm.create!(
           company: @company_item.company,
           date: DateTime.parse(order_date),
@@ -62,7 +62,6 @@ class ShopifyHooksController < ApplicationController
 
         @shopify_orders_count.update(count: @shopify_orders_count.count + 1)
       rescue => ex
-        print ex
         ShopifyOrdersCount.create!(
           company_item: @company_item,
           date: DateTime.parse(order_date),
