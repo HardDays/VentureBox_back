@@ -70,15 +70,13 @@ class EspoExchange
         "amount": price,
         "stage": "Closed Won",
         "probability": 100,
+        "createdAt": creation_date.strftime("%Y-%m-%d %H:%M:%S"),
         "closeDate": creation_date.strftime("%Y-%m-%d"),
         "assignedUserId": user_id,
       }.to_json
     )
 
-    print response.code
-    print response.body
-
-      response.code == 200
+    response.code == 200
   end
 
 end

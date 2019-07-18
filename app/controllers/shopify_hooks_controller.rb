@@ -79,7 +79,6 @@ class ShopifyHooksController < ApplicationController
       end
 
       espo_user_id = @company_item.company.user.espo_user_id
-      print espo_user_id
       if espo_user_id
         espo_exchange = EspoExchange.new
         espo_exchange.create_order(
