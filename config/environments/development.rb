@@ -60,4 +60,7 @@ Rails.application.configure do
     :authentication       => "plain",
     :enable_starttls_auto => true
   }
+
+  config.crm_login = ENV['CRM_LOGIN']
+  config.crm_password = ENV['CRM_PASSWORD']
 end

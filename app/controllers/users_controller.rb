@@ -76,16 +76,18 @@ class UsersController < ApplicationController
           end
         end
 
-        begin
-          WelcomeEmailMailer.welcome_email(@user[:email], "#{@user.name} #{@user.surname}").deliver
-        rescue => ex
-          print(ex)
-        end
-        token = AuthenticationHelper.process_token(request, @user)
+        espo_exchange = EspoExchange.new
+        if espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
+          begin
+            WelcomeEmailMailer.welcome_email(@user[:email], "#{@user.name} #{@user.surname}").deliver
+          rescue => ex
+            print(ex)
+          end
+          token = AuthenticationHelper.process_token(request, @user)
 
-        user = @user.as_json
-        user["token"] = token.token
-        if EspoExchange.create_user(params[:email], params[:password], params[:name], params[:surname])
+          user = @user.as_json
+          user["token"] = token.token
+
           render json: user, status: :created
         else
           render json: {errors: :CRM_ERROR}, status: :unprocessable_entity
@@ -94,7 +96,7 @@ class UsersController < ApplicationController
         render json: @user.errors, status: :unprocessable_entity
       end
     end
-  rescue
+  rescue => ex
     render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
   end
 
