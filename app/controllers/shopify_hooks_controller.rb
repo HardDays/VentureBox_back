@@ -93,8 +93,34 @@ class ShopifyHooksController < ApplicationController
     render status: :ok
   end
 
+  # GET /shopify_hooks/order_refund
+  # Webhook for Shopify on event OrderRefund
+  #
+  # request
+  #
+  # {
+  #   <...>
+  #   "line_items": [
+  #     {
+  #       <...>
+  #       "product_id": #{company_item.shopify_id},
+  #       <...>
+  #       "price": "199.00",
+  #       <...>
+  #     },
+  #     <...>
+  #   ],
+  #   <...>
+  # }
   def order_refund
+    data = request.body.read
 
+    unless verify_webhook(data, request.headers["X-Shopify-Hmac-Sha256"])
+      print request.headers["X-Shopify-Hmac-Sha256"]
+      render status: :forbidden and return
+    end
+
+    data = JSON.parse data
   end
 
   private
