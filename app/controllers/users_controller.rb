@@ -80,8 +80,9 @@ class UsersController < ApplicationController
         espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
         # espo_user_id = espo_exchange.create_order(params[:email], params[:password], params[:name], params[:surname])
         if espo_user_id
+          print espo_user_id
           @user.espo_user_id = espo_user_id
-          @user.save
+          @user.save!
 
           begin
             WelcomeEmailMailer.welcome_email(@user[:email], "#{@user.name} #{@user.surname}").deliver
@@ -101,8 +102,8 @@ class UsersController < ApplicationController
         render json: @user.errors, status: :unprocessable_entity
       end
     end
-  rescue => ex
-    render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
+  # rescue => ex
+  #   render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
   end
 
   # PATCH/PUT /users/1/change_password
