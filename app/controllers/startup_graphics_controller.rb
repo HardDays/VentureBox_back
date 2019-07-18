@@ -20,7 +20,7 @@ class StartupGraphicsController < ApplicationController
     ).order(count: :desc)
 
     if @product_sales.count > 0
-      total_sales = @product_sales.sum(:count)
+      total_sales = @product_sales.sum(:count).to_f
 
       result = []
       @product_sales.limit(3).each do |products_sold|

@@ -8,6 +8,10 @@ RSpec.describe "StartupGraphicsSpec", type: :request do
   let!(:company_item2) { create(:company_item, company_id: company.id) }
   let!(:company_item3) { create(:company_item, company_id: company.id) }
 
+  let!(:sale) { create(:shopify_orders_count, company_item: company_item) }
+  let!(:sale2) { create(:shopify_orders_count, company_item: company_item2) }
+  let!(:sale3) { create(:shopify_orders_count, company_item: company_item3) }
+
   let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
   let!(:company2) { create(:company, user_id: user2.id) }
 
