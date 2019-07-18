@@ -80,7 +80,8 @@ class UsersController < ApplicationController
         espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
         # espo_user_id = espo_exchange.create_order(params[:email], params[:password], params[:name], params[:surname])
         if espo_user_id
-          @user.update(espo_user_id: espo_user_id)
+          @user.espo_user_id = espo_user_id
+          @user.save
 
           begin
             WelcomeEmailMailer.welcome_email(@user[:email], "#{@user.name} #{@user.surname}").deliver
