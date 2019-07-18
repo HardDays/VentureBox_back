@@ -33,6 +33,7 @@ class ShopifyHooksController < ApplicationController
       render status: :unprocessable_entity and return
     end
 
+    order_date = data["updated_at"]
     data["line_items"].each do |line_item|
       @company_item = CompanyItem.find_by(shopify_id: line_item["product_id"])
 
@@ -40,7 +41,7 @@ class ShopifyHooksController < ApplicationController
       begin
         @shopify_orders_summ = ShopifyOrdersSumm.find_by(
           company: @company_item.company,
-          date: DateTime.now.utc.beginning_of_day
+          date: DateTime.parse(order_date).utc.beginning_of_day
         )
 
         price = @shopify_orders_summ.price.to_f + line_item["price"].to_f
@@ -48,7 +49,7 @@ class ShopifyHooksController < ApplicationController
       rescue
         ShopifyOrdersSumm.create!(
           company: @company_item.company,
-          date: DateTime.now,
+          date: DateTime.parse(order_date),
           price: line_item["price"].to_f + orders_sum_price
         )
       end
@@ -62,7 +63,7 @@ class ShopifyHooksController < ApplicationController
       rescue
         ShopifyOrdersCount.create!(
           company_item: @company_item,
-          date: DateTime.now,
+          date: DateTime.parse(order_date),
           count: 1
         )
       end
