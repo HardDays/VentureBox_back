@@ -125,7 +125,7 @@ class InvestorGraphicsController < ApplicationController
       result[date_str] = 0
       @invested_companies.each do |investment|
         if products_sales[date_value.utc.beginning_of_day]
-          result[date_str] = products_sales[date_value.utc.beginning_of_day] / investment.investment
+          result[date_str] = (products_sales[date_value.utc.beginning_of_day] / investment.investment * 100).round(1)
         else
           result[date_str] = 0
         end
