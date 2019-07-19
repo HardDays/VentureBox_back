@@ -192,7 +192,7 @@ class CompanyItemsController < ApplicationController
         render json: @country.errors, status: :unprocessable_entity and return
       end
 
-      shopify_product = ShopifyExchange.create_product(@company_item)
+      shopify_product = ShopifyExchange.new.create_product(@company_item)
       if shopify_product
         @company_item.shopify_id = shopify_product.id
         @company_item.link_to_store = "https://#{ENV['SHOPIFY_SHOP_NAME']}.myshopify.com/products/#{shopify_product.handle}"

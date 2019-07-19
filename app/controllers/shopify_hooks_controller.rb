@@ -100,16 +100,19 @@ class ShopifyHooksController < ApplicationController
   #
   # {
   #   <...>
-  #   "line_items": [
+  #   "refund_line_items": [
   #     {
   #       <...>
-  #       "product_id": #{company_item.shopify_id},
-  #       <...>
-  #       "price": "199.00",
-  #       <...>
+  #       "line_item": {
+  #         <...>
+  #         "product_id": 632910392,
+  #         <...>
+  #         "price": "199.00",
+  #         <...>
+  #       }
   #     },
   #     <...>
-  #   ],
+  #   ]
   #   <...>
   # }
   def order_refund

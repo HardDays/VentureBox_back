@@ -2,6 +2,7 @@
 require 'spec_helper'
 require 'database_cleaner'
 require 'rake'
+require "fantaskspec"
 
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
@@ -43,6 +44,8 @@ Shoulda::Matchers.configure do |config|
 end
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+
+Rails.application.load_tasks
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
