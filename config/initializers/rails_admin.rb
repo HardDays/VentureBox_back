@@ -44,4 +44,8 @@ RailsAdmin.config do |config|
       username == ENV.fetch('ADMIN_LOGIN') && password == ENV.fetch('ADMIN_PASSWORD')
     end
   end
+
+  config.excluded_models = [
+      "ForgotPasswordAttempt", "ResizedCompanyImage", "ResizedCompanyItemImage",
+      "ShopifyOrdersCount", "ShopifyOrdersSumm", "Token"]
 end

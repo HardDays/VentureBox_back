@@ -76,21 +76,6 @@ class ShopifyExchange
       new_product_variant.save
 
       new_product_image = ShopifyAPI::Image.new
-      new_product_image.src = "https://venture-box-back-test.herokuapp.com/company_items/1/image.json?width=480&amp;height=280"
-      # new_product_image.attach_image(
-      #   Base64.decode64(company_item.company_item_image.base64.gsub(/^data:image\/[a-z]+;base64,/, '')))
-      new_product_image.prefix_options = {
-        :product_id => new_product.id,
-        :variant_ids => new_product_variant,
-        :file_name => "#{company_item.name}.jpg",
-        # :position => 0
-      }
-      new_product_image.save
-
-      new_product.images << new_product_image
-      new_product.save!
-
-      new_product_image = ShopifyAPI::Image.new
       # new_product_image.src = "https://venture-box-back-test.herokuapp.com/company_items/1/image.json?width=480&amp;height=280"
       new_product_image.attachment = company_item.company_item_image.base64.gsub(/^data:image\/[a-z]+;base64,/, '')
       new_product_image.prefix_options = {
