@@ -33,15 +33,15 @@ class ShopifyHooksController < ApplicationController
       render status: :unprocessable_entity and return
     end
 
-    order_date = DateTime.parse(data["updated_at"]).utc.beginning_of_day
-    unless order_date == DateTime.now.utc.beginning_of_day
-      ShopifyOrdersSumm.where(
-        company: @company_item.company,
-        date: order_date
-      ).update(verified: false)
-
-      render status: :ok
-    end
+    # order_date = DateTime.parse(data["updated_at"]).utc.beginning_of_day
+    # unless order_date == DateTime.now.utc.beginning_of_day
+    #   ShopifyOrdersSumm.where(
+    #     company: @company_item.company,
+    #     date: order_date
+    #   ).update(verified: false)
+    #
+    #   render status: :ok
+    # end
 
     data["line_items"].each do |line_item|
       @company_item = CompanyItem.find_by(shopify_id: line_item["product_id"])
