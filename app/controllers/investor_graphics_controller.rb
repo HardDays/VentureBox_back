@@ -104,32 +104,28 @@ class InvestorGraphicsController < ApplicationController
       date_range = GraphHelper.axis_dates(params[:period], step)
     end
 
-    @invested_companies = @user.invested_companies
+    @invested_companies = Company.joins(:invested_companies).where(invested_companies: {investor_id: @user.id})
     if params[:company_id]
-      @invested_companies = @invested_companies.where(company_id: params[:company_id])
+      @invested_companies = @invested_companies.where(invested_companies: {company_id: params[:company_id]})
     end
-
-    products_sales_objs = ShopifyOrdersSumm.where(
-      company: @invested_companies.pluck(:company_id),
-      date: date_range[0].utc.beginning_of_day..date_range.last
-    )
-    products_sales = {}
-    products_sales_objs.each do |products_sale|
-      products_sales[products_sale.date] = products_sale.price.to_f / 100
-    end
+    @invested_companies = @invested_companies.distinct
 
     result = {}
     date_range.each do |date_value|
       date_str = date_value.beginning_of_hour.strftime(GraphHelper.date_to_axis_str(step))
 
       result[date_str] = 0
-      @invested_companies.each do |investment|
-        if products_sales[date_value.utc.beginning_of_day]
-          result[date_str] = (products_sales[date_value.utc.beginning_of_day] / investment.investment * 100).round(1)
-        else
-          result[date_str] = 0
-        end
+      @invested_companies.each do |company|
+        result[date_str] += company.get_evaluation_on_date(
+            company.created_at, date_value.end_of_hour
+        ) * @user.invested_companies.where(
+            company_id: company.id, created_at: company.created_at..date_value.end_of_hour
+        ).sum(:evaluation) * 1.00
       end
+
+      result[date_str] = ((result[date_str] / @user.invested_companies.where(
+          created_at: @user.created_at..date_value.end_of_hour
+      ).sum(:investment)) - 100.00).round(1)
     end
 
     render json: {
