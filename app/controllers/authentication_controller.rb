@@ -34,8 +34,7 @@ class AuthenticationController < ApplicationController
       @attempt.save
     end
 
-    # password = SecureRandom.hex(4)
-    password = '0000'
+    password = SecureRandom.hex(4)
     @user.password = password
     begin
       ForgotPasswordMailer.forgot_password_email(params[:email], password).deliver
