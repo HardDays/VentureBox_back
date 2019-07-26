@@ -15,7 +15,7 @@ class EspoExchange
       }
     )
     unless response.code == 200
-      return false
+      return nil
     end
 
     roles = JSON.parse response.body

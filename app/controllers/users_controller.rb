@@ -72,14 +72,7 @@ class UsersController < ApplicationController
     end
 
     User.transaction do
-      # espo_exchange = EspoExchange.new
-      # espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
-      # unless espo_user_id
-      #   render json: {errors: :CRM_ERROR}, status: :unprocessable_entity and return
-      # end
-
       @user = User.new(user_params)
-      # @user.espo_user_id = espo_user_id
       if @user.save
         if @user.role == "startup"
           @company = Company.new(company_params)
@@ -218,24 +211,20 @@ class UsersController < ApplicationController
     end
 
     def set_company_team_members
-      # if params[:team_members]
-      #   params[:team_members].each do |team_member|
-          @team_member = CompanyTeamMember.new(
-            team_member_name: "#{@user.name} #{@user.surname}",
-            c_level: CompanyTeamMember.c_levels[params[:c_level]],
-            company_id: @company.id
-          )
+      @team_member = CompanyTeamMember.new(
+          team_member_name: "#{@user.name} #{@user.surname}",
+          c_level: CompanyTeamMember.c_levels[params[:c_level]],
+          company_id: @company.id
+      )
 
-          if @team_member.save
-            @company.company_team_members << @team_member
-            @company.save
-          else
-            @user.destroy
+      if @team_member.save
+        @company.company_team_members << @team_member
+        @company.save
+      else
+        @user.destroy
 
-            @team_member
-          end
-        # end
-      # end
+        @team_member
+      end
     end
 
     def user_params

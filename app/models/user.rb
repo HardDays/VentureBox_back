@@ -6,14 +6,14 @@ class User < ApplicationRecord
 
   before_validation :lower_email
   validates :email, presence: true, uniqueness: true
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, unless: Proc.new { |a| a.email.blank? }
+  validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}, unless: Proc.new {|a| a.email.blank?}
   validate :check_current_email, if: :email_changed?, on: :update
   attr_accessor :current_email
   validate :check_email_password_confirmation, if: :email_changed?, on: :update
   attr_accessor :current_password
 
-  validates :password, presence:true
-  validates :password, length: {:within => 6..100}, unless: Proc.new { |a| a.password.blank? }
+  validates :password, presence: true
+  validates :password, length: {:within => 6..100}, unless: Proc.new {|a| a.password.blank?}
   before_save :encrypt, if: :password_changed?
   validates_confirmation_of :password, message: 'NOT_MATCHED'
   validates_presence_of :password_confirmation, message: 'MUST_EXIST', if: :password_changed?
@@ -24,6 +24,8 @@ class User < ApplicationRecord
 
   validates_presence_of :role
   enum role: [:startup, :investor]
+
+  before_validation :add_to_crm, if: :status_changed?
   enum status: [:requested, :approved, :declined]
 
   has_one :company, dependent: :destroy
@@ -70,7 +72,7 @@ class User < ApplicationRecord
     end
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     res = super(options)
     res.delete('password')
     res.delete('access_token')
@@ -91,5 +93,33 @@ class User < ApplicationRecord
 
   def full_name
     "#{self.name} #{self.surname}"
+  end
+
+  def add_to_crm
+    if self.status == "approved"
+      if self.role == "startup"
+        espo_exchange = EspoExchange.new
+
+        password = SecureRandom.hex(4)
+        espo_user_id = espo_exchange.create_user(self.email, password, self.name, self.surname)
+        if not espo_user_id
+          errors.add(:crm_error, "can't add user to crm")
+        else
+          self.espo_user_id = espo_user_id
+
+          begin
+            ApprovedEmailMailer.startup_welcome_email(self.email, "#{@user.name} #{@user.surname}", password).deliver
+          rescue => ex
+            print ex
+          end
+        end
+      else
+        begin
+          ApprovedEmailMailer.investor_welcome_email(self.email, "#{@user.name} #{@user.surname}").deliver
+        rescue => ex
+          print ex
+        end
+      end
+    end
   end
 end
