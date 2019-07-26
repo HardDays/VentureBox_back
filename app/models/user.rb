@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include RailsAdmin::User
+
   validates_presence_of :name
   validates_presence_of :surname
 
@@ -85,5 +87,9 @@ class User < ApplicationRecord
     end
 
     res
+  end
+
+  def full_name
+    "#{self.name} #{self.surname}"
   end
 end
