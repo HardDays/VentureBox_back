@@ -34,7 +34,25 @@ class UsersController < ApplicationController
     param_list :form, :stage_of_funding, :string, :optional, "(required for startup) Company stage of funding", ["idea", "pre_seed", "seed", "serial_a", "serial_b", "serial_c"]
     param :form, :investment_amount, :integer, :optional, "Company investment amount"
     param :form, :equality_amount, :integer, :optional, "Company equality amount"
-    param :form, :team_members, :string, :optional, "Company team members [{team_member_name: name, c_level: cto}]"
+    param :form, :c_level, :string, :optional, "C-level of user in company"
+    param :form, :is_interested_in_access, :boolean, :optional, ""
+    param :form, :is_interested_in_insights, :boolean, :optional, ""
+    param :form, :is_interested_in_capital, :boolean, :optional, ""
+    param :form, :is_interested_in_marketplace, :boolean, :optional, ""
+    param :form, :markets, :string, :optional, "Company markets"
+    param :form, :founded_in, :integer, :optional, "Company  year of foundation"
+    param :form, :is_revenue_consumer, :boolean, :optional, ""
+    param :form, :is_revenue_wholesale, :boolean, :optional, ""
+    param :form, :is_revenue_other, :boolean, :optional, ""
+    param :form, :investor_deck_link, :string, :optional, "Company  link to Investor deck"
+    param :form, :investor_deck_file, :string, :optional, "Company file for Investor deck"
+    param_list :form, :current_revenue, :integer, :optional, "Current revenue", ["zero", "two_hundred", "million", "universe"]
+    param :form, :current_stage_description, :string, :optional, "Current stage description"
+    param :form, :primary_market, :string, :optional, "Primary market"
+    param :form, :target_market, :string, :optional, "Target market"
+    param_list :form, :target_revenue, :integer, :optional, "Target revenue", ["hundred", "five_hundred", "one_million", "more"]
+    param :form, :is_cross_border_expantion, :boolean, :optional, ""
+    param :form, :is_consumer_connect, :boolean, :optional, ""
     response :created
     response :unprocessable_entity
   end
@@ -44,10 +62,8 @@ class UsersController < ApplicationController
         render json: {stage_of_funding: ["isn't valid"]}, status: :unprocessable_entity and return
       end
 
-      if params[:team_members]
-        unless params[:team_members].kind_of?(Array)
-          render status: :bad_request and return
-        end
+      if params[:c_level] and not CompanyTeamMember.c_levels[params[:c_level]]
+        render json: {c_level: ["isn't valid"]}, status: :unprocessable_entity and return
       end
 
       unless params[:image]
@@ -56,15 +72,14 @@ class UsersController < ApplicationController
     end
 
     User.transaction do
-      espo_exchange = EspoExchange.new
-      espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
-      unless espo_user_id
-        render json: {errors: :CRM_ERROR}, status: :unprocessable_entity and return
-      end
+      # espo_exchange = EspoExchange.new
+      # espo_user_id = espo_exchange.create_user(params[:email], params[:password], params[:name], params[:surname])
+      # unless espo_user_id
+      #   render json: {errors: :CRM_ERROR}, status: :unprocessable_entity and return
+      # end
 
       @user = User.new(user_params)
-      @user.espo_user_id = espo_user_id
-
+      # @user.espo_user_id = espo_user_id
       if @user.save
         if @user.role == "startup"
           @company = Company.new(company_params)
@@ -203,11 +218,11 @@ class UsersController < ApplicationController
     end
 
     def set_company_team_members
-      if params[:team_members]
-        params[:team_members].each do |team_member|
+      # if params[:team_members]
+      #   params[:team_members].each do |team_member|
           @team_member = CompanyTeamMember.new(
-            team_member_name: team_member["team_member_name"],
-            c_level: CompanyTeamMember.c_levels[team_member["c_level"]],
+            team_member_name: "#{@user.name} #{@user.surname}",
+            c_level: CompanyTeamMember.c_levels[params[:c_level]],
             company_id: @company.id
           )
 
@@ -219,8 +234,8 @@ class UsersController < ApplicationController
 
             @team_member
           end
-        end
-      end
+        # end
+      # end
     end
 
     def user_params
@@ -228,7 +243,12 @@ class UsersController < ApplicationController
     end
 
     def company_params
-      params.permit(:company_name, :website, :description, :contact_email, :stage_of_funding, :investment_amount, :equality_amount)
+      params.permit(:company_name, :website, :description, :contact_email, :stage_of_funding,
+                    :investment_amount, :equality_amount, :is_interested_in_access, :is_interested_in_insights,
+                    :is_interested_in_capital, :is_interested_in_marketplace, :markets, :founded_in,
+                    :is_revenue_consumer, :is_revenue_wholesale, :is_revenue_other, :investor_deck_link,
+                    :investor_deck_file, :current_revenue, :current_stage_description, :primary_market,
+                    :target_market, :target_revenue, :is_cross_border_expantion, :is_consumer_connect)
     end
 
     def change_password_params

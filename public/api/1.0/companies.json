@@ -348,7 +348,7 @@
               "paramType": "path",
               "name": "user_id",
               "type": "integer",
-              "description": "Startup user id",
+              "description": "User id",
               "required": true
             },
             {
@@ -360,44 +360,37 @@
             },
             {
               "paramType": "form",
-              "name": "company_name",
-              "type": "string",
-              "description": "Company name",
-              "required": false
-            },
-            {
-              "paramType": "form",
               "name": "website",
               "type": "string",
-              "description": "Company website",
+              "description": "Website",
               "required": false
             },
             {
               "paramType": "form",
               "name": "description",
               "type": "string",
-              "description": "Company description",
+              "description": "Description",
               "required": false
             },
             {
               "paramType": "form",
               "name": "contact_email",
               "type": "string",
-              "description": "Company contact email",
+              "description": "Contact email",
               "required": false
             },
             {
               "paramType": "form",
               "name": "image",
               "type": "string",
-              "description": "Company logo",
+              "description": "Logo",
               "required": false
             },
             {
               "paramType": "form",
               "name": "stage_of_funding",
               "type": "string",
-              "description": "(required for startup) Company stage of funding",
+              "description": "Stage of funding",
               "required": false,
               "allowableValues": {
                 "valueType": "LIST",
@@ -415,21 +408,165 @@
               "paramType": "form",
               "name": "investment_amount",
               "type": "integer",
-              "description": "Company investment amount",
+              "description": "Investment amount",
               "required": false
             },
             {
               "paramType": "form",
               "name": "equality_amount",
               "type": "integer",
-              "description": "Company equality amount",
+              "description": "Equality amount",
               "required": false
             },
             {
               "paramType": "form",
               "name": "team_members",
               "type": "string",
-              "description": "Company team members [{team_member_name: name, c_level: cto}]",
+              "description": "Team members [{team_member_name: name, c_level: cto}]",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_interested_in_access",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_interested_in_insights",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_interested_in_capital",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_interested_in_marketplace",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "markets",
+              "type": "string",
+              "description": "Markets",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "founded_in",
+              "type": "integer",
+              "description": "Year of foundation",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_revenue_consumer",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_revenue_wholesale",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_revenue_other",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "investor_deck_link",
+              "type": "string",
+              "description": "Link to Investor deck",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "investor_deck_file",
+              "type": "string",
+              "description": "File for Investor deck",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "current_revenue",
+              "type": "integer",
+              "description": "Current revenue",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "zero",
+                  "two_hundred",
+                  "million",
+                  "universe"
+                ]
+              }
+            },
+            {
+              "paramType": "form",
+              "name": "current_stage_description",
+              "type": "string",
+              "description": "Current stage description",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "primary_market",
+              "type": "string",
+              "description": "Primary market",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "target_market",
+              "type": "string",
+              "description": "Target market",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "target_revenue",
+              "type": "integer",
+              "description": "Target revenue",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "hundred",
+                  "five_hundred",
+                  "one_million",
+                  "more"
+                ]
+              }
+            },
+            {
+              "paramType": "form",
+              "name": "is_cross_border_expantion",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_consumer_connect",
+              "type": "boolean",
+              "description": "",
               "required": false
             },
             {

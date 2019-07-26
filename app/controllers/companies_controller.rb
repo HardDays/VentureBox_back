@@ -142,17 +142,34 @@ class CompaniesController < ApplicationController
   # PATCH/PUT /users/1/companies/1
   swagger_api :update do
     summary "Update company info"
-    param :path, :user_id, :integer, :required, "Startup user id"
+    param :path, :user_id, :integer, :required, "User id"
     param :path, :id, :integer, :required, "Company id"
-    param :form, :company_name, :string, :optional, "Company name"
-    param :form, :website, :string, :optional, "Company website"
-    param :form, :description, :string, :optional, "Company description"
-    param :form, :contact_email, :string, :optional, "Company contact email"
-    param :form, :image, :string, :optional, "Company logo"
-    param_list :form, :stage_of_funding, :string, :optional, "(required for startup) Company stage of funding", ["idea", "pre_seed", "seed", "serial_a", "serial_b", "serial_c"]
-    param :form, :investment_amount, :integer, :optional, "Company investment amount"
-    param :form, :equality_amount, :integer, :optional, "Company equality amount"
-    param :form, :team_members, :string, :optional, "Company team members [{team_member_name: name, c_level: cto}]"
+    param :form, :website, :string, :optional, "Website"
+    param :form, :description, :string, :optional, "Description"
+    param :form, :contact_email, :string, :optional, "Contact email"
+    param :form, :image, :string, :optional, "Logo"
+    param_list :form, :stage_of_funding, :string, :optional, "Stage of funding", ["idea", "pre_seed", "seed", "serial_a", "serial_b", "serial_c"]
+    param :form, :investment_amount, :integer, :optional, "Investment amount"
+    param :form, :equality_amount, :integer, :optional, "Equality amount"
+    param :form, :team_members, :string, :optional, "Team members [{team_member_name: name, c_level: cto}]"
+    param :form, :is_interested_in_access, :boolean, :optional, ""
+    param :form, :is_interested_in_insights, :boolean, :optional, ""
+    param :form, :is_interested_in_capital, :boolean, :optional, ""
+    param :form, :is_interested_in_marketplace, :boolean, :optional, ""
+    param :form, :markets, :string, :optional, "Markets"
+    param :form, :founded_in, :integer, :optional, "Year of foundation"
+    param :form, :is_revenue_consumer, :boolean, :optional, ""
+    param :form, :is_revenue_wholesale, :boolean, :optional, ""
+    param :form, :is_revenue_other, :boolean, :optional, ""
+    param :form, :investor_deck_link, :string, :optional, "Link to Investor deck"
+    param :form, :investor_deck_file, :string, :optional, "File for Investor deck"
+    param_list :form, :current_revenue, :integer, :optional, "Current revenue", ["zero", "two_hundred", "million", "universe"]
+    param :form, :current_stage_description, :string, :optional, "Current stage description"
+    param :form, :primary_market, :string, :optional, "Primary market"
+    param :form, :target_market, :string, :optional, "Target market"
+    param_list :form, :target_revenue, :integer, :optional, "Target revenue", ["hundred", "five_hundred", "one_million", "more"]
+    param :form, :is_cross_border_expantion, :boolean, :optional, ""
+    param :form, :is_consumer_connect, :boolean, :optional, ""
     param :header, 'Authorization', :string, :required, 'Authentication token'
     response :ok
     response :unauthorized
@@ -259,11 +276,12 @@ class CompaniesController < ApplicationController
       end
     end
 
-    def company_params
-      params.permit(:company_name, :website, :description, :contact_email, :stage_of_funding, :investment_amount, :equality_amount)
-    end
-
     def update_company_params
-      params.permit(:website, :description, :contact_email, :stage_of_funding, :investment_amount, :equality_amount)
+      params.permit(:website, :description, :contact_email, :stage_of_funding,
+                    :investment_amount, :equality_amount, :is_interested_in_access, :is_interested_in_insights,
+                    :is_interested_in_capital, :is_interested_in_marketplace, :markets, :founded_in,
+                    :is_revenue_consumer, :is_revenue_wholesale, :is_revenue_other, :investor_deck_link,
+                    :investor_deck_file, :current_revenue, :current_stage_description, :primary_market,
+                    :target_market, :target_revenue, :is_cross_border_expantion, :is_consumer_connect)
     end
 end

@@ -397,9 +397,153 @@
             },
             {
               "paramType": "form",
-              "name": "team_members",
+              "name": "c_level",
               "type": "string",
-              "description": "Company team members [{team_member_name: name, c_level: cto}]",
+              "description": "C-level of user in company",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_interested_in_access",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_interested_in_insights",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_interested_in_capital",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_interested_in_marketplace",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "markets",
+              "type": "string",
+              "description": "Company markets",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "founded_in",
+              "type": "integer",
+              "description": "Company  year of foundation",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_revenue_consumer",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_revenue_wholesale",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_revenue_other",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "investor_deck_link",
+              "type": "string",
+              "description": "Company  link to Investor deck",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "investor_deck_file",
+              "type": "string",
+              "description": "Company file for Investor deck",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "current_revenue",
+              "type": "integer",
+              "description": "Current revenue",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "zero",
+                  "two_hundred",
+                  "million",
+                  "universe"
+                ]
+              }
+            },
+            {
+              "paramType": "form",
+              "name": "current_stage_description",
+              "type": "string",
+              "description": "Current stage description",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "primary_market",
+              "type": "string",
+              "description": "Primary market",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "target_market",
+              "type": "string",
+              "description": "Target market",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "target_revenue",
+              "type": "integer",
+              "description": "Target revenue",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "hundred",
+                  "five_hundred",
+                  "one_million",
+                  "more"
+                ]
+              }
+            },
+            {
+              "paramType": "form",
+              "name": "is_cross_border_expantion",
+              "type": "boolean",
+              "description": "",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "is_consumer_connect",
+              "type": "boolean",
+              "description": "",
               "required": false
             }
           ],
