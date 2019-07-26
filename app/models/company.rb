@@ -7,6 +7,8 @@ class Company < ApplicationRecord
   validates_uniqueness_of :user_id
 
   enum stage_of_funding: EnumsHelper.stage_of_funding
+  enum current_revenue: [:zero, :two_hundred, :million, :universe]
+  enum target_revenue: [:hundred, :five_hundred, :one_million, :more]
 
   belongs_to :user
   has_one :company_image, dependent: :destroy

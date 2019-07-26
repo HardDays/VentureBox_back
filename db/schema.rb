@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_18_113945) do
+ActiveRecord::Schema.define(version: 2019_07_26_095539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,24 @@ ActiveRecord::Schema.define(version: 2019_07_18_113945) do
     t.integer "stage_of_funding"
     t.integer "investment_amount"
     t.integer "equality_amount"
+    t.boolean "is_interested_in_access", default: false
+    t.boolean "is_interested_in_insights", default: false
+    t.boolean "is_interested_in_capital", default: false
+    t.boolean "is_interested_in_marketplace", default: false
+    t.string "markets"
+    t.integer "founded_in"
+    t.boolean "is_revenue_consumer", default: false
+    t.boolean "is_revenue_wholesale", default: false
+    t.boolean "is_revenue_other", default: false
+    t.string "investor_deck_link"
+    t.string "investor_deck_file"
+    t.integer "current_revenue"
+    t.string "current_stage_description"
+    t.string "primary_market"
+    t.string "target_market"
+    t.integer "target_revenue"
+    t.boolean "is_cross_border_expantion", default: false
+    t.boolean "is_consumer_connect", default: false
   end
 
   create_table "company_images", force: :cascade do |t|
@@ -183,6 +201,7 @@ ActiveRecord::Schema.define(version: 2019_07_18_113945) do
     t.string "refresh_token"
     t.string "google_calendar_id"
     t.string "espo_user_id"
+    t.integer "status"
   end
 
 end

@@ -22,6 +22,7 @@ class User < ApplicationRecord
 
   validates_presence_of :role
   enum role: [:startup, :investor]
+  enum status: [:requested, :approved, :declined]
 
   has_one :company, dependent: :destroy
   has_many :tokens, dependent: :destroy
