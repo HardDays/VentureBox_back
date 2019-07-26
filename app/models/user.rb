@@ -108,14 +108,14 @@ class User < ApplicationRecord
           self.espo_user_id = espo_user_id
 
           begin
-            ApprovedEmailMailer.startup_welcome_email(self.email, "#{@user.name} #{@user.surname}", password).deliver
+            ApprovedEmailMailer.startup_welcome_email(self.email, "#{self.name} #{self.surname}", password).deliver
           rescue => ex
             print ex
           end
         end
       else
         begin
-          ApprovedEmailMailer.investor_welcome_email(self.email, "#{@user.name} #{@user.surname}").deliver
+          ApprovedEmailMailer.investor_welcome_email(self.email, "#{self.name} #{self.surname}").deliver
         rescue => ex
           print ex
         end
