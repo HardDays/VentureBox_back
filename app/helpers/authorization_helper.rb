@@ -5,6 +5,10 @@ module AuthorizationHelper
     @token = Token.find_by token: @tokenstr
     return @token if not @token
 
+    unless @token.user && @token.user.status == "approved"
+      return nil
+    end
+
     @token.user
   end
 

@@ -2,24 +2,24 @@ require 'rails_helper'
 
 RSpec.describe "InvestedCompanies", type: :request do
   let(:password) { "123123" }
-  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company) { create(:company, user_id: user.id, equality_amount: 20) }
 
-  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company2) { create(:company, user_id: user2.id) }
 
-  let!(:user3)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user3)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company3) { create(:company, user_id: user3.id) }
 
-  let!(:user4)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user4)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company4) { create(:company, user_id: user4.id, equality_amount: 20) }
 
-  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
+  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor, status: :approved )}
   let!(:invested_company1) { create(:invested_company, company_id: company.id, investor_id: investor.id, evaluation: 20)}
   let!(:invested_company2) { create(:invested_company, company_id: company2.id, investor_id: investor.id)}
   let!(:invested_company3) { create(:invested_company, company_id: company3.id, investor_id: investor.id)}
 
-  let!(:investor2) { create(:user, password: password, password_confirmation: password, role: :investor )}
+  let!(:investor2) { create(:user, password: password, password_confirmation: password, role: :investor, status: :approved )}
   let!(:invested_company4) { create(:invested_company, company_id: company.id, investor_id: investor2.id, evaluation: 20)}
   let!(:invested_company5) { create(:invested_company, company_id: company2.id, investor_id: investor2.id)}
 

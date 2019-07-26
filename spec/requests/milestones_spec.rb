@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Milestones", type: :request do
   let(:password) { "123123" }
-  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company) { create(:company, user_id: user.id) }
 
   let!(:milestone) { create(:milestone, company_id: company.id) }
@@ -10,11 +10,11 @@ RSpec.describe "Milestones", type: :request do
   let!(:milestone3) { create(:milestone, company_id: company.id) }
 
 
-  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company2) { create(:company, user_id: user2.id) }
   let!(:milestone4) { create(:milestone, company_id: company2.id) }
 
-  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
+  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor, status: :approved )}
 
   let(:valid_attributes) { { title: "title", description: "description", finish_date: "12-12-2020" } }
   let(:valid_attributes_finish_now) { { title: "title", description: "description", finish_date: DateTime.now } }

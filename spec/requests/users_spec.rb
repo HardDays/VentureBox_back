@@ -15,11 +15,11 @@ RSpec.describe "Users", type: :request do
   let(:surname) { "surname" }
   let(:new_surname) { "surname1" }
 
-  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company)  { create(:company, user_id: user.id) }
-  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company2)  { create(:company, user_id: user2.id) }
-  let!(:investor_user)  { create(:user, password: password, password_confirmation: password, role: :investor) }
+  let!(:investor_user)  { create(:user, password: password, password_confirmation: password, role: :investor, status: :approved) }
 
   let(:valid_attributes_startup) { {
     name: name, surname: surname, email: valid_email, phone: "79510661020",

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_26_095539) do
+ActiveRecord::Schema.define(version: 2019_07_26_121509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -201,7 +201,7 @@ ActiveRecord::Schema.define(version: 2019_07_26_095539) do
     t.string "refresh_token"
     t.string "google_calendar_id"
     t.string "espo_user_id"
-    t.integer "status"
+    t.integer "status", default: 0
   end
 
 end

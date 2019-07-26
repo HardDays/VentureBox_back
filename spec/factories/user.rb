@@ -8,5 +8,6 @@ FactoryBot.define do
     is_email_notifications_available { Faker::Boolean.boolean }
     phone { Faker::PhoneNumber.phone_number }
     role { Faker::Number.between(0, 1) }
+    status { 1 }
   end
 end

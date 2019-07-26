@@ -2,25 +2,25 @@ require 'rails_helper'
 
 RSpec.describe "Companies", type: :request do
   let(:password) { "123123" }
-  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company) { create(:company, user_id: user.id) }
   let!(:company_image) { create(:company_image, company_id: company.id) }
   let!(:company_team_member) { create(:company_team_member, company_id: company.id) }
 
-  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company2) { create(:company, user_id: user2.id) }
   let!(:company2_image) { create(:company_image, company_id: company2.id) }
 
-  let!(:user3)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user3)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company3) { create(:company, user_id: user3.id) }
 
-  let!(:user4)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user4)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company4) { create(:company, user_id: user4.id) }
 
-  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
+  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor, status: :approved )}
   let!(:invested_company) { create(:invested_company, company_id: company.id, investor_id: investor.id)}
   let!(:interesting_company) { create(:interesting_company, company_id: company2.id, investor_id: investor.id)}
-  let!(:new_user) { create(:user, password: password, password_confirmation: password, role: :startup)}
+  let!(:new_user) { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved)}
 
   let(:resize_params) { { height: 200, width: 200 } }
   let(:update_attributes) { {

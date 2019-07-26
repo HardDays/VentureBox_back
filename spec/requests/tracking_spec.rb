@@ -2,23 +2,23 @@ require 'rails_helper'
 
 RSpec.describe "TrackingSpec", type: :request do
   let(:password) {"123123"}
-  let!(:user) {create(:user, password: password, password_confirmation: password, role: :startup)}
+  let!(:user) {create(:user, password: password, password_confirmation: password, role: :startup, status: :approved)}
   let!(:company) {create(:company, user_id: user.id, created_at: "2019-02-01T18:23:51.04+03:00".to_datetime)}
   let!(:company_item) {create(:company_item, company_id: company.id)}
 
-  let!(:user2) {create(:user, password: password, password_confirmation: password, role: :startup)}
+  let!(:user2) {create(:user, password: password, password_confirmation: password, role: :startup, status: :approved)}
   let!(:company2) {create(:company, user_id: user2.id)}
 
-  let!(:user3) {create(:user, password: password, password_confirmation: password, role: :startup)}
+  let!(:user3) {create(:user, password: password, password_confirmation: password, role: :startup, status: :approved)}
   let!(:company3) {create(:company, user_id: user3.id)}
 
-  let!(:investor) {create(:user, password: password, password_confirmation: password, role: :investor)}
+  let!(:investor) {create(:user, password: password, password_confirmation: password, role: :investor, status: :approved)}
   let!(:invested_company) {create(:invested_company, investment: 10000, evaluation: 10, company_id: company.id,
                                   investor_id: investor.id)}
   let!(:invested_company3) {create(:invested_company, investment: 10000, evaluation: 10, company_id: company2.id,
                                    investor_id: investor.id)}
 
-  let!(:investor2) {create(:user, password: password, password_confirmation: password, role: :investor)}
+  let!(:investor2) {create(:user, password: password, password_confirmation: password, role: :investor, status: :approved)}
   let!(:invested_company2) {create(:invested_company, investment: 10000, evaluation: 10, company_id: company.id,
                                    investor_id: investor2.id)}
 

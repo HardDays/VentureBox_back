@@ -2,13 +2,13 @@ require 'rails_helper'
 
 RSpec.describe "InvestorGraphicsSpec", type: :request do
   let(:password) { "123123" }
-  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company) { create(:company, user_id: user.id, created_at: "2019-02-01T18:23:51.04+03:00".to_datetime) }
 
-  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company2) { create(:company, user_id: user2.id, created_at: "2019-02-01T18:23:51.04+03:00".to_datetime) }
 
-  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor,
+  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor, status: :approved,
                            created_at: "2019-02-01T18:23:51.04+03:00".to_datetime )}
 
   let!(:invested_company1) { create(:invested_company, investment: 100, evaluation: 10,
@@ -18,7 +18,7 @@ RSpec.describe "InvestorGraphicsSpec", type: :request do
                                    company_id: company2.id, investor_id: investor.id,
                                    created_at: "2019-02-01T18:23:51.04+03:00".to_datetime )}
   
-  let!(:investor_without_investments) { create(:user, password: password, password_confirmation: password, role: :investor )}
+  let!(:investor_without_investments) { create(:user, password: password, password_confirmation: password, role: :investor, status: :approved )}
 
 
   # Test suite for GET /users/1/investor_graphics/total_current_value

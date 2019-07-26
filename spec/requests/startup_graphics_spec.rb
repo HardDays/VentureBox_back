@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "StartupGraphicsSpec", type: :request do
   let(:password) { "123123" }
-  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company) { create(:company, user_id: user.id, created_at: "2019-02-01T18:23:51.04+03:00".to_datetime) }
   let!(:company_item) { create(:company_item, company_id: company.id) }
   let!(:company_item2) { create(:company_item, company_id: company.id) }
@@ -12,10 +12,10 @@ RSpec.describe "StartupGraphicsSpec", type: :request do
   let!(:sale2) { create(:shopify_orders_count, company_item: company_item2) }
   let!(:sale3) { create(:shopify_orders_count, company_item: company_item3) }
 
-  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company2) { create(:company, user_id: user2.id) }
 
-  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
+  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor, status: :approved )}
   let!(:invested_company) { create(:invested_company, investment: 100, evaluation: 10, company_id: company.id,
                                    investor_id: investor.id, created_at: "2019-02-01T18:23:51.04+03:00".to_datetime)}
 

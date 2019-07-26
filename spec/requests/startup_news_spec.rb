@@ -2,22 +2,22 @@ require 'rails_helper'
 
 RSpec.describe "StartupNews", type: :request do
   let(:password) { "123123" }
-  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company) { create(:company, user_id: user.id) }
 
   let!(:startup_news) { create(:startup_news, company_id: company.id) }
   let!(:startup_news2) { create(:startup_news, company_id: company.id) }
   let!(:startup_news3) { create(:startup_news, company_id: company.id) }
 
-  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user2)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company2) { create(:company, user_id: user2.id) }
   let!(:startup_news4) { create(:startup_news, company_id: company2.id) }
 
-  let!(:user3)  { create(:user, password: password, password_confirmation: password, role: :startup) }
+  let!(:user3)  { create(:user, password: password, password_confirmation: password, role: :startup, status: :approved) }
   let!(:company3) { create(:company, user_id: user3.id) }
   let!(:startup_news5) { create(:startup_news, company_id: company3.id) }
 
-  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor )}
+  let!(:investor) { create(:user, password: password, password_confirmation: password, role: :investor, status: :approved )}
   let!(:invested_company) { create(:invested_company, investor_id: investor.id, company_id: company.id) }
   let!(:interesting_company) { create(:interesting_company, investor_id: investor.id, company_id: company2.id) }
 
