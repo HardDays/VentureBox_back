@@ -70,8 +70,8 @@ class StartupGraphicsController < ApplicationController
     response :unauthorized
   end
   def total_investment
-    @investments = @company.invested_companies.sum(:investment)
-    @investments += @company.investment_amount
+    @investments = @company.investment_amount
+    @investments += @company.invested_companies.sum(:investment)
 
     render json: {total_investment: @investments}, status: :ok
   end
