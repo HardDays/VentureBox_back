@@ -48,8 +48,16 @@ class Company < ApplicationRecord
       res[:evaluation] = get_evaluation
     else
       res[:team_members] = company_team_members.as_json(only: [:team_member_name, :c_level])
-      res[:investment_amount] = investment_amount
-      res[:equality_amount] = equality_amount
+
+      res[:investment_amount] = 0
+      if investment_amount
+        res[:investment_amount] = investment_amount
+      end
+
+      res[:equality_amount] = 0
+      if equality_amount
+        res[:equality_amount] = equality_amount
+      end
 
       if invested_companies
         res[:investment_amount] += invested_companies.sum(:investment)
