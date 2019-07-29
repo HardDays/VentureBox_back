@@ -8,7 +8,7 @@ class ApprovedEmailMailer < ApplicationMailer
 
   def startup_welcome_email(email, name, password)
     @name = name
-    @password = @password
+    @password = password
 
     mail(from:'ventureboxreminder@gmail.com', to: email, subject: "Welcome to VentureBox")
   end
