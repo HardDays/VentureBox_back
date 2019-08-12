@@ -107,6 +107,7 @@ class UsersController < ApplicationController
       end
     end
   rescue => ex
+    print ex
     render json: {errors: :FAILED_SAVE_USER}, status: :unprocessable_entity
   end
 
