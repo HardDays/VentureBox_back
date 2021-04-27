@@ -25,7 +25,7 @@ class User < ApplicationRecord
   validates_presence_of :role
   enum role: [:startup, :investor]
 
-  before_validation :add_to_crm, if: :status_changed?
+  #before_validation :add_to_crm, if: :status_changed?
   enum status: [:requested, :approved, :declined]
 
   has_one :company, dependent: :destroy
