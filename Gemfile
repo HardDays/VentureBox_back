@@ -46,7 +46,7 @@ gem 'therubyracer'
 
 gem 'valid_url'
 
-gem 'mini_magick'
+gem 'mini_magick', '~> 0.3.10'
 
 gem 'httparty'
 
