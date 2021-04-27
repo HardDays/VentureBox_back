@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 # HERE 
-ruby '2.4.4'
+ruby '2.6.3'
 
 gem 'rails', '~> 5.2.3'
 gem 'pg', '~> 0.18'
@@ -46,7 +46,7 @@ gem 'therubyracer'
 
 gem 'valid_url'
 
-gem 'mini_magick', '~> 0.3.10'
+gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f' 
 
 gem 'httparty'
 
