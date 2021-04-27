@@ -42,7 +42,7 @@ gem 'swagger-docs'
 
 gem 'rails_admin', '~> 1.3'
 #HERE
-gem 'therubyracer'
+# gem 'therubyracer', '~> 0.12.3'
 
 gem 'valid_url'
 
