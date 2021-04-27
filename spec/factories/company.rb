@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :company do
     company_name { Faker::Lorem.word }
-    website { Faker::Internet.url }
+    website { Faker::Lorem.word }
     description { Faker::Lorem.paragraph }
     contact_email { Faker::Internet.email }
     stage_of_funding { Faker::Number.between(0, 5) }
