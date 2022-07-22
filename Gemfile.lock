@@ -257,7 +257,7 @@ GEM
       activesupport
       i18n
     timecop (0.9.4)
-    tzinfo (1.2.9)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     valid_url (0.0.4)
       addressable
